@@ -1,0 +1,43 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#define F_CPU 1000000UL;
+
+
+
+int main(void){
+
+
+
+DDRD=0xF0; //ustawienie 4 linii w tryb wyjściowy
+PORTD=0xF0; //podciąganie
+DDRA=0xff; //ustawienie PORTA w tryb wyjściowy
+
+MCUCR|=(1<<ISC10)| (1<<ISC11); //ustawiamy wyzwolenie przerwania
+								// ze stanu 0->1
+GICR|=(1<<INT1); //uaktywnienie przerwania od INT0
+sei(); //odblokowanie możliwości występowania przerwania
+
+while(1){
+
+}
+
+}
+
+
+ISR(INT1_vect){
+
+DDRD=0x0F;// ustawianie PD3 jako wyjście i PD4-7 jako wejście
+PORTD=0x08; //ustawienie 1 na PD3
+
+uint8_t obecny_klawisz=PIND; //odczytanie wartości na wejściu
+asm volatile("nop");
+PORTA=(obecny_klawisz&0xF0);
+
+DDRD=0xF0; // przywracamy stan początkowy linii z przed przerwania
+PORTD=0xF0; //podciąganie
+
+GIFR|=(1<<INTF1);
+PORTD=0xF0;
+
+}

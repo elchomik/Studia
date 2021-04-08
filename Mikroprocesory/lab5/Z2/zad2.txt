@@ -1,0 +1,62 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#define F_CPU 1000000UL;
+
+uint8_t kolumny[]={16,32,64,128}; //tablica zwierająca dane pozwalająca na multipleksowe sterowanie klawiaturę
+volatile uint8_t counter; //zmienna operująca na tablicy kolumn pozwalająca na multipleksowe sterowanie kolumnami
+
+uint8_t poprzedni_klawisz=0; //zmienna zapamiętaująca stan poprzednio wciśniętego przycisku
+uint8_t ile_cykli=0; //zmienna pozwalająca sprawdzić czy wybrano nowy przycisk czy cały czas przytrzymano ten sam
+uint8_t obecny_klawisz=0; //zmienna odpowiadająca za wskazanie obecnie wciśniętego klawisza
+
+
+int main(void){
+
+DDRB=0xF0;//ustawienie 4linii PORTB jako wejścia i 4 linii  PoORTB jako wejścia
+PORTB=0xF0; //podciąganie
+DDRA=0xFF; //PORTA ustawiony jako wyjście
+
+
+TCCR1B|=(1<<CS12)|(1<<CS10); //ustawiamy preskaler na 1024 tryb NORMAL
+TCCR1B|=(0<<WGM12)|(0<<WGM13); //ustawienie tryb Normal
+TCCR1A|=(0<<WGM11)|(0<<WGM10); //ustawienie tryb Normal
+//TCNT1=65390; //ustawiamy wartość do porównania w trybie rzeczywistym da nam to okoł 150ms
+TCNT1=65530;// w celach testowych ustawiam timer na podaną wartość ponieważ HAPSIM ma problem
+//z pracą w trybie rzeczywistym
+
+TIMSK=(1<<TOIE1); //umożliwienie występowania przerwania od przepełnienia licznika
+sei(); //umożliwienie występowania przerwań
+
+while(1){
+}
+}
+
+
+ISR(TIMER1_OVF_vect){
+
+obecny_klawisz=PINB; //przypisujemy stan na PINB zmiennej obecny klawisz 
+
+if((obecny_klawisz&0x0F)!=0){ //sprawddzamy czy wciśnieto jakiś klawisz
+	
+	if(obecny_klawisz!=poprzedni_klawisz){ //sprawdź czy wybrano inny klawisz jeśli 
+	poprzedni_klawisz=obecny_klawisz; //tak poprzedni klawisz=obecny_klawisz
+	
+	}
+		ile_cykli=0; //zerowanie zmiennej odpowiedzialnej za sprawdzanie czy mam długie wciśnięcie przycisku
+	PORTA=obecny_klawisz; //na PORTA wystawiam wartość obecnego klawisza
+}
+	
+if(++ile_cykli>3) { //sprawdzamy czy mamy doczynienie z długim wciśnięciem
+ile_cykli=0;
+PORTA=0x00;
+}
+
+if(++counter>3) //sprawdzamy stan countera po każdy przepełnieniu Timera
+counter=0; //jeśli wartość większa od 3 to zerujemy
+uint8_t odczyt_kolumny=kolumny[counter]; //odczytanie wartość z tablicy odpowiadającej za multipleksacje
+PORTB=odczyt_kolumny; //wystawienie wartości na PORTB
+
+//TCNT1=65390; // przywracamy czas po obsłużeniu przepełnienia
+TCNT1=65530; //w celach testowych przywracamy podany poniżej czas
+}

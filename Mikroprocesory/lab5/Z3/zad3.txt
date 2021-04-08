@@ -1,0 +1,116 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#define F_CPU 1000000UL;
+
+uint8_t kolumny[]={16,32,64,128}; //tablica zwierająca dane pozwalająca na multipleksowe sterowanie klawiaturę
+volatile uint8_t counter; //zmienna operująca na tablicy kolumn pozwalająca na multipleksowe sterowanie kolumnami
+
+const uint8_t keypad[4][4]={ //tablica pomocnicza pozwalajaca odczytać klawisz który został wciśnięty
+								//klawisze zapisane w systemie szestnastkowym
+
+{0x0C,0x00,0x04,0x08},
+{0x0D,0x01,0x05,0x09},
+{0x0E,0x02,0x06,0x0A},
+{0x0F,0x03,0x07,0x0B},
+
+};
+
+uint8_t poprzedni_klawisz=0; //zmienna zapamiętaująca stan poprzednio wciśniętego przycisku
+uint8_t ile_cykli=0; //zmienna pozwalająca sprawdzić czy wybrano nowy przycisk czy cały czas przytrzymano ten sam
+uint8_t obecny_klawisz=0; //zmienna odpowiadająca za wskazanie obecnie wciśniętego klawisza
+
+volatile uint8_t licznik; //zmienna zliczająca ilość wciśniętych klawiszy
+
+int main(void){
+
+DDRD=0xF0;//ustawienie 4linii PORTD jako wejścia i 4 linii  PORTD jako wejścia
+PORTD=0xF0; //podciąganie
+DDRA=0xFF; //PORTA ustawiony jako wyjście
+DDRB=0xFF; //PORTB ustawiony jako wyjście
+
+
+
+TCCR1B|=(1<<CS12)|(1<<CS10); //ustawiamy preskaler na 1024 
+TCCR1B|=(0<<WGM12)|(0<<WGM13); //ustawienie tryb Normal
+TCCR1A|=(0<<WGM11)|(0<<WGM10); //ustawienie tryb Normal
+TCNT1=65530; // w celach testowych ustawiam timer na podaną wartość ponieważ HAPSIM ma problem
+//z pracą z wartością odpowiadającą około 150ms dlatego zmieniam tę wartość
+
+
+//TCNT1=65390 taka wartość TCNT1 pozwoli nam na osięgnięcie około 150 ms po przeskanowaniu 4 kolumn
+//jednak w celach Testowych zmieniam tę wartość
+TIMSK=(1<<TOIE1); //umożliwienie występowania przerwań związanych z przepełnieniem
+sei(); //umożliwienie występowania przerwań
+
+while(1){
+}
+}
+
+
+ISR(TIMER1_OVF_vect){
+
+if((PIND&0x0f)!=0){ // sprawdzamy czy wciśnięto jakikolwiek klawisz
+obecny_klawisz=PIND&0x0f; //jeśli tak wartość obecny_klawisz to watość zczytana z PIND
+
+}
+
+if(++counter>3) //sprawdzamy stan zmiennej counter po każdym przepełnieniu licznika
+counter=0; //jeśli wartość większa od 3 sprawdzamy od początku
+
+uint8_t odczyt_kolumny=kolumny[counter]; //dokonujemy odczytu, w której kolumnie nastąpiło wciśnięcie klawisza
+PORTD=odczyt_kolumny; //wartość wystawiamy na PORTD
+
+if(obecny_klawisz!=poprzedni_klawisz){ //sprawdzamy czy zmienił się klawisz jeśli tak to dekodujemy
+
+uncode(obecny_klawisz,odczyt_kolumny); //wywołanie funkcji dekodującej
+
+}
+
+if(obecny_klawisz!=poprzedni_klawisz){ // sprawdzamy czy obecnie wciskany klawisz różny od poprzedniego
+poprzedni_klawisz=obecny_klawisz; //jeśli tak to poprzedni klawisz jest równy obecnemu
+ile_cykli=0; //zerujemy zmienną odpowiadająca za ilość cykli
+}
+
+else ile_cykli++;
+
+if(ile_cykli>4){
+
+ile_cykli=0; //jeśli zmienna większa od 4 oznacza to, że żaden klawisz nie został wciśnięty 
+}
+
+TCNT1=65530; //przywrócenie stanu licznika i zliczanie od początku
+//TCNT1=65390 taka wartość TCNT1 pozwoli nam na osięgnięcie około 150 ms po przeskanowaniu 4 kolumn
+
+}
+
+void uncode(uint8_t code,uint8_t code2){ // funkcja pozwolająca na zdekodowanie numeru klawisza
+licznik++; //zwiększamy licznik odpowiadający za to ile liczb powinno być wyświetlonych na PORTA i PORTB
+
+uint8_t older=(code2>>4)&0x0f; //przesunięcie zmiennej odpowiadającej za kolumny o 4 w prawo 
+uint8_t lower=code&0x0f; //zamiana zmiennej odpowiadającej za wiersze 
+
+//w poniższych warunkach sprawdzamy czy zmienne odpowiadające za wiersze i kolumny z tablicy
+//odczytującej są w zakresie 0 do 3 ponieważ mamy tablicę 4x4 to nasze indeksy w tablicy muszą byc w zakresie od 0 do 3
+//natowmiast zmienne mogą przyjmować wartości od 0x00 do 0x08
+//w celu poprawnego odczytywania jeśli osiągniemy wartość 0x08 podstawiamy pod zmienna older wartosc=0x03
+//z tego będziemy wiedzieć, że nasz indeks wynosi 3
+//w przeciwnym wypadku każdą inną wartość będziemy przesuwać 0 bitowo o 1 w prawo dzięki temu
+//jeśli wystąpi 0x04 to w indeksie będzie to wartość 0x02 jeśli wystąpi wartość 0x02 to otrzymamy indeks 0x01
+//a jeśli wartość 0x01 to otrzymamy indeks 0x00
+
+if(older==0x08) older=0x03; 
+else older=older>>1;
+
+if(lower==0x08) lower=0x03;
+else lower=lower>>1;
+
+
+
+
+if(licznik==1) PORTA=keypad[lower][older]; //sprawdzamy czy zmienna licznik ma wartość 1 jeśli tak wystaw na młodszą część PORTA
+else if(licznik==2) PORTA|=(keypad[lower][older]<<4); //sprawdzamy czy zmienna licznik ma wartość 2 jeśli tak to wystaw na starszą część PORTA
+else if(licznik==3) PORTB=keypad[lower][older]; //sprawdzamy czy zmienna licznik ma wartość 3 jeśli tak to wystaw na młodszą część PORTB
+else if(licznik==4) PORTB|=(keypad[lower][older]<<4); //sprawdzamy czy zmienna licznik ma wartość 4 jeśli tak to wystaw na starszą cześć PORTB
+
+}
