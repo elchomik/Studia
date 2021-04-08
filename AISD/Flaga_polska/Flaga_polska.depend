@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1555343231 source:c:\users\ja\desktop\programowanie\flaga_polska\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1552926841 source:c:\users\ja\desktop\programowanie\flaga_polska\flaga.2.c
+	<stdio.h>
+	<stdlib.h>
+
