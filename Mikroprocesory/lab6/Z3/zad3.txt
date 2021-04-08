@@ -1,0 +1,124 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/pgmspace.h>
+
+#define F_CPU 1000000UL;
+#define LCD_DDR DDRA
+#define LCD_Port PORTA
+#define RS PA0
+#define EN PA1
+
+//Tablica kodów ASCII w systemie szestnastkowym
+//Zawiera znaki od 0-9 oraz A-F i spacje
+//Tablica znajduje się w pamięci programu 
+//dlatego korzystamy z biblioteki pgmspace.h
+
+unsigned char ASCII[] PROGMEM=
+{
+
+	0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x41,0x42,0x43,0x44,0x45,0x46
+
+};
+
+//tablica zawierająca dane do wyświetlenia
+const char filedata[]={0x02,0xF1,0x38,0xBA,0x97};
+
+
+
+//Funkcja pozwalająca na wykonanie polecenia 
+void executeCommand(unsigned char command){
+
+
+LCD_Port=(LCD_Port & 0x0F) | (command & 0xF0); //przesłanie starszej część bajtu
+
+LCD_Port&=~(1<<RS); //ustawienie stanu RS=0, żeby stan na pinach traktowany był jako polecenie 
+
+LCD_Port|=(1<<EN); //właczamy linie ENABLE
+_delay_us(1); //odczekanie 1 mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza przesłanie starszej części
+_delay_us(40); //odczekujemy 40 mikrosekund na wykonanie się komendy
+
+LCD_Port=(LCD_Port & 0x0F) | ((command<<4)&0xF0); //wysyłamy młodszą część bajtu 
+LCD_Port|=(1<<EN); //włączamy linię ENABLE
+_delay_ms(1); //odczkeanie mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza potwierdzenie przesłania młodszej części bajtu
+_delay_us(40);// odczekanie 40 mikrosekund na wykonanie się komendy
+
+
+}
+
+
+//Funkcja wyświetlająca pojedynczy znak na wyświetlaczu
+
+void charOnLCD(unsigned char data){
+
+LCD_Port=(LCD_Port & 0x0F) | (data & 0xF0); //wysyłamy starszą część bajtu na wyświetlacz LCD
+
+LCD_Port|=(1<<RS); //ustawiamy linie RS=1 aby dane z pinów były przeznaczone na wyświetlenie
+LCD_Port|=(1<<EN); //włączenie Linii ENABLE
+_delay_us(1);// odczekanie mikrosekundy 
+LCD_Port&=~(1<<EN); //opadnięcie linii Enable potwierdzi przesłanie starszej częśći bajtu
+_delay_us(40);//odczekanie 40 mikrosekund 
+
+LCD_Port=(LCD_Port & 0x0F) | ((data<<4)&0xF0); //wysyłamy młodszą część bajtu na wyświetlacz LCD
+LCD_Port|=(1<<EN);//włączamy linię Enable
+_delay_us(1);//odczekanie mikrosekundy na synchronizację
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE potwierdzi przesłanie młodszą część bajtu
+_delay_us(40); //odczekanie 40 mikrosekund 
+
+
+}
+
+void InitLCD(void){
+
+//inicjalizacja wyświetlacza LCD
+LCD_DDR=0xFF; //ustawiamy wszystkie linie PORTA jako wyjściowe
+LCD_Port=0; //stan niski na wszystkich liniach
+_delay_ms(20); //czekamy 20ms na włączenie wyświetlacza
+
+executeCommand(0x02); //wykonanie komendy włączenia stanu 4 bitowego bez tej komendy nie zadziała HAPSIM
+executeCommand(0x28); //ustawienie 2 linii, matrycy 5x8 oraz trybu 4 bitowego
+executeCommand(0x0C); //włączamy wyświetlanie wyłączamy kursor
+executeCommand(0x06); //komenda pozwalająca na wypisywanie tekstu przesuwanie kursora w prawo
+executeCommand(0x01); //czyścimy wyświetlacz z początkowego stanu
+
+_delay_ms(2); //odczekujemy 2ms czyli więcej niż 1.64 ms, tyle czasu potrzeba na wykonanie inicjalizacji wyświetlacza
+
+
+}
+
+int main(void){
+
+InitLCD(); //wywołujemy inicjalizację LCD
+
+
+//Wyświetlanie tekstu od lewej
+
+uint8_t older_nibble,lower_nibble; //zmienne pozwalające na odczytanie młodszej i starszej części bajtu
+int8_t i; //zmienna operująca w pętli
+
+char byte; //zmienna do której będziemy przepisywać odczytane półbjaty z tablicy transkodującej
+
+for(i=0;i<5;i++){
+
+older_nibble=(filedata[i]>>4)&(0x0f); //odczytujemy starszą częśc przesuwamy o 4 w prawo i maskujemy
+lower_nibble=(filedata[i]&0x0f); //odczytanie młodszej części bajtu i maskowanie
+
+byte=pgm_read_byte(&ASCII[older_nibble]); //odczytujemy wartość z tablicy ASCII dla starszej części bajtu
+charOnLCD(byte); //wypisujemy go na wyświetlacz
+
+
+byte=pgm_read_byte(&ASCII[lower_nibble]); //odczytujemy młodszą częśc bajtu z tablicy PROGMEM
+charOnLCD(byte); //wypisujemy młodszą część na ekran
+
+
+byte=pgm_read_byte(&ASCII[16]); //odczytujemy spację w tablicy PROGMEM jest wartością ostatnia
+charOnLCD(byte); //wypisujemy spację na ekran
+
+
+}
+
+while(1){}
+}
+
+

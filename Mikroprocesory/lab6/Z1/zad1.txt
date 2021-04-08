@@ -1,0 +1,87 @@
+#include <avr/io.h>
+#include <util/delay.h>
+
+#define F_CPU 1000000UL; //ustawienie częstotliwości CPU na 1MHZ
+#define LCD_DDR DDRA 
+#define LCD_Port PORTA
+#define RS PA0
+#define EN PA1
+
+
+
+//Funkcja odpowiadająca za wykonanie polecenia
+void executeCommand(unsigned char command){
+
+LCD_Port=(LCD_Port & 0x0F) | (command & 0xF0); //przesłanie starszej część bajtu
+
+LCD_Port&=~(1<<RS); //ustawienie stanu RS=0, żeby stan na pinach traktowany był jako polecenie 
+
+LCD_Port|=(1<<EN); //właczamy linie ENABLE
+_delay_us(1); //odczekanie 1 mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza przesłanie starszej części
+_delay_us(40); //odczekujemy 40 mikrosekund 
+
+LCD_Port=(LCD_Port & 0x0F) | ((command<<4)&0xF0); //wysyłamy młodszą część bajtu 
+LCD_Port|=(1<<EN); //włączamy linię ENABLE
+_delay_ms(1); //odczkeanie mikrosekundy 
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza potwierdzenie przesłania młodszej części bajtu
+_delay_us(40); //odczekanie 40 mikrosekund
+
+
+}
+
+
+//Funkcja wyświetlająca pojedynczy znak na wyświetlaczu
+
+void charOnLCD(unsigned char data){
+
+LCD_Port=(LCD_Port & 0x0F) | (data & 0xF0); //wysyłamy starszą część bajtu na wyświetlacz LCD
+
+LCD_Port|=(1<<RS); //ustawiamy linie RS=1 aby dane z pinów były przeznaczone na wyświetlenie
+LCD_Port|=(1<<EN); //włączenie Linii ENABLE
+_delay_us(1);// odczkeanie mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii Enable potwierdzi przesłanie starszej częśći bajtu
+_delay_us(40);//odczekanie 40 mikrosekund przed przesłaniem młodszej częśći
+
+LCD_Port=(LCD_Port & 0x0F) | ((data<<4)&0xF0); //wysyłamy młodszą część bajtu na wyświetlacz LCD
+LCD_Port|=(1<<EN);//włączamy linię Enable
+_delay_us(1);//odczekanie mikrosekundy na synchronizację
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE potwierdzi przesłanie młodszą część bajtu
+_delay_us(40); //odczekanie 40 mikrosekund na potwierdzenie wykonania zapisu
+
+
+}
+
+//Funkcja inicjalizacyjna wyświetlacza
+void InitLCD(void){
+
+//inicjalizacja wyświetlacza LCD
+LCD_DDR=0xFF; //ustawiamy wszystkie linie PORTA jako wyjściowe
+LCD_Port=0x00; //stan niski jako stan początkowy
+_delay_ms(20); //czekamy 20ms na włączenie wyświetlacza
+
+executeCommand(0x02); //wykonanie komendy włączenia stanu 4 bitowego 
+executeCommand(0x28); //ustawienie 2 linii, matrycy 5x8 oraz trybu 4 bitowego
+executeCommand(0x0C); //włączamy wyświetlanie wyłączamy kursor
+executeCommand(0x01); //funkcja czyszcząca zawartość wyświetlacza
+_delay_ms(2); //odczekujemy 2ms czyli więcej niż 1.64 ms, tyle czasu potrzeba na wykonanie inicjalizacji wyświetlacza
+
+
+}
+
+
+int main(void){
+
+InitLCD(); //wywołanie funkcji inicjalizującej wyświetlacz LCD
+
+
+while(1){
+//wywołanie funkcji w pętli while spowoduje, że znak będzie migać
+
+charOnLCD('?'); //wyświetlenie znaku ? na ekranie
+_delay_ms(5);
+executeCommand(0x01); //wyczyszczenie ekranu
+_delay_ms(5);
+}
+
+}

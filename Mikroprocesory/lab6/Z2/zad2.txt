@@ -1,0 +1,134 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+
+#define F_CPU 1000000UL; //ustawienie częstotliwości CPU na 1MHZ
+#define LCD_DDR DDRA 
+#define LCD_Port PORTA
+#define RS PA0
+#define EN PA1
+
+
+char text[13]={'0x00','G','o','o','d',' ','m','o','r','n','i','n','g'}; //tablica zawierjąca tekst do wyświetlenia
+
+volatile uint8_t counter=12; //zmienna odczytująca znak z tabeli
+
+//Funkcja odpowiedzialna za wykonanie polecenia
+void executeCommand(unsigned char command){
+
+
+LCD_Port=(LCD_Port & 0x0F) | (command & 0xF0); //przesłanie starszej część bajtu
+
+LCD_Port&=~(1<<RS); //ustawienie stanu RS=0, żeby stan na pinach traktowany był jako polecenie 
+
+LCD_Port|=(1<<EN); //właczamy linie ENABLE
+_delay_us(1); //odczekanie 1 mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza przesłanie starszej części
+_delay_us(40); //odczekujemy 40 mikrosekund na wykonanie się komendy
+
+LCD_Port=(LCD_Port & 0x0F) | ((command<<4)&0xF0); //wysyłamy młodszą część bajtu 
+LCD_Port|=(1<<EN); //włączamy linię ENABLE
+_delay_ms(1); //odczkeanie mikrosekundy na synchronizacje
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE oznacza potwierdzenie przesłania młodszej części bajtu
+_delay_us(40);// odczekanie 40 mikrosekund na wykonanie się komendy
+
+
+}
+
+
+//Funkcja wyświetlająca pojedynczy znak na wyświetlaczu
+
+void charOnLCD(unsigned char data){
+
+LCD_Port=(LCD_Port & 0x0F) | (data & 0xF0); //wysyłamy starszą część bajtu na wyświetlacz LCD
+
+LCD_Port|=(1<<RS); //ustawiamy linie RS=1 aby dane z pinów były przeznaczone na wyświetlenie
+LCD_Port|=(1<<EN); //włączenie Linii ENABLE
+_delay_us(1);// odczekanie mikrosekundy 
+LCD_Port&=~(1<<EN); //opadnięcie linii Enable potwierdzi przesłanie starszej częśći bajtu
+_delay_us(40);//odczekanie 40 mikrosekund 
+
+LCD_Port=(LCD_Port & 0x0F) | ((data<<4)&0xF0); //wysyłamy młodszą część bajtu na wyświetlacz LCD
+LCD_Port|=(1<<EN);//włączamy linię Enable
+_delay_us(1);//odczekanie mikrosekundy na synchronizację
+LCD_Port&=~(1<<EN); //opadnięcie linii ENABLE potwierdzi przesłanie młodszą część bajtu
+_delay_us(40); //odczekanie 40 mikrosekund 
+
+
+}
+
+void InitLCD(void){
+
+//inicjalizacja wyświetlacza LCD
+LCD_DDR=0xFF; //ustawiamy wszystkie linie PORTA jako wyjściowe
+LCD_Port=0x00; //początkowo stan niski na wszystkich liniach
+_delay_ms(20); //czekamy 20ms na włączenie wyświetlacza
+
+executeCommand(0x02); //wykonanie komendy włączenia stanu 4 bitowego bez tej komendy nie zadziała HAPSIM
+executeCommand(0x28); //ustawienie 2 linii, matrycy 5x8 oraz trybu 4 bitowego
+executeCommand(0x0C); //włączamy wyświetlanie wyłączamy kursor
+executeCommand(0x06); //komenda pozwalająca na wypisywanie tekstu przesuwanie kursora w prawo
+executeCommand(0x01); //czyścimy wyświetlacz z początkowego stanu
+
+_delay_ms(2); //odczekujemy 2ms czyli więcej niż 1.64 ms, tyle czasu potrzeba na wykonanie inicjalizacji wyświetlacza
+
+
+}
+
+//Funkcja czyszcząca wyświetlacz LCD
+void clearDisplay(void){
+
+executeCommand(0x01); //wysłanie komendy wyczysczenia wyświetlaca
+_delay_ms(2); //odczekanie 2ms na wykonanie polecenia
+}
+
+int main(void){
+
+InitLCD(); // inicjalizacja LCD
+
+DDRD=0xF0; //wiersze PORTD jako wejście
+PORTD=0xF0; //podciąganie 
+
+GICR|=(1<<INT0); //umożliwienie obsługi przerwań od INT0
+GICR|=(1<<INT1); //umożliwienie obsługi przerwań od INT1
+
+MCUCR|=(1<<ISC01) | (1<<ISC11) | (1<<ISC00) |(1<<ISC10); //zmiana stanu z 0->1 na PD2 i PD#
+
+sei(); //umożliwienie obsługi przerwań
+while(1){}
+
+}
+
+uint8_t position=15;
+ISR(INT0_vect){
+
+cli(); //blokowanie przerwań
+char read_text=text[counter]; //odczytanie pojedynczego znaku z tablicy 
+
+if(counter!=0){ //sprawdzamy czy już odczytaliśmy wszystkie znaki z tablicy
+executeCommand(position|0x80); //wykonanie komendy przesunięcia w pierwszym wierszu
+position--; //zmniejszenie zmiennej odpowiedzialnej za aktualnie wyświetlaną pozycję
+charOnLCD(read_text); //wypisanie znaku jeśli counter mniejszy od 12
+counter--; //zmniejszenie zmiennej odpowiedzialnej za odczyt z tablicy
+}
+
+
+
+PIND=(0<<PD2); //przywrócenie stanu statycznego
+
+GIFR|=(1<<INTF0); //ustawienie INTF0 w celu wyczyszczenia kolejki przerwań 
+
+sei(); //odblokowanie możliwości występowania przerwań
+}
+
+
+ISR(INT1_vect){
+
+cli(); //blokujemy występowanie przerwań
+
+clearDisplay();
+PIND=(0<<PD3); //przywrócenie stanu statycznego
+GIFR|=(1<<INTF1); //ustawienie INTF1 w celu wyczyszczenia kolejki przerwań
+
+sei(); //odblokowanie występowania przerwań
+}
