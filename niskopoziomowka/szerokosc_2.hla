@@ -1,0 +1,24 @@
+program szerokosc_2;
+#include("stdlib.hhf");
+
+var
+	zm: int8;
+	licznik_kolumn: int8;
+begin szerokosc_2;
+	mov(50,zm);
+	mov(0,licznik_kolumn);
+	
+	while(zm>2) do
+	while(licznik_kolumn>4)do
+	stdout.newln();
+	stdio.bell;
+	mov(0,licznik_kolumn);
+	endwhile;
+stdout.put(zm::5);
+sub(1,zm);
+add(1,licznik_kolumn);
+endwhile;
+
+end szerokosc_2;
+
+	

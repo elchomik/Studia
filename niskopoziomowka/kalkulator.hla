@@ -1,0 +1,97 @@
+program kalkulator;
+#include("stdlib.hhf");
+
+static
+	wybor: int8;
+	x: int32;
+	y: int32;
+	wynik: int32;
+	iloczyn: int64;
+	zm: int32:=-1;
+begin kalkulator;
+
+stdout.put(nl,"Menu",nl,"1.Dodawanie",nl,"2.Odejmowanie",nl,"3.Mnozenie",nl,"4.Dzielenie ",nl,"5.Potegowanie",nl);
+stdout.put("Podaj swoj wybor",nl);
+stdin.get(wybor);
+while(wybor!=0) do
+stdout.put("Potwierdz lub zmien swoj wybor",nl);
+stdin.get(wybor);
+
+if(wybor==1) then
+stdout.put("Podaj dwie liczby",nl);
+stdin.get(x);
+stdin.get(y);
+mov(x,eax);
+add(y,eax);
+mov(eax,wynik);
+stdout.put("Wynik to ",wynik,nl);
+
+
+elseif(wybor==2) then
+stdout.put("Podaj dwie liczby ",nl);
+stdin.get(x);
+stdin.get(y);
+mov(x,eax);
+sub(y,eax);
+mov(eax,wynik);
+stdout.put("Wynik to ",wynik,nl);
+
+
+elseif(wybor==3) then
+stdout.put("Podaj dwie liczby ");
+stdin.get(x);
+stdin.get(y);
+mov(x,eax);
+imul(y,eax);
+mov(edx:eax,iloczyn);
+stdout.put("Wynik to",iloczyn,nl);
+
+elseif(wybor==4) then
+stdout.put("Podaj pierwsza liczbe ");
+stdin.get(x);
+
+	if(x<0) then
+	mov(x,eax);
+	stdout.put("Podaj druga liczbe ",nl);
+	stdin.get(y);
+		if(y==0) then
+		stdout.put("Blad",nl);
+		else
+		cdq();
+		idiv(y,edx:eax);
+		stdout.put("Wynik calkowity to ",nl);
+		stdout.puti32(eax);
+		stdout.put(" Reszta to ",nl);
+		stdout.puti32(edx);
+		endif;
+	elseif(x>0) then
+	mov(x,eax);
+	stdout.put("Podaj druga liczbe ",nl);
+	stdin.get(y);
+		if(y==0) then
+		stdout.put("Blad",nl);
+		else
+		cdq();
+		idiv(y,edx:eax);
+		stdout.put("Wynik calkowity to ",nl);
+		stdout.puti32(eax);
+		stdout.put(nl,"Reszta to ");
+		stdout.puti32(edx);
+		endif;
+
+	endif;
+
+
+else if(wybor==5) then
+stdout.put("Podaj liczbe ",nl);
+stdin.get(x);
+mov(x,eax);
+imul(x,eax);
+mov(edx:eax,iloczyn);
+stdout.put("Wynik to : ",nl,iloczyn,nl);
+endif;
+
+endif;
+endwhile;
+
+end kalkulator;

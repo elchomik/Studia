@@ -1,0 +1,11 @@
+program s;
+#include("stdlib.hhf");
+
+static
+	zm: int8:=35;
+begin s;
+mov(2,al);
+sub(zm,al);
+mov(al,zm);
+stdout.put("Wartosc zmiennej wynosi ",zm);
+end s;

@@ -1,0 +1,21 @@
+program movaddsub_2;
+#include ("stdlib.hhf");
+static
+	zmienna_1: int8:=-7;
+	zmienna_2: int16:=-277;
+	zmienna_3: int32:=-66000;
+begin movaddsub_2;
+mov(0,AL);
+sub(AL,zmienna_1);
+sub(zmienna_1,AL);
+mov(AL,zmienna_1);
+mov(0,AX);
+sub(zmienna_2,AX);
+mov(AX,zmienna_2);
+mov(0,EAX);
+sub(zmienna_3,EAX);
+mov(EAX,zmienna_3);
+add(667,zmienna_3);
+
+stdout.put("Wartosc zmiennych wynosi ",zmienna_1,nl,zmienna_2,nl,zmienna_3,nl);
+end movaddsub_2;

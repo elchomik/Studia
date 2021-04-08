@@ -1,0 +1,20 @@
+program najutro;
+#include("stdlib.hhf");
+var
+	zmienna:	int8;
+	licznik:	int8;
+
+begin najutro;
+	mov(0,licznik);
+	mov(50,zmienna);
+	stdout.put("Wyswietlanie od 50 do 3 liczb",nl);
+	while(zmienna >= 3) do 
+		stdout.put(zmienna:3);
+		sub(1,zmienna);
+		add(1,licznik);
+		while(licznik == 5) do
+			stdout.newln();
+			mov(0,licznik);
+		endwhile;
+	endwhile;
+end najutro;

@@ -1,0 +1,12 @@
+program hex_to_dec;
+#include("stdlib.hhf");
+
+static
+	liczba: int 32;
+begin hex_to_dec;
+stdout.put("Podaj wartosc liczbowa w systemie szesnastkowym",nl );
+stdin.get(ebx);
+mov(ebx,liczba);
+stdout.put("Wartosc liczby w systemie dziesietnym wynosi ",liczba,nl);
+
+end hex_to_dec;

@@ -1,0 +1,13 @@
+program znaki;
+#include("stdlib.hhf");
+
+static
+zmienna: char:='A';
+wprowadzona: char;
+begin znaki;
+stdout.put("Wartosc zmienna = ",zmienna,nl);
+stdout.put("Wprowadz litere z klawiatury ",nl);
+stdin.get(wprowadzona);
+stdout.put("Wprowadzono litere: ",wprowadzona,nl);
+
+end znaki;

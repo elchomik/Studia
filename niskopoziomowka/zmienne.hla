@@ -1,0 +1,17 @@
+program zmienne;
+#include ("stdlib.hhf");
+
+static 
+	zmienna: int8 :=5;
+	wprowadzana: int32;
+begin zmienne;
+//wyswietl wartosc zainicjowanej zmiennej
+
+stdout.put("wartosc zmiennej zadeklarowanej wynosi ",zmienna,nl);
+
+//pobierz wartosc od uzytkownika i wyswietl ja
+
+stdout.put("wprowadz liczbe calkowita: ");
+stdin.get(wprowadzana);
+stdout.put("wprowadzono: ", wprowadzana, nl);
+end zmienne;

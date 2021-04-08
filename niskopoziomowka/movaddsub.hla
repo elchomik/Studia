@@ -1,0 +1,18 @@
+program movaddsub;
+#include ("stdlib.hhf");
+
+static 
+jedenbajt: int8:=-7;
+
+begin movaddsub;
+stdout.put("Wprowadzona stala wynosi ",jedenbajt,nl);
+mov(jedenbajt,AL);
+sub(AL,jedenbajt);
+sub(AL,jedenbajt);
+stdout.put("Zmienna po negacji wynosi ",jedenbajt,nl);
+//mov(jedenbajt,AL);
+//add(32,AL);
+//mov(AL,jedenbajt);
+add(32,jedenbajt);
+stdout.put("Po dodaniu 32 wynik wynosi: ",jedenbajt,nl);
+end movaddsub;

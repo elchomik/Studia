@@ -1,0 +1,21 @@
+program kolumny;
+#include ("stdlib.hhf");
+
+var 	
+	zm:  int32;
+	licznik_kolumn: int8;
+begin kolumny;
+	mov(40,zm);
+	mov(0,licznik_kolumn);
+while(zm>0) do
+	if(licznik_kolumn = 5) then
+	stdout.newln();
+	mov(0,licznik_kolumn);
+endif;
+stdout.put(zm:5);
+sub(1,zm);
+add(1,licznik_kolumn);
+endwhile;
+stdout.newln();
+
+end kolumny;

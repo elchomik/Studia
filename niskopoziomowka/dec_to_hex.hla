@@ -1,0 +1,13 @@
+program dec_to_hex;
+#include("stdlib.hhf");
+
+static
+	liczba: int32;
+begin dec_to_hex;
+
+stdout.put("Podaj liczbe w systemie dziesietnym ",nl);
+stdin.get(liczba);
+mov(liczba,ax);
+stdout.put("Liczba w systemie szestanstkowym ",ax,nl);
+
+end dec_to_hex;
