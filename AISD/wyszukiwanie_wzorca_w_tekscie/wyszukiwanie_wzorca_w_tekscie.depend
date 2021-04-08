@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1555001872 source:c:\users\ja\desktop\programowanie\wyszukiwanie_wzorca_w_tekscie\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<conio.h>
+
+1585946611 source:c:\users\ja\desktop\programowanie\algorytmy_struktury_danych_c\wyszukiwanie_wzorca_w_tekscie\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<conio.h>
+
