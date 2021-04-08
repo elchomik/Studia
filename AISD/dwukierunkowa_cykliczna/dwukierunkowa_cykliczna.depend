@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1559994882 source:c:\users\ja\desktop\programowanie\dwukierunkowa_cykliczna\main.c
+	<stdio.h>
+	<stdlib.h>
+
