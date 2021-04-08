@@ -1,0 +1,24 @@
+#1
+PIND = 0x0c
+#148
+PIND = 0x08
+#17
+PORTA = 0x01
+#133
+PIND = 0x0c
+#150
+PIND = 0x08
+#150
+PIND = 0x0c
+#150
+PIND = 0x08
+#150
+PIND = 0x04
+#17
+PORTA = 0x00
+#133
+PIND = 0x08
+#17
+PORTA = 0x01
+#17
+PORTA = 0x00
