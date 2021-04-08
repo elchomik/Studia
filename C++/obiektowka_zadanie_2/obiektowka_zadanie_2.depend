@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1571080630 source:c:\users\ja\desktop\programowanie\obiektowka_zadanie_2\main.cpp
+	<cstdlib>
+	<iostream>
+	<ios>
+	<iomanip>
+	<vector>
+

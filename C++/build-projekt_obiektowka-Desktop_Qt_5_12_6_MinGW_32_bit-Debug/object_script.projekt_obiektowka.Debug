@@ -1,0 +1,10 @@
+debug/ddialog.o
+debug/main.o
+debug/mainwindow.o
+debug/secdialog.o
+debug/tdialog.o
+debug/qrc_obrazki.o
+debug/moc_ddialog.o
+debug/moc_mainwindow.o
+debug/moc_secdialog.o
+debug/moc_tdialog.o

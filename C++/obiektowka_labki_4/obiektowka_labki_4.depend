@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1573745301 source:c:\users\ja\desktop\programowanie\obiektowka_labki_4\main.cpp
+	<iostream>
+	<stdlib.h>
+	<string>
+

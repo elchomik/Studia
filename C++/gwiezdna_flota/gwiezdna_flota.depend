@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1576162076 source:c:\users\ja\desktop\obiektowka\gwiezdna_flota\main.cpp
+	<iostream>
+	<ctime>
+	<cstdlib>
+	<assert.h>
+	<time.h>
+

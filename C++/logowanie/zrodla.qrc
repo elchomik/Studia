@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>img/dwa.jpg</file>
+        <file>img/heroes.jpg</file>
+        <file>img/indeks.png</file>
+        <file>img/jeden.jpg</file>
+        <file>img/pingwin-maly.jpg</file>
+        <file>img/trzy.jpg</file>
+        <file>img/zero.jpg</file>
+    </qresource>
+</RCC>

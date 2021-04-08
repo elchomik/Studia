@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1576159826 source:c:\users\ja\desktop\obiektowka\ultimate_kolos\main.cpp
+	<iostream>
+	<cstdlib>
+	<ctime>
+
