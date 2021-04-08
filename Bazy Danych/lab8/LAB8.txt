@@ -1,0 +1,863 @@
+
+--Zad 8.1a--
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "YEAR",
+st.salesterritoryname AS "Region"
+FROM OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN SalesTerritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY to_char(oh.orderdate,'yyyy'), st.salesterritoryname
+ORDER BY 1 DESC,2 ASC;
+
+
+--Zad 8.1b--
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month"
+FROM OrderHeader oh
+GROUP BY to_char(oh.orderdate,'yyyy'), to_char(oh.orderdate,'Month')
+ORDER BY 1, to_date(to_char(oh.orderdate,'Month'),'Month');
+
+--Zad 8.1c --
+
+SELECT
+pc.productcategoryname AS "Product Category",
+oc.channelname AS "Order Channel"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+INNER JOIN OrderChannel oc ON oc.channelkey=oh.channelkey
+GROUP BY pc.productcategoryname, oc.channelname
+ORDER BY 1,2;
+
+--Zad 8.1d --
+
+SELECT
+st.salesterritoryname AS "Region",
+c.countryname AS "Country",
+to_char(oh.orderdate,'yyyy') AS "Year"
+FROM OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN Salesterritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY st.salesterritoryname, c.countryname, to_char(oh.orderdate,'yyyy')
+ORDER BY 1,2,3;
+
+--Zad 8.1e --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "YEAR",
+st.salesterritoryname AS "Region",
+pc.productcategoryname AS "Product Category"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN Salesterritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY to_char(oh.orderdate,'yyyy'),st.salesterritoryname,pc.productcategoryname
+ORDER BY 1,2,3;
+
+-- Zad 8.1f --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+CASE
+WHEN to_char(oh.orderdate,'MM') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN('07','08','09') THEN 'Q3'
+WHEN to_char(oh.orderdate,'MM') IN('10','11','12') THEN 'Q4'
+END  AS "Quarter",
+c.countryname AS "Country",
+oc.channelname AS "Channel",
+p.productname AS "Product"
+FROM OrderHeader oh INNER JOIN OrderChannel oc ON oh.channelkey=oh.channelkey
+INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN OrderDetail od ON oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+GROUP BY to_char(oh.orderdate,'yyyy'), to_char(oh.orderdate,'MM'), c.countryname,oc.channelname,p.productname
+ORDER BY 1,2,3,4,5;
+
+
+
+-- Zad 8.2a --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month"
+FROM OrderHeader oh
+GROUP BY to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month'),
+ROLLUP(to_char(oh.orderdate,'Month'))
+ORDER BY 1,to_date(to_char(oh.orderdate,'Month'),'Month');
+
+
+
+-- Zad8.2b --
+
+SELECT
+pc.productcategoryname AS "Product Category",
+to_char(oh.orderdate,'yyyy') AS "Year"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON  oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+GROUP BY pc.productcategoryname,to_char(oh.orderdate,'yyyy'),
+CUBE(pc.productcategoryname,to_char(oh.orderdate,'yyyy'))
+ORDER BY 1 NULLS FIRST;
+
+
+-- Zad8.2c--
+
+SELECT
+c.countryname AS "Country",
+to_char(oh.orderdate,'yyyy') AS "Year"
+FROM OrderHeader oh INNER JOIN Country c ON oh.countrykey=c.countrykey
+GROUP BY c.countryname,to_char(oh.orderdate,'yyyy'),
+CUBE(c.countryname,to_char(oh.orderdate,'yyyy'))
+ORDER BY 1 NULLS FIRST,2;
+
+-- Zad 8.2d --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+oc.channelname AS "Channel",
+c.countryname AS "Country"
+FROM OrderHeader oh INNER JOIN OrderChannel oc ON oc.channelkey=oh.channelkey
+INNER JOIN Country c ON c.countrykey=oh.countrykey
+GROUP BY to_char(oh.orderdate,'yyyy'),oc.channelname,c.countryname,
+CUBE(to_char(oh.orderdate,'yyy'),oc.channelname,c.countryname)
+ORDER BY 1 NULLS FIRST,2 NULLS FIRST, 3 NULLS FIRST;
+
+-- Zad8.2e --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month",
+c.countryname AS "Country"
+FROM OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+GROUP BY to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month'),c.countryname,
+CUBE(to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month'))
+ORDER BY to_date(to_char(oh.orderdate,'Month'),'Month') NULLS FIRST,2,3;
+
+
+-- Zad8.3a--
+
+
+SELECT 
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh 
+WHERE to_char(oh.orderdate,'yyyy')='2019';
+
+
+-- Zad 8.3b--
+
+SELECT
+c.customerkey AS "Id",
+c.firstname AS "Imie",
+c.lastname AS "Nazwisko",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN Customer c ON c.customerkey=oh.customerkey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+GROUP BY c.customerkey,c.firstname,c.lastname
+ORDER BY 4 DESC;
+
+
+-- Zad8.3c --
+
+SELECT
+oh.orderkey AS "OrderKey",
+COUNT(*) AS "#Products"
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'yyyy')='2019' AND to_char(oh.orderdate,'mm') IN('01','02','03')
+GROUP BY oh.orderkey
+ORDER BY 1;
+
+
+-- Zad8.3d --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh
+GROUP BY to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month')
+ORDER BY 1,to_date(to_char(oh.orderdate,'Month'),'Month');
+
+
+
+-- Zad 8.3f --
+
+SELECT 
+st.salesterritoryname AS "Region",
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month"
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN SalesTerritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY st.salesterritoryname, to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month')
+ORDER BY 1,2,to_date(to_char(oh.orderdate,'Month'),'Month');
+
+
+-- Zad 8.3 g--
+
+SELECT
+st.salesterritoryname AS "Region",
+c.countryname AS "Country",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+INNER JOIN SalesTerritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY st.salesterritoryname,c.countryname
+ORDER BY 1,2;
+
+-- Zad 8.3h --
+
+SELECT 
+to_char(oh.orderdate,'yyyy') AS "YEAR",
+pc.productcategoryname AS "Product Category",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey 
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+GROUP BY to_char(oh.orderdate,'yyyy'),pc.productcategoryname
+ORDER BY 1,2;
+
+
+-- Zad 8.3i ---
+
+SELECT 
+pc.productcategoryname AS "Product Category",
+ps.productsubcategoryname AS "Product Subcategory",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON  oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+GROUP BY pc.productcategoryname,ps.productsubcategoryname
+ORDER BY 1,2;
+
+-- Zad 8.3j --
+SELECT
+c.countryname AS "Country",
+oc.channelname AS "Channel",
+COUNT(*) AS "#Orders"
+FROM OrderHeader oh INNER JOIN OrderChannel oc ON oh.channelkey=oc.channelkey
+INNER JOIN Country c ON c.countrykey=oh.countrykey
+GROUP BY c.countryname,oc.channelname
+ORDER BY 1;
+
+-- Zad 8.3k --
+SELECT
+c.customerkey AS "Id",
+c.firstname AS "Imie",
+c.lastname AS "Nazwisko",
+COUNT(*) AS "#Canceled"
+FROM OrderHeader oh INNER JOIN Customer c ON c.customerkey=oh.customerkey
+INNER JOIN OrderStatus os ON os.orderstatuskey=oh.orderstatuskey
+WHERE os.orderstatusname='Canceled'
+GROUP BY c.customerkey,c.firstname,c.lastname
+ORDER BY 4 DESC;
+
+-- Zad8.3l--
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryname AS "Country",
+COUNT(*) AS "#Customers"
+FROM  OrderHeader oh INNER JOIN Country c ON c.countrykey=oh.countrykey
+GROUP BY to_char(oh.orderdate,'yyyy'), c.countryname
+ORDER BY 1,2;
+
+-- Zad8.3m --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.customerkey AS "Id",
+c.lastname AS "Nazwisko",
+c.firstname AS "Imie",
+COUNT(DISTINCT od.productkey) AS "#Products"
+FROM Customer c INNER JOIN OrderHeader oh ON c.customerkey=oh.customerkey
+INNER JOIN OrderDetail od ON od.orderkey=oh.orderkey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+GROUP BY to_char(oh.orderdate,'yyyy'),c.customerkey,c.lastname,c.firstname
+ORDER BY 5 DESC;
+
+
+-- Zad8.3n --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+st.salesterritoryname AS "Region",
+c.countryname AS "Country",
+COUNT(*) AS "#Customers"
+FROM SalesTerritory st INNER JOIN Country c ON c.salesterritorykey=st.salesterritorykey
+INNER JOIN OrderHeader oh ON oh.countrykey=c.countrykey
+GROUP BY to_char(oh.orderdate,'yyyy'),st.salesterritoryname,c.countryname
+ORDER BY 1,2,3,4;
+
+
+-- Zad 8.4a --
+
+SELECT
+SUM(od.transactionprice*od.quantity) AS "Total Orders Value"
+FROM OrderDetail od;
+
+-- Zad 8.4b --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderDetail od INNER JOIN OrderHeader oh ON od.orderkey=oh.orderkey
+GROUP BY to_char(oh.orderdate,'yyyy')
+ORDER BY 1;
+
+-- Zad 8.4c --
+
+SELECT
+pc.productcategoryname AS "Product Category", 
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderHeader oh INNER JOIN OrderDetail od ON oh.orderkey=od.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+GROUP BY pc.productcategoryname,to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month')
+CUBE(to_char(oh.orderdate,'Month'))
+ORDER BY 1,2,to_date(to_char(oh.orderdate,'Month'),'Month') NULLS FIRST;
+
+
+-- Zad 8.4d --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "YEAR",
+c.countryname AS "Country",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM Country c INNER JOIN OrderHeader oh ON c.countrykey=oh.countrykey
+INNER JOIN OrderDetail od ON od.orderkey=oh.orderkey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryname
+ORDER BY 1 DESC,3 DESC;
+
+-- Zad 8.4e --
+SELECT
+pc.productcategoryname AS "Product category",
+to_char(oh.orderdate,'Month') AS "Month",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderChannel oc INNER JOIN OrderHeader oh ON oc.channelkey=oh.channelkey
+INNER JOIN OrderDetail od ON od.orderkey=oh.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN ProductSubcategory ps ON ps.productsubcategorykey=p.productsubcategorykey
+INNER JOIN ProductCategory pc ON pc.productcategorykey=ps.productcategorykey
+INNER JOIN OrderStatus os ON os.orderstatuskey=oh.orderstatuskey
+WHERE oc.channelname='Mobile application' AND to_char(oh.orderdate,'yyyy')='2019' AND
+os.orderstatusname='Finished'
+GROUP BY pc.productcategoryname,to_char(oh.orderdate,'Month')
+ORDER BY 3 ASC;
+
+-- Zad 8.4f --
+
+SELECT
+st.salesterritoryname AS "Region",
+c.countryname AS "Country",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderDetail od INNER JOIN OrderHeader oh ON oh.orderkey=od.orderkey
+INNER JOIN Country c ON c.countrykey=oh.countrykey 
+INNER JOIN SalesTerritory st ON st.salesterritorykey=c.salesterritorykey
+GROUP BY st.salesterritoryname, c.countryname
+ORDER BY 1 ASC,3 DESC;
+
+-- Zad 8.4g PYTANIE --
+
+SELECT
+c.countryname AS "Country",
+oc.channelname AS "Channel",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderChannel oc INNER JOIN OrderHeader oh ON oh.channelkey=oc.channelkey
+INNER JOIN OrderStatus os ON os.orderstatuskey=oh.orderstatuskey
+INNER JOIN Country c ON c.countrykey=oh.countrykey 
+INNER JOIN OrderDetail od ON od.orderkey=oh.orderkey
+GROUP BY c.countryname,oc.channelname
+ORDER BY 1 ASC, 3 DESC;
+
+
+-- Zad 8.4h --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+p.productname AS "Product",
+SUM(od.quantity) AS "#Items"
+FROM OrderDetail od INNER JOIN OrderHeader oh ON od.orderkey=oh.orderkey
+INNER JOIN Product p ON p.productkey=od.productkey
+GROUP BY to_char(oh.orderdate,'yyyy'),p.productname
+ORDER BY 1,3;
+
+-- Zad 8.4i --
+
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryname AS "Country",
+oc.channelname AS "Channel",
+p.productname AS "Product",
+SUM(od.quantity) AS "#Items"
+FROM OrderDetail od INNER JOIN Product p ON p.productkey=od.productkey
+INNER JOIN OrderHeader oh ON oh.orderkey=od.orderkey
+INNER JOIN OrderChannel oc ON oc.channelkey=oh.channelkey
+INNER JOIN Country c ON c.countrykey=oh.countrykey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryname,oc.channelname,p.productname
+ORDER BY 1,2,3,4;
+
+
+/* Zadanie 8.5 */
+
+--Zad 8.5a --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryName AS "Country",
+FLOOR(AVG(oh.deliverydate-oh.orderdate)) AS "#Avg Days"
+FROM OrderHeader oh INNER JOIN Country c
+ON oh.countryKey=c.countryKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryName
+ORDER BY 1,2;
+
+--Zad 8.5b --
+
+SELECT
+p.productName AS "Product",
+to_char(oh.orderdate,'yyyy') AS "Year",
+CASE 
+WHEN to_char(oh.orderdate,'MM') IN ('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN ('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN ('07','08','09') THEN 'Q3'
+WHEN to_char(oh.orderdate,'MM') IN ('10','11','12') THEN 'Q4'
+END AS "Quater",
+ROUND(AVG(od.transactionprice),2) AS "Avg Trans Price"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+GROUP BY p.productName,to_char(oh.orderdate,'yyyy'),
+CASE 
+WHEN to_char(oh.orderdate,'MM') IN ('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN ('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN ('07','08','09') THEN 'Q3'
+WHEN to_char(oh.orderdate,'MM') IN ('10','11','12') THEN 'Q4'
+END 
+ORDER BY 1,2,3;
+
+--Zad 8.5c --
+SELECT
+ps.productSubcategoryName AS "Product",
+to_char(oh.orderdate,'yyyy') AS "Year",
+ROUND(AVG(od.discountAmount),2) AS "Avg Discount"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE ps.productSubcategoryName LIKE '%Bikes%'
+GROUP BY ps.productSubcategoryName,to_char(oh.orderdate,'yyyy')
+ORDER BY 1,2;
+
+
+--Zad 8.5d --
+SELECT
+ps.productSubcategoryName AS "Product",
+to_char(oh.orderdate,'yyyy') AS "Year",
+ROUND(AVG(od.transactionprice),2) AS "Avg Trans Price"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE LOWER(ps.productSubcategoryName) LIKE '%frames%'
+GROUP BY ps.productSubcategoryName,to_char(oh.orderdate,'yyyy')
+ORDER BY 1,2;
+
+--Zad 8.5e --
+SELECT
+ps.productSubcategoryName AS "Product",
+to_char(oh.orderdate,'yyyy') AS "Year",
+CASE 
+WHEN to_char(oh.orderdate,'MM') IN ('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN ('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN ('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END AS "Quater",
+ROUND(AVG(od.transactionprice),2) AS "Avg Trans Price"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE ps.productSubcategoryName LIKE '%Bikes%'
+GROUP BY ps.productSubcategoryName,CUBE(to_char(oh.orderdate,'yyyy')),
+CASE 
+WHEN to_char(oh.orderdate,'MM') IN ('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN ('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN ('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END
+ORDER BY 1,2;
+
+/* Zadanie 8.6 */
+
+--Zad 8.6a --
+SELECT
+c.countryName AS "Country",
+to_char(oh.orderdate,'yyyy') AS "Year",
+MIN(to_char(oh.orderdate,'dd-mm-yyyy')) AS "First Order Date"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+GROUP BY c.countryName,to_char(oh.orderdate,'yyyy')
+ORDER BY 1 ASC,2 DESC;
+
+--Zad 8.6b --
+SELECT 
+c.customerKey AS "Customer ID",
+CONCAT(CONCAT(c.lastName,' '),c.firstName) AS "Customer Name",
+CASE
+WHEN to_char(oh.orderdate,'mm') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'mm') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'mm') IN('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END AS "Quater",
+MAX(to_char(oh.orderdate,'dd-mm-yyyy')) AS "Last Purchase Date"
+FROM Customer c INNER JOIN OrderHeader oh
+ON oh.customerKey=c.customerKey
+GROUP BY c.customerKey,CONCAT(CONCAT(c.lastName,' '),c.firstName) AS "Customer Name",
+CASE
+WHEN to_char(oh.orderdate,'mm') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'mm') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'mm') IN('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END 
+ORDER BY 2,3;
+
+--Zad 8.6c --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+MAX(od.discountAmount) AS "Max Discount Amount" 
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Bikes'
+GROUP BY to_char(oh.orderdate,'yyyy')
+ORDER BY 1;
+
+--Zad 8.6d --
+SELECT
+c.customerKey AS "Customer ID",
+c.lastName AS "LastName",
+c.firstName AS "FirstName",
+MAX(od.transactionprice) AS "Max Value"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+WHERE c.lastName='Alan'
+GROUP BY c.customerKey,c.lastname,c.firstname
+ORDER BY 1;
+
+
+--Zad 8.6e --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryName AS "Country",
+MAX(od.transactionprice) AS "Max Trans Price"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Bikes'
+GROUP BY CUBE(to_char(oh.orderdate,'yyyy'),c.countryName)
+ORDER BY 1,2;
+
+
+/* Zad 8.7 */
+
+--Zad 8.7a --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+ps.productSubcategoryName AS "Product",
+COUNT(distinct oh.customerKey) AS "#Customers",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE ps.productSubcategoryName IN ('Mountain Bikes','Touring Bikes','Road Bikes')
+GROUP BY to_char(oh.orderDate,'yyyy'),ps.productSubcategoryName
+ORDER BY 1,2;
+
+
+--Zad 8.7b --
+SELECT
+to_char(oh.orderDate,'yyyy') AS "Year",
+c.countryName AS "Country",
+pc.productCategoryName AS "Product",
+COUNT(oh.orderKey) AS "#Orders",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryName,pc.productCategoryName
+ORDER BY 1 DESC,2 ASC,5 DESC;
+
+--Zad 8.7c --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.customerKey AS "Customer ID",
+CONCAT(CONCAT(c.lastname,' '),c.firstname) AS "Customer Name",
+COUNT(oh.customerKey) AS "#Orders",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.customerKey,
+CONCAT(CONCAT(c.lastname,' '),c.firstname)
+ORDER BY 1 DESC,5 DESC;
+
+
+--Zad8.7d --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryName AS "Country",
+COUNT(oh.customerKey) AS "#Customers",
+SUM(od.transactionprice*od.quantity) AS "Total Value",
+ROUND(AVG(od.transactionprice*od.quantity),2) AS "Avg Customer Value"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryName
+ORDER BY 1,4;
+
+--Zad 8.7e --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month",
+st.salesTerritoryName AS "Region",
+COUNT(oh.customerKey) AS "#Customers",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM SalesTerritory st INNER JOIN Country c
+ON st.salesTerritoryKey=c.salesTerritoryKey
+INNER JOIN OrderHeader oh
+ON oh.countryKey=c.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),CUBE(to_char(oh.orderdate,'Month')),
+st.salesTerritoryName
+ORDER BY 1,to_date(to_char(oh.orderdate,'Month'),'Month'),3;
+
+--Zad 8.7f --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+oc.channelName AS "Channel",
+COUNT(oh.orderKey) AS "#Orders",
+SUM(od.transactionPrice*od.quantity) AS "Total Value",
+ROUND(AVG(od.transactionPrice*od.quantity),2) AS "Avg Order Value"
+FROM OrderChannel oc INNER JOIN OrderHeader oh
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),oc.channelName
+ORDER BY 1,5;
+
+/* Zadanie 8.8 */
+
+--Zad 8.8a --
+SELECT
+c.countryName AS "Country",
+COUNT(DISTINCT oh.customerKey) AS "#Customers"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+GROUP BY c.countryName
+HAVING COUNT(DISTINCT oh.customerKey) > 1500
+ORDER BY 1 DESC;
+
+--Zad 8.8b --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.customerKey AS "Customer Id",
+c.lastName AS "Last Name",
+c.firstName AS "First Name",
+SUM(od.transactionPrice*od.quantity) AS "Total Value"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.customerKey,c.lastName,c.firstName
+HAVING SUM(od.transactionPrice*od.quantity)>12000
+ORDER BY 1 DESC,5 DESC;
+
+--Zad 8.8c --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+oc.channelName AS "Channel",
+pm.paymentMethodName AS "Payment Method",
+COUNT(DISTINCT oh.customerKey) AS "#Customers"
+FROM OrderChannel oc INNER JOIN OrderHeader oh
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN PaymentMethod pm
+ON pm.paymentMethodKey=oh.paymentMethodKey
+GROUP BY to_char(oh.orderdate,'yyyy'),oc.channelName,pm.paymentMethodName
+HAVING COUNT(DISTINCT oh.customerKey)>1300
+ORDER BY 1,2,4;
+
+
+--Zad 8.8d --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "YEAR",
+p.productName AS "Product",
+COUNT(DISTINCT oh.customerKey) AS "#Customers"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+GROUP BY to_char(oh.orderdate,'yyyy'),p.productName
+HAVING COUNT(DISTINCT oh.customerKey)>1000
+ORDER BY 1 DESC,3 DESC;
+
+
+--Zad 8.8e --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name",
+COUNT(oh.orderKey) AS "#Orders",
+SUM(od.transactionprice*od.quantity) AS "Total Value"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKEy=oh.orderKey
+WHERE oc.channelName='Mobile application'
+GROUP BY to_char(oh.orderdate,'yyyy'),c.customerKey,c.lastName,c.firstName
+HAVING COUNT(oh.orderKey) > 20 AND SUM(od.transactionprice*od.quantity) > 800
+ORDER BY 1 DESC,5 DESC;
+
+--Zad 8.8f --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+CASE 
+WHEN to_char(oh.orderdate,'mm') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'mm') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'mm') IN('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END AS "Quater",
+oc.channelName AS "Channel",
+ROUND(SUM(od.transactionprice*od.quantity),2) AS "Total Value"
+FROM OrderChannel oc INNER JOIN OrderHeader oh
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+GROUP BY to_char(oh.orderdate,'yyyy'),
+CASE 
+WHEN to_char(oh.orderdate,'mm') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'mm') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'mm') IN('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END,
+oc.channelName
+HAVING SUM(od.transactionPrice*od.quantity) > 3000000
+ORDER BY 1,2;
+
+--Zad 8.8g --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryName AS "Country",
+p.productName AS "Product",
+COUNT(od.quantity) AS "#Items"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+GROUP BY to_char(oh.orderdate,'yyyy'),c.countryName,
+p.productName
+HAVING COUNT(od.quantity) > 500
+ORDER BY 1,2,4 DESC;
+
+--Zad 8.8h --
+SELECT
+to_char(oh.orderdate,'yyyy') AS "Year",
+to_char(oh.orderdate,'Month') AS "Month",
+oc.channelName AS "Channel",
+ROUND(AVG(od.transactionprice*od.quantity),2) AS "Avg Order Value"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+GROUP BY to_char(oh.orderdate,'yyyy'),to_char(oh.orderdate,'Month'),
+oc.channelName
+HAVING ROUND(AVG(od.transactionPrice*od.quantity)) > 2500
+ORDER BY 1,4;
+
+--Zad 8.8i --
+SELECT
+p.productName AS "Product",
+ROUND(AVG(oh.deliverydate-oh.orderdate),0) AS "#Days"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+GROUP BY p.productName
+HAVING AVG(oh.deliverydate-oh.orderdate)=7
+ORDER BY 1;
+
+
+--Zad 8.8j --
+SELECT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name",
+MIN(oh.orderdate) AS "First Order"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+GROUP BY c.customerKey,c.lastName,c.firstName
+HAVING MIN(oh.orderdate)=to_date('01-04-2019','DD-MM-YYYY')
+ORDER BY 1;
+
+
+--Zad 8.8k --
+SELECT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name",
+MIN(oh.orderdate) AS "First Order",
+MAX(oh.orderdate) AS "Last Order",
+MAX(oh.orderdate)-MIN(oh.orderdate) AS "#DiffDays"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+GROUP BY c.customerKey,c.lastName,c.firstName
+HAVING MAX(oh.orderdate)-MIN(oh.orderdate)>300
+ORDER BY 6 DESC;
