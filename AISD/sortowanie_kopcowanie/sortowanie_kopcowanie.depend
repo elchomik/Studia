@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1559673234 source:c:\users\ja\desktop\programowanie\sortowanie_kopcowanie\main.c
+	<stdio.h>
+	<stdlib.h>
+
