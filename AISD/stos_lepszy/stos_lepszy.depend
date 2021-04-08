@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1559494898 source:c:\users\ja\desktop\programowanie\stos_lepszy\main.c
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
