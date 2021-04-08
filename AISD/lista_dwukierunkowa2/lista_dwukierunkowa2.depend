@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1560022143 source:c:\users\ja\desktop\programowanie\lista_dwukierunkowa2\main.c
+	<stdio.h>
+	<stdlib.h>
+
