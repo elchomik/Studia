@@ -1,0 +1,713 @@
+
+--Zad 7.1a--
+SELECT DISTINCT
+pc.productCategoryName AS "Category Name",
+ps.productSubcategoryName AS "Subcategory Name"
+FROM ProductSubcategory ps INNER JOIN ProductCategory pc
+ON ps.productSubcategoryKey=pc.productCategoryKey
+ORDER BY 1 ASC,2 DESC;
+
+--Zad 7.1b--
+SELECT DISTINCT
+CONCAT(CONCAT(p.productCode,'-'),p.productName) AS "Product",
+ps.productSubcategoryName AS "Subcategory Name"
+FROM Product p INNER JOIN ProductSubcategory ps
+ON p.productSubcategoryKey=ps.productSubcategoryKey
+ORDER BY 1 ASC;
+
+--Zad 7.1c--
+SELECT DISTINCT 
+to_char(oh.orderdate,'yyyy') AS "Year",
+od.productKey AS "Product"
+FROM OrderDetail od INNER JOIN OrderHeader oh
+ON oh.orderKey=od.orderKey
+WHERE to_char(oh.orderdate,'yyyy') IN('2019','2020')
+ORDER BY 1 DESC,2 ASC;
+
+--Zad 7.1d --
+SELECT DISTINCT
+od.transactionPrice AS "Transaction Price",
+od.productKey AS "Product"
+FROM OrderDetail od INNER JOIN OrderHeader oh
+ON od.orderKey=oh.orderKey
+WHERE oh.orderdate BETWEEN date '2019-12-01' AND date '2019-12-24' AND oh.ChannelKey=2
+ORDER BY 1 DESC;
+
+/*Zad7.2 */
+
+--Zzad 7.2a --
+SELECT DISTINCT
+pm.paymentMethodName AS "Payment Method"
+FROM PaymentMethod pm INNER JOIN OrderHeader oh
+ON pm.paymentMethodKey=oh.paymentMethodKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+WHERE oc.channelName='Mobile application'
+ORDER BY 1;
+
+--Zad 7.2b --
+SELECT DISTINCT
+c.customerKey AS "Customer Key",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM OrderStatus os INNER JOIN OrderHeader oh
+ON os.orderStatusKey=oh.orderStatusKey
+INNER JOIN Customer c
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p 
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE ps.productSubcategoryName='Mountain Bikes' AND os.orderStatusName='Canceled'
+ORDER BY 1;
+
+
+--Zad 7.2c --
+SELECT DISTINCT
+c.customerKey AS "ID Klienta",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie",
+p.productCode AS "Kod Produktu"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p 
+ON p.productKey=od.productKey
+WHERE c.lastname='Alan'
+ORDER BY 1,4;
+
+--Zad 7.2d --
+SELECT DISTINCT
+dm.deliveryMethodName AS "Delivery Method"
+FROM DeliveryMethod dm INNER JOIN OrderHeader oh
+ON dm.deliveryMethodKey=oh.deliveryMethodKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE lower(p.productName) LIKE '%women's shorts%' OR lower(p.productName) LIKE '%men's shorts%'
+ORDER BY 1;
+
+
+--Zad 7.2e --
+SELECT DISTINCT
+to_char(oh.orderDate,'YYYY') AS "YEAR",
+st.salesTerritoryName AS "Sales Territory",
+CONCAT(CONCAT(p.productCode,'-'),p.productName) AS "Product"
+FROM OrderHeader oh INNER JOIN Country c
+ON c.countryKey=oh.countryKey 
+INNER JOIN SalesTerritory st 
+ON st.salesTerritoryKey=c.salesTerritoryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+ORDER BY 1 DESC,2 DESC,3 DESC;
+
+
+--Zad 7.2f--
+SELECT DISTINCT
+c.customerKey AS "ID Klienta",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKeay=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Bikes' AND to_char(oh.orderdate,'yyyy')='2019'
+ORDER BY 1;
+
+--Zad 7.2g --
+SELECT DISTINCT
+to_char(oh.orderDate,'yyyy') AS "YEAR",
+CASE 
+WHEN to_char(oh.orderdate,'MM') IN('01','02','03') THEN 'Q1'
+WHEN to_char(oh.orderdate,'MM') IN('04','05','06') THEN 'Q2'
+WHEN to_char(oh.orderdate,'MM') IN('07','08','09') THEN 'Q3'
+ELSE 'Q4'
+END  AS "Quater"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Bikes'
+ORDER BY 1 DESC,2 ASC;
+
+
+/* Zad 7.3 LEFT i RIGHT JOIN */
+
+--Zad 7.3a --
+SELECT DISTINCT
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM Customer c LEFT JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+WHERE oh.customerKey IS NULL
+ORDER BY 2,3;
+
+--Zad 7.3b --
+SELECT DISTINCT
+pm.paymentMethodName AS "Payment Method"
+FROM OrderHeader oh RIGHT JOIN PaymentMethod pm
+ON oh.paymentMathodKey=pm.paymentMethodKey
+WHERE pm.paymentMethodKey IS NULL
+ORDER BY 1;
+
+--Zad 7.3c --
+SELECT DISTINCT
+c.countryName AS "Kraj"
+FROM Country c LEFT JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+WHERE oh.countrykey IS NULL
+ORDER BY 1 ASC;
+
+--Zad 7.3d --
+SELECT DISTINCT
+p.productCode AS "Kod Produktu",
+p.productName AS "Nazwa Produktu"
+FROM OrderDetail od RIGHT JOIN Product p
+ON od.productKey=p.productKey
+WHERE p.productKey IS NULL
+ORDER BY 1;
+
+/Z Left Join/
+SELECT DISTINCT
+p.productCode AS "Code",
+p.productName AS "Name"
+FROM Product p LEFT JOIN OrderDetail od
+ON p.productKey=od.productKey
+WHERE p.productKey IS NULL
+ORDER BY 1;
+
+/*Zad 7.4 */
+
+--Zad 7.4a --
+SELECT DISTINCT
+c.countryName AS "Country",
+oc.channelName AS "Order Channel"
+FROM OrderHeader oh INNER JOIN OrderChannel oc
+ON oh.channelkey=oc.channelkey
+RIGHT JOIN Country c
+ON c.countrykey=oh.countrykey
+ORDER BY 1;
+
+--Zad 7.4b --
+SELECT DISTINCT
+oc.channelName AS "Channel",
+pm.paymentMethodName AS "Payment Method"
+FROM OrderChannel oc INNER JOIN OrderHeader oh
+ON oc.orderKey=oh.orderKey
+RIGHT JOIN PaymentMethod pm
+ON pm.paymentMethodKey=oh.paymentMethodKey
+ORDER BY 1;
+
+--Zad 7.4c --
+SELECT DISTINCT
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM OrderHeader oh INNER JOIN OrderChannel oc
+ON oh.channelKey=oc.channelKey
+RIGHT JOIN Customer c
+ON c.customerKey=oh.customerKey
+WHERE c.lastName='Alan'
+ORDER BY 1,2,3;
+
+/* Zad 7.5 */
+
+--Zad 7.5a --
+SELECT DISTINCT
+pm.paymentMethodName AS "Payment Method",
+dm.deliveryMethodName AS "Delivery Method"
+FROM OrderHeader oh RIGHT JOIN DeliveryMethod dm
+ON oh.deliveryMethodKey=dm.deliveryMethodKey
+FULL JOIN PaymentMethod pm 
+ON pm.paymentMethodKey=oh.paymentMethodKey
+WHERE oh.deliveryMethodKey IS NULL
+ORDER BY 1;
+
+--Zad 7.5b --
+SELECT DISTINCT
+p.productName AS "Product",
+c.countryName AS "Country"
+FROM Product p LEFT JOIN OrderDetail od
+ON p.productKey=od.productKey
+LEFT JOIN OrderHeader oh
+ON oh.orderKey=od.orderKey
+FULL JOIN Country c
+ON c.countryKey=oh.countryKey
+WHERE oh.orderKey IS NULL
+ORDER BY 1;
+
+--Zad 7.5c --
+SELECT DISTINCT
+c.customerKey AS "Klient ID",
+c.LastName AS "Nazwisko",
+c.firstName AS "Imie",
+oc.channelName AS "Kanał"
+FROM Customer c LEFT JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+FULL JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+WHERE oh.channelKey IS NULL
+ORDER BY 2,4;
+
+/* Zadanie 7.6*/
+
+--Zad 7.6a --
+SELECT DISTINCT
+c.countryName AS "Country",
+oc.channelName AS "Channel"
+FROM Country c CROSS JOIN OrderChannel oc
+LEFT JOIN OrderHeader oh
+ON oh.countryKey=c.countryKey
+AND oh.channelKey=oc.channelKey
+WHERE oh.orderKey IS NULL
+ORDER BY 1;
+
+--Zad 7.6b --
+SELECT DISTINCT
+pc.productCategoryName AS "Product Category",
+dm.deliveryMethodName AS "Delivery Method"
+FROM OrderHeader oh
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON p.productSubcategoryKey=ps.productSubcategoryKey
+RIGHT JOIN ProductCategory pc CROSS JOIN DeliveryMethod
+ON ps.productCategoryKey=pc.productCategoryKey
+AND oh.deliveryMethodKey=dm.deliveryMethodKey
+WHERE oh.orderKey IS NULL
+ORDER BY 1,2;
+
+--Zad 7.6c --
+SELECT DISTINCT
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM Customer c CROSS JOIN PaymentMethod pm
+LEFT JOIN OrderHeader oh
+ON oh.customerKey=c.customerKey
+AND oh.paymentMethodKey=pm.paymentMethodKey
+WHERE pm.paymentMethodName='PayPal'
+AND oh.orderKey IS NULL
+ORDER BY 2;
+
+--Zad 7.6d --
+SELECT DISTINCT
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+RIGHT JOIN ProductCategory pc
+CROSS JOIN Customer c
+ON pc.productCategoryKey=ps.productCategoryKey
+AND c.customerKey=oh.customerKey
+WHERE pc.productCategoryName='Bikes' AND oh.orderKey IS NULL
+ORDER BY 2;
+
+
+/* Zadanie 7.7 */
+
+--Zad 7.7a --
+SELECT 
+CASE
+WHEN to_char(oh.orderdate,'mm') IN('01','02','03') THEN 'Q1'
+END AS "Quater",
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderChannel oc 
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE oc.channelName='Mobile application' AND pc.productCategoryName='Bikes'
+AND extract(month from oh.orderdate) IN (1,2,3) 
+
+UNION
+
+SELECT 
+CASE
+WHEN to_char(oh.orderdate,'mm') IN ('07','08','09') THEN 'Q3'
+END AS "Quater",
+c.customerKey AS "Klient ID",
+c.lastName AS "Nazwisko",
+c.firstName AS "Imie"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE oc.channelName='Mobile application'
+AND pc.productCategoryName='Bikes'
+AND extract(month FROM oh.orderDate) IN(7,8,9)
+ORDER BY 1,3;
+
+--Zad 7.7b --
+
+SELECT DISTINCT
+c.countryName AS "Kraj",
+p.productName AS "Produkt",
+ps.productSubcategoryName "Podkategoria"
+FROM OrderHeader oh INNER JOIN Country c
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategoryCategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE c.countryName='USA'
+AND to_char(oh.orderdate,'yyyy')=2019
+
+UNION ALL
+
+SELECT DISTINCT
+c.countryName AS "Kraj", 
+p.productName AS "Product",
+p.productSubcategoryName AS "Product Subcategory"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Country c
+ON c.coutnryKey=oh.countryKey
+INNER JOIN Product p 
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+ORDER BY 1,2;
+
+
+--Zad 7.7c --
+SELECT DISTINCT
+co.countryName AS "Country",
+to_char(oh.orderdate,'Month') AS "Month",
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name",
+p.productName AS "Product"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN Country co
+ON co.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p 
+ON p.productKey=od.productKey
+WHERE co.countryName IN ('USA','Canada') AND
+oh.orderdate  BETWEEN  date '2019-04-01' AND  date '2019-05-31'
+ORDER BY 1,2,3,5;
+
+/* Zadanie 7.8 */
+
+--Zad 7.8a --
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od 
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+AND LOWER(p.productName) LIKE '%mountain%'
+
+INTERSECT
+
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+AND LOWER(p.productName) LIKE '%road%'
+ORDER BY 2; 
+
+
+--Zad 7.8b --
+SELECT DISTINCT 
+p.productName AS "Product"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE c.countryName='United States'
+ 
+INTERSECT
+
+SELECT DISTINCT
+p.productName AS "Product"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE c.countryName='Canada'
+ORDER BY 1;
+
+
+--Zad 7.8c --
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+
+INTERSECT
+
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+WHERE to_char(oh.orderdate,'yyyy')='2020'
+ORDER BY 1;
+
+--Zad 7.8d --
+SELECT DISTINCT
+c.countryName AS "Country"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE p.productName='Rear Brakes'
+
+INTERSECT
+
+SELECT DISTINCT
+c.countryName AS "Country"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE p.productName='Front Brakes'
+ORDER BY 1;
+
+
+--Zad 7.8e --
+SELECT DISTINCT 
+pm.paymentMethodName AS "Payment Method"
+FROM PaymentMethod pm INNER JOIN OrderHeader oh
+ON pm.paymentMethodKey=oh.paymentMethodKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Bikes'
+
+INTERSECT
+
+SELECT DISTINCT
+pm.paymentMethodName AS "Payment Method"
+FROM PaymentMethod pm INNER JOIN OrderHeader oh
+ON pm.paymentMethodKey=oh.paymentMethodKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+INNER JOIN ProductCategory pc
+ON pc.productCategoryKey=ps.productCategoryKey
+WHERE pc.productCategoryName='Accessories'
+ORDER BY 1;
+
+
+/*Zadanie 7.9 */
+
+--Zad 7.9a--
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE ps.productSubcategoryName='Mountain Bikes'
+
+MINUS
+
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderDetail od
+ON od.orderKey=oh.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+INNER JOIN ProductSubcategory ps
+ON ps.productSubcategoryKey=p.productSubcategoryKey
+WHERE p.productName='Mountain Tire'
+ORDER BY 2;
+
+
+--Zad 7.9b --
+SELECT DISTINCT
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeadr oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+WHERE oc.channelName='Mobile application'
+
+MINUS
+
+SELECT DISTINCT 
+c.customerKey AS "Customer ID",
+c.lastName AS "Last Name",
+c.firstName AS "First Name"
+FROM Customer c INNER JOIN OrderHeader oh
+ON c.customerKey=oh.customerKey
+INNER JOIN OrderChannel oc
+ON oc.channelKey=oh.channelKey
+WHERE oc.channelName IN ('Web page','Mobile web page')
+ORDER BY 2;
+
+
+--Zad 7.9c --
+SELECT DISTINCT
+c.countryName AS "Country",
+pm.paymentMethodName AS "PaymentMethod"
+FROM Country c CROSS JOIN PaymentMethod pm
+
+MINUS 
+
+SELECT DISTINCT
+c.countryName AS "Country",
+pm.paymentMethodName AS "Payment Method"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+INNER JOIN PaymentMethod pm
+ON pm.paymentMethodKey=oh.paymentMethodKey
+ORDER BY 1 ASC;
+
+--Zad 7.9d --
+
+SELECT DISTINCT
+c.countryName AS "Country"
+FROM Country c INNER JOIN OrderHeader oh
+ON c.countryKey=oh.countryKey
+
+MINUS
+
+SELECT DISTINCT
+c.countryName AS "Country"
+FROM Country c INNER JOIN City ci
+ON c.countryKey=ci.countryKey
+INNER JOIN Customer cu
+ON cu.cityKey=ci.cityKey
+INNER JOIN OrderHeader oh
+ON cu.customerKey=oh.customerKey
+ORDER BY 1;
+
+
+--Zad 7.9e --
+SELECT DISTINCT 
+p.productName AS "Product"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE to_char(oh.orderdate,'yyyy')='2019'
+
+MINUS 
+
+SELECT DISTINCT
+p.productName AS "Product"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+WHERE to_char(oh.orderdate,'yyyy')='2020'
+ORDER BY 1;
+
+
+--Zad 7.9f --
+SELECT DISTINCT 
+to_char(oh.orderdate,'yyyy') AS "Year",
+c.countryName AS "Country",
+p.productName AS "Product"
+FROM OrderHeader oh CROSS JOIN Product p
+CROSS JOIN Country c
+
+MINUS
+
+SELECT DISTINCT
+to_char(oh.orderdate,'yyyy') AS "Year"
+FROM OrderHeader oh INNER JOIN OrderDetail od
+ON oh.orderKey=od.orderKey
+INNER JOIN Country c
+ON c.countryKey=oh.countryKey
+INNER JOIN Product p
+ON p.productKey=od.productKey
+ORDER BY 1,2,3;
+
