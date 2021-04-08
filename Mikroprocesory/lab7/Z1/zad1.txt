@@ -1,0 +1,204 @@
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+
+#define F_CPU 1000000UL //ustawienie częstotliwości na 1Mhz
+#define LCD_DDR DDRA
+#define LCD_Port PORTA
+#define RS PA0
+#define EN PA1
+
+
+
+uint8_t kolumny[]={16,32,64,128}; //tablica zawierające dane do sterowania multipleksowego kolumnami klawiatury
+volatile uint8_t counter; //zmienne operujące na tablicy kolumn pozwalająca sterować multipleksowo kolumnami
+
+uint8_t poprzedni=0,ile_cykli=0;// zmienna odpowiadająca za poprzednio wykryty przycisk, oraz ile_cykli sprawdza nam czy wybrany inny przycisk czy jest cały czas ten sam
+
+
+uint8_t wiersz=0;
+volatile uint8_t licznik; //zmienna pomocnicza pozwalająca na wprowadzenie tylko 16 cyfr
+
+
+//Tablica pomocnia składająca sie ze znaków znajdujących sie na klawiature
+//wykorzystuje ją w funkcji dekodującej dzięki której po wykryciu przycisku
+//jestem w stanie znaleźć odpowiedni znak i wyświetlić go na klawiaturze
+
+const char keypad[4][4]={
+{'U','1','2','3'},
+{'D','4','5','6'},
+{'R','7','8','9'},
+{'L','C','0','E'}
+
+};
+
+//Funkcja wydająca polecenia do wyświetlacza
+//Opis tej funkcji wykonałem w zadaniu 8
+void executeCommand(unsigned char command){
+
+LCD_Port=(LCD_Port & 0x0F) |( command & 0xF0);
+
+LCD_Port&=~(1<<RS);
+
+LCD_Port|=(1<<EN);
+_delay_us(1);
+LCD_Port&=~(1<<EN);
+_delay_us(40);
+
+LCD_Port=(LCD_Port & 0x0F) | ((command<<4)&0xF0);
+LCD_Port|=(1<<EN);
+_delay_us(1);
+LCD_Port&=~(1<<EN);
+_delay_us(40);
+
+}
+
+
+//Funkcja wyświetlająca znak na wyświetlaczu
+//szczegółowy opis znajuduje sie w zadaniu 8
+void charOnLCD(unsigned char data){
+
+LCD_Port=(LCD_Port & 0x0F) | (data & 0xF0);
+
+LCD_Port|=(1<<RS);
+LCD_Port|=(1<<EN);
+_delay_us(1);
+LCD_Port&=~(1<<EN);
+_delay_us(40);
+
+LCD_Port=(LCD_Port &0x0F) | ((data<<4)&0xF0);
+LCD_Port|=(1<<EN);
+_delay_us(1);
+LCD_Port&=~(1<<EN);
+_delay_us(40);
+
+}
+
+
+//Inicjalizacja wyświetlacza wysłanie odpowiednich komend
+//Robimy dokładnie to samo co w LAB8
+void InitLCD(void){
+
+LCD_DDR=0xff;
+_delay_ms(20);
+
+executeCommand(0x02);
+executeCommand(0x28);
+executeCommand(0x0C);
+executeCommand(0x06);
+executeCommand(0x01);
+
+_delay_ms(2);
+
+}
+
+
+//Funkcja czyszcząca wyświetlacz
+void clearDisplay(void){
+
+executeCommand(0x01);
+_delay_ms(2);
+
+
+}
+
+
+int main(void){
+
+InitLCD(); //wywołanie funkcji inicjalizującej wyświetlacz
+
+
+
+DDRB=0xF0; // ustawienie 4 lini jako wyjścia F i 4 jako wejścia 0
+PORTB=0xF0; //podciąganie
+
+TCCR0|=(1<<CS00)|(1<<CS02) |(1<<WGM01); //ustawienie TIMER0 z preskalerem 1024
+TIMSK|=(1<<OCIE0); //umożliwienie obsługi przerwań
+OCR0=13; //reakcja nie dłuższa niż 40 ms
+sei();
+
+while(1){}
+
+
+}
+
+
+ISR(TIMER0_COMP_vect){
+
+
+if((PINB&0x0f)!=0x00){ //sprawdzamy czy wciśnięty klawisz
+wiersz=PINB&0x0f; //jeśli tak to podstawiamy pod wiersz wartość zczytaną z PINu
+
+}
+
+
+if(++counter>3) //sprawdzamy czy 
+counter=0;
+uint8_t odczyt=kolumny[counter]; //odczytujemy w, której kolumnie znajduje się dany klawisz
+PORTB=odczyt; //wystawiamy na PORTB w której kolumnie nastąpiło wciśnięcie
+
+
+
+if(wiersz!=poprzedni ){ //sprawdzamy czy obecny klawisz!=poprzedniego  jeśli tak wywołujemy funkcję dekodującą
+uncode(wiersz,odczyt); //funkcja pozwalająca na odczytanie który znak wciśnięto
+}
+
+if(wiersz!=poprzedni){ //jeśli obecnie wciśnięty klawisz != poprzedniego
+ poprzedni=wiersz; //to podstawiamy za poprzedni obecny
+ ile_cykli=0; //zerujemy zmienną ile_cykli
+}
+else ile_cykli++; //w przeciwnym wypadku zwiększamy tą zmienną
+
+
+if(ile_cykli>4){
+ile_cykli=0; //jeśli zmienna osiągnie wartość 4 tzn że żaden inny klawisz nie był wciskany
+
+}
+
+
+}
+
+//Funkcja służąca do wyświetlania odpowieniego klawisza
+void uncode(uint8_t code,uint8_t code2){
+cli(); //zablokowanie występowania przerwań
+
+uint8_t older=(code2>>4)&0x0f; //przesunięcie zmiennej code2 odpowiadającej za kolumny o 4 pozycje w prawo
+uint8_t lower=code&0x0f; //zmienna odpowiadająca za wiersze
+
+
+//w poniższych warunkach sprawdzamy czy zmienne odpowiadające za wiersze i kolumny z tablicy
+//odczytującej są w zakresie 0 do 3 ponieważ mamy tablicę 4x4 to nasze indeksy w tablicy muszą byc w zakresie od 0 do 3
+//natowmiast zmienne mogą przyjmować wartości od 0x00 do 0x08
+//w celu poprawnego odczytywania jeśli osiągniemy wartość 0x08 podstawiamy pod zmienna older wartosc=0x03
+//z tego będziemy wiedzieć, że nasz indeks wynosi 3
+//w przeciwnym wypadku każdą inną wartość będziemy przesuwać 0 bitowo o 1 w prawo dzięki temu
+//jeśli wystąpi 0x04 to w indeksie będzie to wartość 0x02 jeśli wystąpi wartość 0x02 to otrzymamy indeks 0x01
+//a jeśli wartość 0x01 to otrzymamy indeks 0x00
+
+
+if(older==0x08) older=0x03; //jeśli osiągniemy wartośc 0x08 to podstawiamy wartość 0x03
+else 
+older=older>>1; //w przeciwny wypadku przesuwamy zmienna odpowiadająca z kolumny o 1 w prawo
+
+if(lower==0x08) lower=0x03; //jeśli osiągniemy wartość 0x08 to podstawiamy wartość 0x03
+else 
+lower=lower>>1; //w przeciwnym wypadku przesuwamy zmienna o 1 w prawo
+
+
+if(keypad[lower][older]=='C') //sprawdzamy czy wartość z tablicy wynosi 'C' jeśli tak czyścimy wyświetlacz
+executeCommand(0x01);
+
+
+//Sprawdzamy czy wciśnięty klawisz jest cyfrą jeśli tak to wyświetlamy go na ekranie
+
+else if((keypad[lower][older]!='R') && (keypad[lower][older]!='U') && (keypad[lower][older]!='L') && (keypad[lower][older]!='D') && (keypad[lower][older]!='E'))
+{
+
+	if(licznik<16) //jeśli osiągniemy wartość mniejszą od wartości maksymalnej wyświetlanej w wierszu to wypisujemy cyfrę
+	charOnLCD(keypad[lower][older]);
+	licznik++;
+}
+
+sei(); //odblokowanie występowania przerwań
+}
+
