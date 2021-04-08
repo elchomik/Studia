@@ -1,0 +1,262 @@
+
+--Zadanie 6.1a --
+
+SELECT * FROM Customer;
+
+--6.1 b--
+
+SELECT CityName,CityKey,CountryKey FROM City;
+
+--Zad 6.2 a--
+
+Select CityName AS "City Full Name"
+FROM City;
+
+--Zad 6.2 b--
+Select CountryName AS "Country Name",CountryCode AS "Country Code" FROM Country;
+
+--Zad 6.3 a--
+SELECT DISTINCT CityKey AS "ID CITY" 
+FROM Customer;
+
+-- Zad 6.3 b--
+SELECT DISTINCT FirstName,LastName 
+FROM Customer;
+
+-- Zad 6.4 a --
+SELECT concat(concat(countryname,' '),countrycode) AS "Country"
+FROM Country
+
+--Zad 6.4 b oraz 6.4 c--
+SELECT CountryName AS "Country"
+CASE 
+WHEN
+CountryName='United States' or CountryName='Canda' THEN 'North America'
+ELSE 'Other continent'
+FROM Country;
+
+--Zad 6.5 a --
+
+SELECT DISTINCT
+to_char(orderdate,'yyyy') AS "Order Year"
+FROM OrderHeader;
+
+--Zad 6.5 b--
+SELECT DISTINCT
+to_char(orderdate,'yyyy') AS "Order Year",
+to_char(orderdate,'Month') AS "Order Month Name"
+FROM OrderHeader;
+
+--Zad 6.5 c--
+SELECT DISTINCT
+to_char(orderdate,'yyyy') AS "Order Year",
+to_char(orderdate,'Day') AS "Order Day Name of Week"
+FROM OrderHeader;
+
+--Zad 6.6 a--
+SELECT DISTINCT
+to_char(oh.orderdate,'yyyy') AS "Order Year"
+FROM OrderHeader oh
+ORDER BY 1 DESC;
+
+--Zad 6.6 b--
+SELECT DISTINCT
+to_char(oh.orderdate,'yyyy') AS "Order Year",
+to_char(oh.orderdate,'Month') AS "Order Month"
+FROM OrderHeader oh
+ORDER BY 1 DESC,to_date(to_char(oh.orderdate,'Month'),'Month');
+
+-- Zad 6.7 a--
+SELECT DISTINCT
+oh.customerkey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'yyyy')='2019';
+
+--Zad 6.7 b--
+SELECT DISTINCT
+oh.countrykey
+FROM OrderHeader oh
+where to_char(oh.orderdate,'d')=7;
+
+--Zad 6.7c--
+SELECT DISTINCT
+oh.customerkey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'MM-yyyy')='06-2019';
+
+--Zad 6.7d--
+SELECT DISTINCT
+od.orderkey
+FROM OrderDetail od
+WHERE od.productkey=217
+ORDER BY 1 ASC;
+
+--Zad 6.7e--
+SELECT 
+od.productkey
+FROM OrderDetail od
+WHERE od.transactionprice=od.catalogprice
+ORDER BY 1;
+
+--Zad 6.7f--
+SELECT DISTINCT
+od.orderkey
+FROM OrderDetail od
+WHERE od.productkey=483 AND od.transactionprice>360
+ORDER BY 1;
+
+--Zad 6.8a--
+SELECT DISTINCT
+oh.channelkey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'D') IN(1,7);
+
+--Zad 6.8b--
+SELECT DISTINCT
+oh.paymentMethodKey
+FROM OrderHeader oh
+WHERE oh.countrykey IN(6);
+
+--Zad 6.8c--
+SELECT DISTINCT
+od.orderkey
+FROM OrderDetail od
+WHERE od.productkey IN(483,528);
+
+--Zad 6.8d --
+SELECT DISTINCT
+p.ProductCode
+FROM Prodcut p
+WHERE p.productsubcategorykey IN(1,12)
+ORDER BY 1;
+
+--Zad 6.8e --
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE p.ProductCode IN('RF-9198','CH-0234');
+
+--Zad 6.9a --
+SELECT DISTINCT
+oh.customerkey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'YYYY') BETWEEN '2017' AND '2019'
+ORDER BY 1;
+
+--Zad 6.9b--
+SELECT DISTINCT
+oh.customerkey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'dd-MM-yyyy') BETWEEN '01-07.2019' AND '30-09.2019'
+ORDER BY 1;
+
+--Zad 6.9c --
+SELECT DISTINCT
+od.productkey
+FROM OrderDetail od
+WHERE od.transactionprice BETWEEN 1000 AND 3000
+ORDER BY 1;
+
+--Zad 6.10a --
+SELECT DISTINCT
+ps.productsubcategoryname
+FROM ProductSubcategory ps
+WHERE lower(ps.productSubcategoryName) LIKE '%mountain%'
+ORDER BY 1;
+
+--Zad 6.10b--
+SELECT DISTINCT
+p.ProductName
+FROM Product p
+WHERE lower(p.ProductName) LIKE '%helmet%'
+ORDER BY 1;
+
+--Zad 6.10c--
+SELECT DISTINCT
+p.productName
+FROM Product p
+WHERE lower(p.productname) LIKE 'women%'
+ORDER BY 1;
+
+--Zad 6.11a--
+SELECT DISTINCT
+oh.orderKey,
+oh.orderDate,
+FROM OrderHeader oh
+WHERE oh.deliveryDate IS NULL
+ORDER BY 2;
+
+--Zad 6.12a--
+SELECT DISTINCT
+oh.channelKey
+FROM OrderHeader oh
+WHERE to_char(oh.orderdate,'yyyy')='2019' AND oh.countrykey=1
+ORDER BY 1;
+
+--Zad 6.12b --
+SELECT DISTINCT
+oh.countrykey AS "Country",
+to_char(oh.orderdate,'YYYY') AS "YEAR",
+to_char(oh.orderdate,'Month') AS "Month"
+FROM OrderHeader oh
+WHERE oh.orderdate BETWEEN date '2019-05-01' AND date '2019-06-30'
+AND oh.channelKey=2
+ORDER BY 2,3,1;
+
+--Zad 6.12c --
+SELECT DISTINCT
+oh.paymentMethodKey
+FROM OrderHeader oh
+WHERE oh.orderdate BETWEEN date '2018-12-01' AND date '2018-12-24'
+AND oh.paymentMethodKey=2 OR oh.paymentMethodKey=3
+ORDER BY 1;
+
+--Zad 6.12d --
+SELECT DISTINCT
+oh.customerkey
+FROM OrderHeader oh
+WHERE oh.orderdate BETWEEN date '2019-07-01' AND date '2019-09-30'
+AND oh.countrykey=3 AND oh.deliverycost=0 AND oh.deliverymethodkey=2
+ORDER BY 1;
+
+--Zad 6.13 a--
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexp_like(p.productname,'\d')
+ORDER BY 1;
+
+--Zad 6.13b --
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexp_like(p.productname,'[-,]+')
+ORDER BY 1;
+
+--Zad 6.13c--
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexep_like(p.productname,'$\d')
+ORDER BY 1;
+
+--Zad 6.13d --
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexp_like(p.productname,'\s(S|M|L|XL)$\s(S|M|L|XL)\s')
+ORDER BY 1;
+
+--Zad 6.13e --
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexp_like(p.productname,'Front Wheel | Rear Wheel')
+ORDER BY 1;
+
+--Zad 6.13f--
+SELECT DISTINCT
+p.productname
+FROM Product p
+WHERE regexp_like(p.productname,'(Mountain | Road)\s.+\sTube')
+ORDER BY 1;
