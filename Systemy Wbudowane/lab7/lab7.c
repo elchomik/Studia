@@ -39,9 +39,9 @@ void enableInterrupt(); //zdefiniowanie prototypu funkcji obsługującej zezwole
 void potencjometr(); //funkcja do obsługi potencjometru
 void termistor(); //funkcja do obsługi termistora
 void aktualnyCzas(); //funkcja pomocnicza dla ustawiania aktualnego czasu
-void setHours(int hours,int setHours); //ustawienie godziny
-void setMinutes(int minutes,int setMinutes); //ustawienie minut
-void setSeconds(int seconds,int setSeconds);
+void setHoursFunction(int hours,int setHours); //ustawienie godziny
+void setMinutesFunction(int minutes,int setMinutes); //ustawienie minut
+void setSecondsFunction(int seconds,int setSeconds);
 int position=0; //zmienna pomocnicza dla głownego menu
 int subposition=0; //zmienna pomocnicza dla menu pomocniczego
 float sredniaPotencjometr=0;
@@ -73,7 +73,7 @@ int main(){
 	
 	enableInterrupt(); //wywołanie funkcji pozwalającej na globalne zezwolenie ma przerwania
 	
-	int subposition=0; //zmienna pomocnicza dla menu mniejszego
+	
 	
       InitLCD(); //ustawienie wyświetlacza
 	  initADC(); //inicjalizacja ADC
@@ -307,34 +307,34 @@ void aktualnyCzas(){
 	while((PIOB_PDSR&ENTER)!=0){ //dopóki nie wciśnięto klawisza Enter
 		//ustawienie godziny
 		setHours=1; //obecnie ustawiamy godzinę
-		setHours(hours,setHours); //wywołanie funkcji ustaw godzinę
+		setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godzinę
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setHours==1){
 			setHours=0; //przechodzimy na prawo ustawiamy minuty
 			setMinutes=1; //obecnie ustawiamy minuty
-			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+			setMinutesFunction(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setHours==1){
 			setHours=0; //nie ustawiamy już godzin
 			setSeconds=1; //ustawiamy sekundy
-			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
+			setSecondsFunction(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
 		}
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setMinutes==1){
 			setMinutes=0; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=1; //obecnie ustawiamy minuty
-			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
+			setSecondsFunction(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setHours=1; //nie ustawiamy już godzin
-			setSMinutes=0; //ustawiamy sekundy
-			setHours(hours,setHours); //wywołanie funkcji ustaw godzine
+			setMinutes=0; //ustawiamy sekundy
+			setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godzine
 			
 		}
 		
@@ -342,14 +342,14 @@ void aktualnyCzas(){
 		if((PIOA_PDSR&RIGHT)==0 && setSeconds==1){
 			setHours=1; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=0; //obecnie ustawiamy minuty
-			setHours(hours,setHours); //wywołanie funkcji ustaw godziny
+			setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godziny
 						
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setMinutes=1; //nie ustawiamy już godzin
 			setSeconds=0; //ustawiamy sekundy
-			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+			setMinutesFunction(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 					
 		}
 	
@@ -374,7 +374,7 @@ void aktualnyCzas(){
 	
 }
 
-void setHours(int hours,int setHours){
+void setHoursFunction(int hours,int setHours){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setHours==1){
 			
 		
@@ -417,7 +417,7 @@ void setHours(int hours,int setHours){
 }
 }
 
-void setMinutes(int minutes,int setMinutes){
+void setMinutesFunction(int minutes,int setMinutes){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setMinutes==1){
 			
 		
@@ -461,7 +461,7 @@ void setMinutes(int minutes,int setMinutes){
 			}
 }
 
-void setSeconds(int seconds,int setSeconds){
+void setSecondsFunction(int seconds,int setSeconds){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setSeconds==1){
 			
 		
@@ -594,34 +594,34 @@ void czasomierz(){
 	while((PIOB_PDSR&ENTER)!=0){ //dopóki nie wciśnięto klawisza Enter
 		//ustawienie godziny
 		setHours=1; //obecnie ustawiamy godzinę
-		setHours(hours,setHours); //wywołanie funkcji ustaw godzinę
+		setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godzinę
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setHours==1){
 			setHours=0; //przechodzimy na prawo ustawiamy minuty
 			setMinutes=1; //obecnie ustawiamy minuty
-			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+			setMinutesFunction(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setHours==1){
 			setHours=0; //nie ustawiamy już godzin
 			setSeconds=1; //ustawiamy sekundy
-			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
+			setSecondsFunction(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
 		}
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setMinutes==1){
 			setMinutes=0; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=1; //obecnie ustawiamy minuty
-			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
+			setSecondsFunction(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setHours=1; //nie ustawiamy już godzin
-			setSMinutes=0; //ustawiamy sekundy
-			setHours(hours,setHours); //wywołanie funkcji ustaw godzine
+			setMinutes=0; //ustawiamy sekundy
+			setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godzine
 			
 		}
 		
@@ -629,14 +629,14 @@ void czasomierz(){
 		if((PIOA_PDSR&RIGHT)==0 && setSeconds==1){
 			setHours=1; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=0; //obecnie ustawiamy minuty
-			setHours(hours,setHours); //wywołanie funkcji ustaw godziny
+			setHoursFunction(hours,setHours); //wywołanie funkcji ustaw godziny
 						
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setMinutes=1; //nie ustawiamy już godzin
 			setSeconds=0; //ustawiamy sekundy
-			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+			setMinutesFunction(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 					
 		}
 	
