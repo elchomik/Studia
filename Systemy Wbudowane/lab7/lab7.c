@@ -2,6 +2,7 @@
 #include <lcd.h>
 #include <acd.h>
 #include <bmp.h>
+#include <bits.h>
 #define LCD_BACKLIGHT PIOB_SODR_P20 //definicja podświetlenia LCD
 #define ENTER PIOB_SODR_P24 //definicja przycisku SW1
 #define RESET PIOB_SODR_P25 //definicja przycisku SW2
@@ -38,9 +39,9 @@ void enableInterrupt(); //zdefiniowanie prototypu funkcji obsługującej zezwole
 void potencjometr(); //funkcja do obsługi potencjometru
 void termistor(); //funkcja do obsługi termistora
 void aktualnyCzas(); //funkcja pomocnicza dla ustawiania aktualnego czasu
-void setHours(); //ustawienie godziny
-void setMinutes(); //ustawienie minut
-void setSeconds();
+void setHours(int hours,int setHours); //ustawienie godziny
+void setMinutes(int minutes,int setMinutes); //ustawienie minut
+void setSeconds(int seconds,int setSeconds);
 int position=0; //zmienna pomocnicza dla głownego menu
 int subposition=0; //zmienna pomocnicza dla menu pomocniczego
 float sredniaPotencjometr=0;
@@ -167,6 +168,8 @@ int main(){
 				
 				Backlight(1); //włączenie podświetlenia
 				subposition=4; //ustawienie wartości subposition na 4 aby reagować na stoper
+				stoper(); //wywołanie funkcji stopera
+				Backlight(0); //wyłączenie podświetlenia 
 			}
 				
 			if(position==40 && ((PIOB_PDSR&ENTER)==0 && subposition==2){
@@ -175,7 +178,8 @@ int main(){
 				PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 				
 				Backlight(1); //włączenie podświetlenia
-				//wywołanie funkcji Czasomierz
+				czasomierz();
+				Backlight(0);
 			}
 				
 			}
@@ -297,37 +301,40 @@ void aktualnyCzas(){
 	LCDPutStr("Ustaw godzinę ",120,20,SMALL,WHITE,BLACK);
 	LCDPutStr("Zatwierdź klawiszem SW_1",100,20,SMALL,WHITE,BLACK);
 	LCDPutStr("00:00:00",65,40,LARGE,WHITE,BLACK); //ustawienie aktualnego czasu jako 00:00:00
-	while((PIOB_PDSR&ENTER)!=0){ //dopóki nie wciśnięto klawisza ESCAPE
+	
+	while((PIOB_PDSR&ESCAPE)!=0){ //dopóki nie wciśnięto klawisza ESCAPE
+	
+	while((PIOB_PDSR&ENTER)!=0){ //dopóki nie wciśnięto klawisza Enter
 		//ustawienie godziny
 		setHours=1; //obecnie ustawiamy godzinę
-		setHours(); //wywołanie funkcji ustaw godzinę
+		setHours(hours,setHours); //wywołanie funkcji ustaw godzinę
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setHours==1){
 			setHours=0; //przechodzimy na prawo ustawiamy minuty
 			setMinutes=1; //obecnie ustawiamy minuty
-			setMinutes(); //wywołanie funkcji ustaw minuty
+			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setHours==1){
 			setHours=0; //nie ustawiamy już godzin
 			setSeconds=1; //ustawiamy sekundy
-			setSeconds(); //wywołanie funkcji ustaw seknudy
+			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
 		}
 	
 	
 		if((PIOA_PDSR&RIGHT)==0 && setMinutes==1){
 			setMinutes=0; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=1; //obecnie ustawiamy minuty
-			setSeconds(); //wywołanie funkcji ustaw sekundy			
+			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
 			
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setHours=1; //nie ustawiamy już godzin
 			setSMinutes=0; //ustawiamy sekundy
-			setHours(); //wywołanie funkcji ustaw godzine
+			setHours(hours,setHours); //wywołanie funkcji ustaw godzine
 			
 		}
 		
@@ -335,14 +342,14 @@ void aktualnyCzas(){
 		if((PIOA_PDSR&RIGHT)==0 && setSeconds==1){
 			setHours=1; //przechodzimy na prawo ustawiamy minuty
 			setSeconds=0; //obecnie ustawiamy minuty
-			setHours(); //wywołanie funkcji ustaw godziny
+			setHours(hours,setHours); //wywołanie funkcji ustaw godziny
 						
 		}
 		
 		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
 			setMinutes=1; //nie ustawiamy już godzin
 			setSeconds=0; //ustawiamy sekundy
-			setMinutes(); //wywołanie funkcji ustaw minuty
+			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
 					
 		}
 	
@@ -357,7 +364,7 @@ void aktualnyCzas(){
 			LCDPutStr(minutes,80,60,MEDIUM,WHITE,BLACK);
 			LCDPutStr(seconds,80,80,MEDIUM,WHITE,BLACK);
 		}
-		
+	}
 		if((PIOB_PDSR&ESCAPE)==0){
 			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
 			Delay(10);
@@ -367,7 +374,7 @@ void aktualnyCzas(){
 	
 }
 
-void setHours(){
+void setHours(int hours,int setHours){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setHours==1){
 			
 		
@@ -410,7 +417,7 @@ void setHours(){
 }
 }
 
-void setMinutes(){
+void setMinutes(int minutes,int setMinutes){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setMinutes==1){
 			
 		
@@ -419,7 +426,7 @@ void setMinutes(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					minutes=59;
-					LCDPutStr(":mm:",65,60,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",65,60,LARGE,WHITE,BLACK);
 					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK); //wyświetlenie aktualnej minuty
 					}
 				
@@ -428,7 +435,7 @@ void setMinutes(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					minutes=0;
-					LCDPutStr(":mm:",65,60,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",65,60,LARGE,WHITE,BLACK);
 					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 			
 					}
@@ -438,7 +445,7 @@ void setMinutes(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					minutes--; 
-					LCDPutStr(":mm:",65,60,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",65,60,LARGE,WHITE,BLACK);
 					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 					}
 		
@@ -447,14 +454,14 @@ void setMinutes(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					minutes++; 
-					LCDPutStr(":mm:",65,60,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",65,60,LARGE,WHITE,BLACK);
 					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 				}
 	
 			}
 }
 
-void setSeconds(){
+void setSeconds(int seconds,int setSeconds){
 	while(((PIOA_PDSR&LEFT)!=0 || ((PIOA_PDSR&RIGHT)!=0)) && setSeconds==1){
 			
 		
@@ -463,7 +470,7 @@ void setSeconds(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					seconds=59;
-					LCDPutStr(":ss:",65,80,LARGE,WHITE,BLACK);
+					LCDPutStr("ss:",65,80,LARGE,WHITE,BLACK);
 					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 					}
 				
@@ -472,7 +479,7 @@ void setSeconds(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					seconds=0;
-					LCDPutStr(":ss:",65,80,LARGE,WHITE,BLACK);
+					LCDPutStr("ss:",65,80,LARGE,WHITE,BLACK);
 					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 			
 					}
@@ -482,7 +489,7 @@ void setSeconds(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					seconds--; 
-					LCDPutStr(":ss:",65,80,LARGE,WHITE,BLACK);
+					LCDPutStr("ss:",65,80,LARGE,WHITE,BLACK);
 					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 					}
 		
@@ -491,7 +498,7 @@ void setSeconds(){
 					Delay(10);
 					PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 					seconds++; 
-					LCDPutStr(":ss:",65,80,LARGE,WHITE,BLACK);
+					LCDPutStr("ss:",65,80,LARGE,WHITE,BLACK);
 					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK); //wyświetlenie aktualnej godziny
 				}
 	
@@ -506,28 +513,200 @@ void stoper(){
 	while((PIOB_PDSR&ESCAPE)!=0){
 		
 		if(((PIOB_PDSR&ENTER)==0 && start==0)){ //włączenie stopera
+			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+			Delay(10);
+			PIOB_CODR|=BUZZER;//wyłączenie dźwięku
 			start=1;// stoper działa
 			if(counterTimer==1){ //sprawdzamy czy minęła 1 sekunda
 				seconds++;
 					if(seconds!=60){
-						LCDPutStr(":ss:",60,80,LARGE,WHITE,BLACK);
+						LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
 						LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
 					}
 				counterTimer=0; //zerujemy wartość Timera
 			}
-			if(seconds==60){
+			if(seconds==60){ //sprawdzamy czy minęło 60 sekund
 				seconds=0; //zerujemy sekundy
+				LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+				LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
 				minutes++; //zwiększamy minuty
 					if(minutes!=60){
-						LCDPutStr(":mm:",60,80,LARGE,WHITE,BLACK);
-						LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+						LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+						LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);
 					}
 			}
 			
+			if(minutes==60){ //sprawdzamy czy 60 minut minęło
+				minutes=0; //zerujemy minuty
+				LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+				LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);
+				hours++; //zwiększamy godziny
+				if(hours!=24){
+					LCDPutStr("gg:",60,40,LARGE,WHITE,BLACK);
+					LCDPutStr(hours,40,40,LARGE,WHITE,BLACK);
+				}
+			}
+			if(hours==24){ //sprawdzamy czy minęły 24 godziny
+				hours=0; //ustawiamy wartość godzin na 0
+				LCDPutStr("gg:",60,40,LARGE,WHITE,BLACK);
+				LCDPutStr(hours,40,40,LARGE,WHITE,BLACK);
+				seconds++; //ponownie zliczamy sekundy
+			}
 			
 		}
 		
+		if(((PIOB_PDSR&ENTER)==0 && start==1)){
+			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+			Delay(10);
+			PIOB_CODR|=BUZZER;//wyłączenie dźwięku
+			start=0; //zatrzymujemy stoper
+			//wyświetlamy aktualny czas stopera
+			LCDPutStr("gg:",60,40,LARGE,WHITE,BLACK);
+			LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+			LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+			LCDPutStr(hours,40,40,LARGE,WHITE,BLACK);
+			LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);
+			LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+		}
+		
 	}
+	
+	if((PIOB_PDSR&ESCAPE)==0){
+		PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+		Delay(10);
+		PIOB_CODR|=BUZZER;//wyłączenie dźwięku
+		backFromFunctions2();
+	}
+}
+
+
+void czasomierz(){
+	int hours=0,minutes=0,seconds=0; //dane wartości będą ustawiane na LCD
+	int setHours=0,setMinutes=0,setSeconds=0; //zmienne pomocnicze pomagające przy poruszaniu się joystickiem w prawo i lewo
+	int startCzasomierz=0; //powoduje włączenie czasomierza
+	LCDClearScreen(); //wyczyść ekranu
+	LCDPutStr("Ustaw godzinę ",120,20,SMALL,WHITE,BLACK);
+	LCDPutStr("Zatwierdź klawiszem SW_1",100,20,SMALL,WHITE,BLACK);
+	LCDPutStr("00:00:00",65,40,LARGE,WHITE,BLACK); //ustawienie aktualnego czasu jako 00:00:00
+	
+	while((PIOB_PDSR&ESCAPE)!=0){ //dopóki nie wciśnięto klawisza ESCAPE
+	
+	while((PIOB_PDSR&ENTER)!=0){ //dopóki nie wciśnięto klawisza Enter
+		//ustawienie godziny
+		setHours=1; //obecnie ustawiamy godzinę
+		setHours(hours,setHours); //wywołanie funkcji ustaw godzinę
+	
+	
+		if((PIOA_PDSR&RIGHT)==0 && setHours==1){
+			setHours=0; //przechodzimy na prawo ustawiamy minuty
+			setMinutes=1; //obecnie ustawiamy minuty
+			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+			
+		}
+		
+		if((PIOB_PDSR&LEFT)==0 && setHours==1){
+			setHours=0; //nie ustawiamy już godzin
+			setSeconds=1; //ustawiamy sekundy
+			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw seknudy
+		}
+	
+	
+		if((PIOA_PDSR&RIGHT)==0 && setMinutes==1){
+			setMinutes=0; //przechodzimy na prawo ustawiamy minuty
+			setSeconds=1; //obecnie ustawiamy minuty
+			setSeconds(seconds,setSeconds); //wywołanie funkcji ustaw sekundy			
+			
+		}
+		
+		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
+			setHours=1; //nie ustawiamy już godzin
+			setSMinutes=0; //ustawiamy sekundy
+			setHours(hours,setHours); //wywołanie funkcji ustaw godzine
+			
+		}
+		
+		
+		if((PIOA_PDSR&RIGHT)==0 && setSeconds==1){
+			setHours=1; //przechodzimy na prawo ustawiamy minuty
+			setSeconds=0; //obecnie ustawiamy minuty
+			setHours(hours,setHours); //wywołanie funkcji ustaw godziny
+						
+		}
+		
+		if((PIOB_PDSR&LEFT)==0 && setMinutes==1){
+			setMinutes=1; //nie ustawiamy już godzin
+			setSeconds=0; //ustawiamy sekundy
+			setMinutes(minutes,setMinutes); //wywołanie funkcji ustaw minuty
+					
+		}
+	
+	}
+		if(((PIOB_PDSR&ENTER)==0 && startCzasomierz==0)){ //zatwierdzenie godziny
+			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+			Delay(10);
+			PIOB_CODR|=BUZZER;//wyłączenie dźwięku
+			startCzasomierz=1; //czasomierz zacznie działać po kolejnym wciśnięciu przycisku
+			LCDClearScreen();
+			LCDPutStr("Godzina została zatwierdzona",110,60,MEDIUM,WHITE,BLACK);
+			LCDPutStr(hours,80,40,MEDIUM,WHITE,BLACK);
+			LCDPutStr(minutes,80,60,MEDIUM,WHITE,BLACK);
+			LCDPutStr(seconds,80,80,MEDIUM,WHITE,BLACK);
+		}
+		
+		
+		if(((PIOB_PDSR&ENTER)==0 && startCzasomierz==1)){
+			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+			Delay(10);
+			PIOB_CODR|=BUZZER;//wyłączenie dźwięku
+			startCzasomierz=0;
+				if(counterTimer==1){ //sprawdzamy czy minęła sekunda z wykorystaniem Timera
+					seconds--;
+					LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+					counterTimer=0; //ustawiamy z powrotem wartość countera na 0
+				}
+				
+				if(seconds==0 && minutes!=0){ //sprawdzamy czy sekundy się wyzerowały i minuty są różne od zera
+					seconds=59; //ustawiamy sekundy na wartość 59
+					minutes--; //zmniejszamy wartość minut
+					LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);						
+				}
+				
+				if(minutes==0 && hours!=0){ //sprawdzamy czy wyzerowały się minuty i godziny są różne od zera
+					minutes=59; //ustawiamy wartość minut na 59
+					hours--; //zmniejszamy wartość godzin
+					LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);	
+					LCDPutStr("gg:",60,40,LARGE,WHITE,BLACK);
+					LCDPutStr(hours,40,40,LARGE,WHITE,BLACK);	
+				}
+				
+				if(hours==0 && minutes==0 && seconds==0){ //jeśli wszystkie wartości minut,godzin i sekund są na 0 to czasomiersz zakończył działanie
+					
+					LCDPutStr("Koniec działania czasomirza",95,20,MEDIUM,WHITE,BLACK);
+					LCDPutStr("ss:",60,80,LARGE,WHITE,BLACK);
+					LCDPutStr(seconds,40,80,LARGE,WHITE,BLACK);
+					LCDPutStr("mm:",60,60,LARGE,WHITE,BLACK);
+					LCDPutStr(minutes,40,60,LARGE,WHITE,BLACK);	
+					LCDPutStr("gg:",60,40,LARGE,WHITE,BLACK);
+					LCDPutStr(hours,40,40,LARGE,WHITE,BLACK);	
+					
+				}
+				
+		}
+	}
+		if((PIOB_PDSR&ESCAPE)==0){
+			PIOB_SODR|=BUZZER; //włączenie dźwięku w głośniczku
+			Delay(10);
+			PIOB_CODR|=BUZZER;//wyłączenie dźwięku
+			backFromFunctions2(); //wywołanie powrotu z pod funkcji
+		}
+	
 }
 
 void backFromFunctions(){
