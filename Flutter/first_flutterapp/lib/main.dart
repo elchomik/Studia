@@ -6,8 +6,18 @@ void main() {
     home: Card(),
   ));
 }
-class Card extends StatelessWidget {
+class Card extends StatefulWidget {
   const Card({Key key}) : super(key: key);
+
+  @override
+  _CardState createState() => _CardState();
+}
+
+class _CardState extends State<Card> {
+
+  int level=0;
+  String text="BEGINNER";
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +34,7 @@ class Card extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             Center(
               child: CircleAvatar(
                 backgroundImage:NetworkImage("https://graph.facebook.com/1463985430423977/picture?type=large"),
@@ -52,16 +63,26 @@ class Card extends StatelessWidget {
             ),
             ),
             SizedBox(height:30.0),
-            Text(
-              'CURRENT LEVEL',
-              style: TextStyle(
-                color: Colors.grey,
-                letterSpacing: 2.0,
+            Row(
+              children:[
+                    Text(
+                      'LEVEL',
+                      style: TextStyle(
+                      color: Colors.grey,
+                      letterSpacing: 2.0,
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(width: 20.0),
+                Text(
+                  "$text",
+                  style: TextStyle(
+                    color: Colors.green,
+                    letterSpacing: 2.0,
+                  ),
+                ),
+            ],),
             Text(
-              '9',
+              '$level',
               style: TextStyle(
                 color: Colors.amberAccent[200],
                 letterSpacing: 2.0,
@@ -85,16 +106,53 @@ class Card extends StatelessWidget {
                     letterSpacing:1.0,
                   ),
                 ),
+
+
+          ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                    child: Icon(Icons.add),
+                    backgroundColor: Colors.grey[800],
+                    onPressed: (){
+                      setState(() {
+                        level++;
+                        if(level>0 && level<20) text="BEGINNER";
+                        if(level>20 && level<40) text="JUNIOR";
+                        if(level>40 && level<80) text="REGULAR";
+                        if(level>80)  text="SENIOR";
+
+                      });
+                    }),
+                SizedBox(width: 10,),
+                FloatingActionButton(
+                  child: Icon(Icons.remove),
+                    backgroundColor: Colors.grey[800],
+                    onPressed: (){
+                    setState(() {
+                      level--;
+                      if(level>0 && level<20) text="BEGINNER";
+                      if(level>20 && level<40) text="JUNIOR";
+                      if(level>40 && level<80) text="REGULAR";
+                      if(level>80)  text="SENIOR";
+                      if(level==0) level=0;
+                     
+                    });
+                    }),
               ],
             ),
-
-
           ],
         ),
       ),
     );
   }
 }
+
+
 
 
 
