@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+    <head>
+        <title>Formluarz zgłoszeniowy</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="CSS/formularz.css">
+    </head>
+    <body>
+        <header><h1>Przykładowy Formularz zgłoszeniowy na zawody</h1></header>
+        <nav>
+             <ul id="name">
+                    
+                    <li><a href="strona.html">Strona Główna</a>
+                    <li><a href="tabela.html">Ranking najlepszych szachistów</a>
+                    <li><a href="formularz.html">Formularz zgłoszeniowy</a>
+                    <li><a href="debiuty.html">Podstawowe debiuty</a>
+                        
+                </ul>
+        </nav>
+        <br/>
+        
+        
+        
+        <form action="#" method="get">
+            <fieldset>
+                <legend>Dane Osobowe</legend>
+                
+                <label>*Imie</label>
+                    <input  name="imie" size="30" required ><br/>
+                
+                <label>*Nazwisko</label>
+                    <input  name="nazwisko" size="30" required><br/>
+                
+                <label>*Wiek</label>
+                    <input  name="wiek" required><br/>
+                
+                <label>*Klub</label>
+                    <input  name="klub" required><br/>
+                <br/>
+            </fieldset>
+                <br/>
+                <br/>
+            <fieldset>
+                <legend>Wpisowe</legend>
+                
+                <output name="Karta">Karta:</output>
+                    <input type="radio" name="Karta" value="Visa">Visa
+                    <input type="radio" name="Karta" value="MasterCard">MasterCard
+                    <input type="radio" name="Karta" value="Paszport Polsatu">Paszport Polsatu<br/>
+                <output name="Nr Karty">Numer Karty:</output>
+                    <input type="text" name="Nr Karty" title="Podaj minimum 13 znaków" required pattern="[0-9]{13}|[0-9]{16}"><br/>
+                <output name="Ważność karty">Ważność karty</output>
+                    <input type="month" required><br/>
+                    <output name="Kod Ważności">Kod CVV</output> 
+                    <input type="text" required title="Podaj 3 lub 4 znaki" pattern="[0-9]{3,4}"><br/>
+                 Wartość wpisowego:
+                          <input type="number" min="20" step="1" required placeholder="Minmum 20 " title="Prosze podac wartosc">
+                          <br/>
+                    
+            </fieldset>
+            <br/>
+            <input type="submit" value="Rejestruj">
+            <input type="reset" value="Resetuj"><br/>
+            
+                
+            
+        </form>
+        
+        <br/>
+        <br/>
+        <footer>&copy;MM</footer>
+    </body>
+</html>

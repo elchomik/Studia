@@ -1,0 +1,46 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+.kontener {
+   display:grid;
+   grid-template-column: 1fr 2fr 2fr;
+       grid-template-rows: 1fr 2fr 2fr 1fr;
+    width:500px;
+    height:300px;
+    margin:150px auto 0 auto;
+    border:2px solid black;
+   .pasek,.baner,.stopka,.menu,.tresc{
+    background: brown;
+    width:100%;
+    height:100%;
+    text-align:center;
+}
+}
+.klasa{
+    flex: 0 150%;
+}
+.pasek{
+    background: #8A2BE2;
+    flex:0 125%;
+}
+.baner{
+    background-color: #9ACD32;
+    flex:0 125%;
+   
+}
+.stopka{
+    background-color: #dbffff;
+    flex:0 125%;
+}
+.tresc{
+    background-color:yellow;
+   height: 75%;
+}
+.menu{
+    background-color: #FFD700;
+    height: 25%;
+}

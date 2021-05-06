@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>WebStorage API Wykład</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="JS/obslugazadan.js"></script>
+    </head>
+    <body onload="dodajDate()">
+        <header><h2 id='h'></h2></header>
+        <nav>
+            <table>
+                <tr><td><button onclick="pokazListe()">Pokaż listę zadań</button></td>
+                    <td><button onclick="usunListe()">Usuń zadania</button></td></tr>
+                <tr><td>Zadanie:</td><td><input id='zadanie'/></td></tr>
+                <tr><td>Data:</td><td><input id='data' type="date"/></td></tr>
+                <tr><td>Godzina:</td><td><input id='godzina' type="time"/></td></tr>
+                <tr><td colspan='2'><button onclick="dodajZadanie()">Dodaj zadanie do listy</button></td></tr>
+                 
+            </table>
+        </nav>
+        <div id="list"></div>
+        <footer><h4>MM 2020</h4></footer>
+    </body>
+</html>

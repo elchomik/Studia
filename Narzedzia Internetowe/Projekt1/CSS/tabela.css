@@ -1,0 +1,149 @@
+
+nav{
+    display:flex;
+}
+
+article{
+   
+    background: salmon;
+    flex:1;
+}
+nav{
+    background: #7FFF00;
+    color:slategrey;
+   
+    flex:2;
+}
+aside{
+    background:violet;
+    flex:0.25;
+    
+}
+table{
+   width:94%;
+	background:#ffffb3;
+	text-align:center;
+	margin:1%;
+	border: 1px solid #000040;
+}
+thead,tfoot{
+	background-color:buttontext;
+	text-align:center;
+	font-size:110%;
+	padding:5pt;
+}
+tr,th{
+	border:1pt solid #000040;
+      
+}
+
+tr:nth-child(2n){
+    background: #98bed8;
+}
+th:nth-child(2n+1){
+    background: #80ffff;
+}
+caption{
+    font-size:120%;
+}
+
+header{
+    background: #aaa;
+    border-radius:10px;
+    font-size:110%;
+    width:100%;
+}
+
+body{
+    background: cornflowerblue;
+}
+h1,footer{
+    padding: 0.2em;
+    text-align:center;
+    background:#0000a0;
+}
+
+footer{
+    clear:both;
+    padding:1%;
+    background: #000040; 
+    color:window;
+    border-radius:10px;
+   
+}
+#name{
+	text-align:left;
+	overflow:hidden;
+	font-family:calibri, tahoma;
+}
+ul#name li{
+	border:1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#98bed8;
+        width:24%;
+	
+}
+ul#name li:hover{
+	border: 1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#f0f0f0;
+	margin-left:3px;
+}
+ul#name li a{
+	display:block;
+	padding:4pt;
+	text-decoration:none;
+}
+ul#name li li a{
+	width:160px;
+}
+ul#name li li:hover{
+	background:white;
+}
+ul#name li ul{
+	overflow:hidden;
+	display: none;
+}
+ul#name li:hover ul{
+	position:absolute;
+	background:#aaa;
+	padding:0;
+	display:block;
+	width: 177px;
+}
+
+@media screen and (max-width: 769px){
+    table{
+   width:50%;
+	background:#aaa;
+	text-align:center;
+	margin:1%;
+	border: 1px solid #000040;
+}
+thead,tfoot{
+	background-color:#a4ffa4;
+	text-align:center;
+	
+	padding:2pt;
+}
+tr,th{
+	border:2pt solid #000040;
+      
+}
+
+tr:nth-child(2n){
+    background: tan;
+}
+th:nth-child(2n+1){
+    background: cadetblue;
+    text-align: center;
+}
+caption{
+    font-size:80%;
+}
+body{
+    background:  aqua;
+}
+}

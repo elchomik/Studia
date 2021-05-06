@@ -1,0 +1,157 @@
+/*Zadanie /*6 podpunkt ustawic elementy htmla jak ponizej
+ chodzi o kolejnosc inczaej nie zadziala a*/ 
+/*#kontenenr{
+	background:#ffffff;
+	vertical-align:middle;
+	width:50%;
+	background-color:#9ACD32;
+	
+}
+
+#baner{
+width: 96%;
+background:#FAEBD7;	
+text-align:center;
+padding:2%;
+
+}
+#menu{
+	background:	#FFD700;
+	width:83%;
+        padding:1%;
+	float:right;
+        font-size:125%;
+	text-align:center;
+}
+#tresc{
+	background:	#7CFC00;
+	float:right;
+	width:83%;
+        padding:1%;
+        font-size:120%;
+	text-align:center;
+}
+#pasek{
+text-align:center;	
+background:darkorange;
+width: 9%;
+padding:3%;
+
+	
+}
+#stopka{
+clear:both;
+width:96%;
+padding:2%;
+text-align:center;	
+background-color:#8A2BE2;
+}
+*/
+/* Zadanie 6b*/
+body
+{
+    margin:0;
+    background: #8A2BE2;
+}
+
+#kontener
+{
+  height: 400px;
+}
+
+#baner
+{
+   background: #8A2BE2;
+   text-align: center;
+   font-size:200%;
+   height: 10%;
+}
+
+#pasek
+{
+   background:darkseagreen;
+   font-size: 200%;
+   width:20%;
+   height:60%;
+   float:left;
+}
+#tresc
+{
+   background: springgreen;
+   font-size: 200%;
+   width: 80%;
+   height: 40%;
+    float: left;
+    line-height: 200px;
+   text-align: center;
+}
+
+#menu
+{
+   background:turquoise;
+   font-size: 200%;
+   float:left;
+    width: 80%;
+     text-align: center;
+     height: 10%;
+
+}
+
+
+
+
+#stopka
+{
+   background: aquamarine;
+   font-size: 200%;
+   float:right;
+   height: 10%;
+   width:80%;
+   text-align: center;
+
+
+}
+
+
+/* Zadanie 6c  ustawic kolejnosc elementow jak napisane pod spodem
+body{
+    margin:0;  
+}
+#baner{
+width: 98%;
+background:#FAEBD7;	
+text-align:center;
+padding:1%;
+}
+#menu{
+	background:	#FFD700;
+        width:10%;
+      
+        padding:1%;
+	float:left;
+	text-align:center;
+}
+#tresc{
+	background:	#7CFC00;
+	float:right;
+        width:84%;
+        padding:2%;
+	text-align:center;
+        font-size:125%;
+}
+#pasek{
+	text-align:center;
+	background:#ffffb3;
+        width:10%;
+        padding:1%;
+	float-bottom:left;
+	
+}
+#stopka{
+clear:both;
+width:100%;
+float:left;
+text-align:center;	
+background-color:#8A2BE2;
+}
+*/

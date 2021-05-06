@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+    <head>
+        <title>Kalkulator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div><h1>Kalkulator faktur:</h1></div>
+        <form oninput="suma.value=liczba_1.valueAsNumber+(liczba_2.valueAsNumber*10)">
+            Wartość netto:<input name="liczba_1" type="number" value="0">PLN<br/>
+            Stawka VAT:<input name="liczba_2" type="number" value="0">%<br/>
+            Wartość brutto=<output name=suma for="liczba_1 liczba_2"></output>
+        </form>
+        <br/>
+       
+      
+        <div><h2> Prosty kalkulator bez Java Script</h2></div>
+        Dodawanie:
+        <form oninput="suma.value = a.valueAsNumber + b.valueAsNumber">
+          a<input name=a type=number > +<br/>
+          b<input name=b type=number > =<br/>
+         wynik=<output name=suma for="a b"></output>
+        </form>
+        <br/>
+        Odejmowanie:
+        <form oninput="róznica.value=a.valueAsNumber-b.valueAsNumber">
+            a<input name="a" type="number">-<br/>
+            b<input name="b" type="number">=<br/>
+            wynik=<output name="róznica" for="a b"></output>
+        </form>
+        <br/>
+        Mnożenie:
+        <form oninput="il.value=a.valueAsNumber*b.valueAsNumber">
+            a<input name="a" type="number">*<br/>
+            b<input name="b" type="number">=<br/>
+            wynik=<output name="il" for="a b"></output>
+        </form>
+        <br/>
+        Dzielenie:
+        <form oninput="r.value=a.valueAsNumber/b.valueAsNumber">
+            a<input name="a" type="number"><br/>
+            b<input name="b" type="number"><br/>
+            wynik=<output name="r" for="a b"></output>
+        </form>
+        <br/>
+    </body>
+</html>

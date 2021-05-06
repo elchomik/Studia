@@ -1,0 +1,106 @@
+﻿table{
+	width:94%;
+	background:#ffffb3;
+	text-align:center;
+	margin:1%;
+	border: 1px solid #000040;
+	
+}
+caption{
+	font-size:120%;
+	
+}
+thead,tfoot{
+	background-color:#0000a0;
+	text-align:center;
+	font-size:110%;
+	padding:5pt;
+}
+body{
+	background:#8080ff;
+	color:#000040;
+}
+
+td,th{
+	border:1pt solid #000040;
+}
+
+ tfoot a{
+	color:#ffffff;
+}
+.parzysty{
+background-color:#ffffff;
+}
+#kontener{
+	background:#ffffff;
+	vertical-align:middle;
+	width:80%;
+	background-color:#7FFF00;
+}
+#stopka{
+clear:both;
+width:100%;
+padding:5px 0 5px 0;
+text-align:center;	
+background-color:#8A2BE2;
+}
+#tresc{
+	float:left;
+	width:75%;
+	padding:1%;
+	background:#80ffff;
+	
+}
+#pasek{
+	float:right;
+	width:20%;
+	padding:1%;
+	background:#8A2BE2;
+}
+#nav{
+	text-align:left;
+	overflow:hidden;
+	font-family:calibri, tahoma;
+}
+ul#nav li{
+	border:1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#98bed8;
+	margin-left:3px;
+}
+ul#nav li:hover{
+	border: 1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#f0f0f0;
+	margin-left:3px;
+}
+ul#nav li a{
+	display:block;
+	padding:4pt;
+	text-decoration:none;
+}
+ul#nav li li a{
+	width:160px;
+}
+ul#nav li li:hover{
+	background:white;
+}
+ul#nav li ul{
+	overflow:hidden;
+	display: none;
+}
+ul#nav li:hover ul{
+	position:absolute;
+	background:#aaa;
+	padding:0;
+	display:block;
+	width: 177px;
+}
+h1, h2,#stopka{
+
+	background:#000040;
+	color:#8080ff;
+	text-align:center;
+}

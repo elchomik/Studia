@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "output": {
+            "context": "form"
+        },
+        "playsinline": {
+            "context": "video"
+        }
+    }
+}

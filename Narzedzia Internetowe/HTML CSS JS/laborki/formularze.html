@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title> Szybki kurs HTML </title>
+	
+</head>
+
+<body> 
+	<div id="kontener">
+		<div id="banner"><h1>Szybki kurs HTML</h1></div>
+		
+		<div id="menu">
+			<a href="index.html">Podstawowe znaczniki</a>
+			<a href="tabele.html">Tworzenie tabel </a>
+			<a href="formularze.html">Budowa formularzy </a>
+			
+			</div>
+		<div id="tresc">
+                    <h2>Podstawowe znaczniki formularza to</h2>
+				<ul>
+					
+					<li>&lt;form&gt;-znacznik podstawowy zawierajacy pole formularza </li>
+					<li>&lt;input&gt;-znacznik umozliwia wstawienie roznych pol(pola tekstowe,przycisk typu radio,przycisk typu checkbox)w zaleznosci od wartosci jego atrybutu type</li>
+					<li>&lt;select&gt;-pole formularza typu lista rozwijana</li>
+					<li>&lt;textarea&gt;-pole formularza typu obszar tekstowy</li>
+					<li>&lt;button&gt;-pole formularza typu przycisk</li>
+					
+				</ul>
+                    
+                    <h3>Przykładowy formularz HTML</h3>
+                    
+                    <form action="mailto:mateuszmarkowski101@wp.pl" method="post">
+                        <table>
+                            <tr>
+                                <td>Nazwisko:</td>
+                                <td colspan="2"><input type="text" name="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Wiek:</td>
+                            <td colspan="2">
+                                <input type="text" name="text"/></td>
+                        </tr>
+                        <tr>
+                            <td>Panstwo:</td>
+                            <td colspan="2"><select size="1" name="Panstwo">
+                                <option value="Polska">Polska</option>
+                                <option value="Niemcy">Niemcy</option>
+                                <option value="Rosja">Rosja</option>                            
+                            </select></td>
+                        </tr>
+                        <tr>
+                            <td>Adres e-mail:</td>
+                            <td colspan="2"><input type="text" name="text"></td>
+                        </tr>
+                        <tr>
+                        <td colspan="3"><h4> Zamawiam tutorial z jezyka </h4></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="C" value="C"/>JezykC/C++</td>
+                            <td><input type="checkbox" name="Java" value="J"/>Język Java</td>
+                            <td><input type="checkbox" name="PHP" value="PHP"/>Język PHP </td>
+                            </tr>
+                            <tr><td colspan="3"><h5>Sposob zaplaty:</h5></td></tr>
+                        <tr>
+                            <td><input type="radio" name="eurocard" value="E"/>eurocard</td>
+                            <td><input type="radio" name="isa" value="v"/>visa</td>
+                            <td><input type="radio" name="przelew bankowy " value="p"/>przelew bankowy</td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Wyslij"/></td>
+                            <td colspan="2"><input type="reset" value="Wyczysc"/></td></tr>
+                    </table>
+                            
+                    </form>
+				</div>
+		<div id="stopka"> &copy;BP</div>
+		
+	</div>
+	</body>
+	</html>

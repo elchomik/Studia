@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title>Szybki kurs HTML </title>
+		<link rel="stylesheet" href="CSS/formularze.css" type="text/css"/>
+</head>
+
+<body>
+	<div id="kontener">
+	<div id="baner"><h2>Szybki kurs HTML</h2></div>
+	
+	<div id="menu">
+	<p>
+		<ul id="nav">
+			<li><a href="indeks.html">Podstawowe znaczniki</a></li>
+			<li><a href="tabele.html">Tworzenie Tabel </a></li>
+			<li><a href="">Formularze</a>
+				<ul>
+					<li><a href="formularze.html">Pola formularza</a></li>
+					<li><a href="obliczenia.html">Obliczenia w formularzu</a></li>
+				</ul>
+			<li><a href="galeria.html" title="">Galeria</a></li>
+	</ul>
+
+	</div>
+	<div id="tresc">
+	
+	
+		<h3>Podstawowe znaczniki formularza HTML:</h3>
+		<ul>
+			<li>&lt;form&gt; -znacznik podstawowy zawierający pola formularza</li>
+			<li>&lt;input&gt; -znacznik umożliwia wstawienie róznych pól(pola tekstowe,przycisk typu radio,przycisk typu checkbox) w zależności od wartości jego atrybutu type</li>
+			<li>&lt;select&gt; -pole formularza typu lista rozwijana</li>
+			<li>&lt;textarea&gt; -pole formularza typu obszar tekstowy</li>
+			<li>&lt;button&gt; -pole formularza typu przycisk</li>
+		
+		</ul>
+		
+	<form action="mailto:mateuszmarkowski101@wp.pl" method="post">
+		<!-- PRzykładowe typy znacznika input -->
+		<fieldset>
+		<legend>Przykładowy formularz HTML:</legend>
+		<label for="Nazwisko">*Nazwisko:</label> 
+				<input id="Nazwisko" name="nazwisko" size="30" required><br/>		
+		<label for="wiek">*Wiek:</label>  
+				<input id="wiek" name="wiek" size="30" required><br/>
+		Państwo:  <select size="1" >
+					<option value="Polska" selected>Polska</option>
+					<option value="Niemcy">Niemcy </option>
+					<option value="Rosja">Rosja </option>
+				</select><br/>
+		<label for="Adres">*Adres e-mail:</label>
+			<input id="Adres" name="adres e-mail" size="30" required>
+		</fieldset>
+		<fieldset>
+		<legend>Zamawiam tutorial z języka</legend><br/>
+		<input type="checkbox" name="PHP" value="PHP"/> Język PHP 
+		<input type="checkbox" name="C"	  value="C"/> Język C/C++ 
+		<input type="checkbox" name="Java" value="Java"/> Język Java <br/>
+		<h4>Sposób zapłaty </h4><br/>
+		<input type="radio" name="eurocard" value="e"/> eurocard
+		<input type="radio" name="visa" value="v" /> visa
+		<input type="radio" name="przelew bankowy" value="p"/> przelew bankowy<br/>
+		<input type="submit" value="Wyślij" />
+		<input type="reset" value="Anuluj" />
+		</fieldset>
+		
+		</form>
+	</div>
+	<div id="pasek">
+		<div class="box">
+			<h3>Walidatory:</h3>
+				<ul>
+					<li><a href="http://validator.w3.org/">HTML</a></li>
+					<li><a href="htttp://jigsaw.w3.org/css-validator/">CSS</a></li>
+				</ul>
+				</div>
+			<div class="box">
+				<h3>Kursy</h3>
+					<ul>
+						<li><a href="htttp://www.w3schools.com/html/default.asp/">HTML</a></li>
+						<li><a href="http://www.w3schools.com/html5/default.asp/">HTML5</a></li>
+						<li><a href="http://www.w3schools.com/css/default.asp/">CSS</a></li>
+						<li><a href="http://www.w3schools.com/css3/default.asp/">CSS3</a></li>
+					</ul>
+					</div>
+					</div>
+	<div id="stopka">&copy;BP</div>
+
+</div>
+</body>
+</html>

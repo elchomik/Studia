@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+    <head>
+        <title>Dotacje</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+            <div id="baner"><h1>Formluarz dotacyjny</h1></div>
+            <br/>
+            <form action="#" method="get">
+                <fieldset>
+                    Beneficjent:
+                    <input list="beneficjent" required name="beneficjent">
+                    <datalist id="beneficjent">
+                        <option value="Hospicjum malego Ksiecia"></option>
+                        <option value="Wioski dziecięce"></option>
+                        <option value="Fundacja Polsat"></option>
+                        <option value="Hospicjum Samarytanina">
+                    </datalist>
+                          <br/>
+                          Wartość Dotacji:
+                          <input type="number" min="20" step="5" required placeholder="Minmum 20 " title="Prosze podac wartosc">
+                          <br/>
+                </fieldset>
+                <br/>
+                <br/>
+                <fieldset>
+                    <legend> Dane karty płatniczej</legend>
+                    <output name="Karta">Karta:</output>
+                    <input type="radio"  name="Karta" value="visa">Visa
+                    <input type="radio" name="Karta" value="mastercard" required>MasterCard<br/>
+                    <output name="Numer">Numer Karty:</output> 
+                    <input type="text" name="Numer" title="Podaj minimum 13 znaków" required pattern="[0-9]{13}|[0-9]{16}"><br/>
+                    <output name="Ważność karty">Ważność karty</output>
+                    <input type="month" required><br/>
+                    <output name="Kod Ważności">Kod CVV</output> 
+                    <input type="text" required title="Podaj 3 lub 4 znaki" pattern="[0-9]{3,4}"><br/>
+                       
+                    
+                </fieldset>
+                <br/>
+                <output name="Darczyńca">Darczyńca</output>
+                <input type="text" required title="Duża litera i minimum 2 małe" pattern="^[A-Z]{1}[a-z]{2,}"><br/>
+                <br/>
+                <input type="submit" value="Rejestruj">
+                <input type="reset" value="Anuluj">
+			</form>
+    </body>
+</html>

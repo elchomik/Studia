@@ -1,0 +1,90 @@
+body{
+    background:#7FFF00;
+}
+
+
+#name{
+	text-align:left;
+	overflow:hidden;
+	font-family:calibri, tahoma;
+}
+ul#name li{
+	border:1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#98bed8;
+        width:24%;
+	
+}
+ul#name li:hover{
+	border: 1px solid #d5d5d5;
+	list-style-type:none;
+	float:left;
+	background:#f0f0f0;
+	margin-left:3px;
+}
+ul#name li a{
+	display:block;
+	padding:4pt;
+	text-decoration:none;
+}
+ul#name li li a{
+	width:160px;
+}
+ul#name li li:hover{
+	background:white;
+}
+ul#name li ul{
+	overflow:hidden;
+	display: none;
+}
+ul#name li:hover ul{
+	position:absolute;
+	background:#aaa;
+	padding:0;
+	display:block;
+	width: 177px;
+}
+@media  screen and (min-width: 420px)  and (max-width: 734px){
+    body{
+        background: #80ffff;
+    }
+    fieldset{
+        background: #a4ffa4;
+        text-align: left;
+    }
+    
+    
+    footer{
+        font-size:90%;
+        background: #ffffb3;
+    }
+    header{
+        font-size:100%;
+        text-align:left;
+        background:cadetblue;
+    }
+}
+header{
+    font-size:130%;
+    text-align:center;
+    background:thistle;
+}
+
+label{
+	font-weight:bold;
+}
+
+
+fieldset{
+	background: #a4ffa4;
+	text-align:center;
+	border-style:double;
+	border-color:#007100;
+
+}
+footer{
+    font-size: 110%;
+    text-align:center;
+    background:thistle;
+}
