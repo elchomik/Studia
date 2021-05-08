@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'quote.dart';
+import 'quote_card.dart';
+
 
 void main() {
   runApp(MaterialApp(
@@ -24,7 +26,6 @@ class _QuoteListState extends State<QuoteList> {
   ];
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,11 +36,20 @@ class _QuoteListState extends State<QuoteList> {
         backgroundColor: Colors.redAccent,
       ),
       body:Column(
-        children:quotes.map((quote)=>Text('${quote.text} -${quote.author}')).toList(),
-      )
+        children:quotes.map((quote)=>QuoteCard(
+        quote: quote,
+        delete: (){
+          setState(() {
+            quotes.remove(quote);
+          });
+    }
+      )).toList(),
+
+    ),
     );
   }
 }
+
 
 
 
