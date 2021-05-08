@@ -42,7 +42,7 @@ class _QuoteListState extends State<QuoteList> {
           setState(() {
             quotes.remove(quote);
           });
-    }
+    },
       )).toList(),
 
     ),

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'quote.dart';
 import 'package:flutter/material.dart';
 
@@ -31,14 +33,16 @@ class QuoteCard extends StatelessWidget {
                 color: Colors.grey[800],
               ),
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: 4.0),
             // ignore: deprecated_member_use
             FlatButton.icon(
                 onPressed:delete,
                 label: Text("delete quote"),
                 icon: Icon(Icons.delete),
             ),
-          ],
+        ],
+
+
         ),
       ),
     );
