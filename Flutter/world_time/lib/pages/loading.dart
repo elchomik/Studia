@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'dart:convert';
+import 'package:world_time/services/world_time.dart';
 
 class Loading extends StatefulWidget {
   const Loading({Key key}) : super(key: key);
@@ -11,24 +10,29 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
-  void getData() async { //asynchronous function
-
-  Response response=await get(Uri.parse("https://jsonplaceholder.typicode.com/todos/1"));
-  Map data=jsonDecode(response.body);
-  print(data['title']);
-
+  Future<void> setupWorldTime() async {
+    WorldTime worldTime=WorldTime(location: 'London',flag: 'UK.png',url: 'Europe/London');
+    await worldTime.getTime();
+    Navigator.pushReplacementNamed(context, '/home',arguments: {
+      'location': worldTime.location,
+      'flag':worldTime.flag,
+      'time':worldTime.time,
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    getData();
-
+    setupWorldTime();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Text("Loading screen"),
+      body:Padding(
+        padding: EdgeInsets.all(50.0),
+        child: Text("loading"),
+      ),
     );
   }
 }
