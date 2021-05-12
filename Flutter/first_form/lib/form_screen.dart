@@ -154,6 +154,7 @@ class _FormScreenState extends State<FormScreen> {
                     print(url);
                     print(password);
                     print(calories);
+                    Navigator.pop(context,'/');
                   },
                   child: Text(
                     "Submit",
@@ -171,3 +172,5 @@ class _FormScreenState extends State<FormScreen> {
     );
   }
 }
+
+
