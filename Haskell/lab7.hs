@@ -8,7 +8,9 @@ sign x
 	  | x>0 = 1
 	  | otherwise =0
 
-
+sign2 x = case x of
+           0->0
+           _-> if x<0 then -1 else 1
 porownajLiczby a b
                  | a-b>0 = GT
 				 | a-b<0 = LT
@@ -40,9 +42,9 @@ silniaWarunek x = if x==0 then wynik
                     wynik2 = x-1					
 
 fib x 
-     | x<1 = error "Liczba musi być dodatnia"
-	 | x<3 = 1
-	 | otherwise = fib(x-1) + fib(x-2)
+     | x<0 = error "Liczba musi być dodatnia"
+	 | x>=0 && x<=1 = 1
+	 | otherwise = fib (x-1) + fib (x-2)
 
 
 fibWarunek n = if n<1 then error "Liczba musi być większa od 1"
