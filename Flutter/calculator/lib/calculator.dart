@@ -1,3 +1,5 @@
+import 'package:calculator/calculator_layout.dart';
+import 'package:calculator/main_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,104 +12,120 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
 
-  String inputString="20 +30";
+  String inputString="";
+  double prevValue;
+  String value="";
+  String op='z';
+  int counter=0;
 
+  bool isNumber(String input){
+
+    if(input==null){
+      return false;
+    }
+    return double.parse(input)!=null;
+  }
+
+  void onPressed(keyvalue){
+    switch(keyvalue){
+      case "C":
+        {
+          op = null;
+          prevValue = 0.0;
+          value="";
+          setState(()=>inputString="");
+          break;
+        }
+      case ".":
+      case "%":
+      case "<=":
+        break;
+      case "+/-":
+        setState(() {
+          inputString=((-1)*double.parse(inputString)).toStringAsFixed(0);
+        });
+        break;
+      case "/":
+      case "x":
+      case "-":
+      case "+":
+        op=keyvalue;
+        value='';
+        prevValue=double.parse(inputString);
+        setState(() {
+          counter=0;
+          inputString=inputString+keyvalue;
+        });
+        break;
+      case "=":
+
+          if(op!=null) {
+            setState(() {
+              switch (op) {
+                case "x":
+
+                  inputString =
+                  (prevValue * double.parse(value)).toStringAsFixed(2);
+
+                  break;
+                case "+":
+
+                  inputString =
+                      (prevValue +double.parse(value)).toString();
+
+                  break;
+                case "-":
+
+                  inputString =
+                      (prevValue- double.parse(value)).toStringAsFixed(2);
+                  break;
+                case "/":
+                  inputString =
+                      (prevValue / double.parse(value)).toStringAsFixed(2);
+
+                  break;
+              }
+            });
+            op=null;
+            prevValue=double.parse(inputString);
+            value='';
+            break;
+          }
+
+        break;
+
+      default:
+        if(isNumber(keyvalue)){
+          if(op!=null){
+            setState(() {
+              inputString=inputString+keyvalue;
+            });
+            value=value+keyvalue;
+          }else{
+            setState(() {
+              inputString=""+keyvalue;
+            });
+            op='z';
+          }
+        }else{
+          onPressed(keyvalue);
+        }
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Calculator"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-              child: Container(
-                padding: EdgeInsets.all(16.0),
-                color:Colors.blueGrey.withOpacity(0.85),
-                child: Row(
-                  children: [
-                    Text(
-                      inputString,
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 48.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ),
-          Expanded(
-            flex: 4,
-              child: Container(
-                child: Column(
-                  children: [
-                    makeButtons('C%</'),
-                    makeButtons('789x'),
-                    makeButtons('456-'),
-                    makeButtons('123+'),
-                    makeButtons('_0.='),
-
-                  ],
-                ),
-              ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget makeButtons(String row){
-    List<String> token=row.split("");
-    return Expanded(
-      flex: 1,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: token.map((e)=>CalcButton(
-              keyvalue: e =='_' ? "+/-": e == '<' ? '<=':e,
-            )).toList(),
-
-        ),
+    return MainState(
+      inputValue: inputString,
+      prevValue: prevValue,
+      value: value,
+      op: op,
+      onPressed: onPressed,
+      child: CalculatorLayout(),
     );
   }
 }
 
-class CalcButton extends StatelessWidget {
 
-  final String keyvalue;
-  const CalcButton({Key key, this.keyvalue}) : super(key: key);
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
-        child: ElevatedButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
-                side: BorderSide(color: Colors.grey.shade50.withOpacity(0.85),
-                style: BorderStyle.solid),
-              ),
-            ),
-            ),
-          child: Text(
-            keyvalue,
-            style: TextStyle(
-              fontSize: 36,
-              fontWeight: FontWeight.normal,
-              color: Colors.black54,
-              fontStyle: FontStyle.normal,
-            ),
-          ),
-          onPressed: (){},
-          ),
-        );
-
-  }
-}
 
