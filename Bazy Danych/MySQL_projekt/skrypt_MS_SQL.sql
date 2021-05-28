@@ -1,5 +1,5 @@
 CREATE TABLE DziedzinaPracy (
-  ID_DziedzinaPracy INT NOT NULL,
+  ID_DziedzinaPracy INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(40) NOT NULL,
   PRIMARY KEY (ID_DziedzinaPracy),
   CONSTRAINT ID_DziedzinaPracy_UNIQUE UNIQUE (ID_DziedzinaPracy ) );
@@ -7,7 +7,7 @@ CREATE TABLE DziedzinaPracy (
 
 
 CREATE TABLE RodzajUmowy (
-  ID_RodzajUmowy INT NOT NULL,
+  ID_RodzajUmowy INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(70) NOT NULL,
   PRIMARY KEY (ID_RodzajUmowy),
   CONSTRAINT ID_RodzajUmowy_UNIQUE UNIQUE (ID_RodzajUmowy));
@@ -15,7 +15,7 @@ CREATE TABLE RodzajUmowy (
 
 
 CREATE TABLE Umowa (
-  ID_Umowa INT NOT NULL,
+  ID_Umowa INT IDENTITY(1,1) NOT NULL,
   MiejsceWykonania VARCHAR(30) NOT NULL,
   Wynagrodzenie DECIMAL(7,2) NOT NULL,
   CzasPracy VARCHAR(5) NOT NULL,
@@ -33,7 +33,7 @@ CREATE UNIQUE INDEX Miejsce_Wykonania_UNIQUE ON Umowa (MiejsceWykonania);
 
 
 CREATE TABLE Uprawnienia (
-  ID_Uprawnienia INT NOT NULL,
+  ID_Uprawnienia INT IDENTITY(1,1) NOT NULL,
   RodzajUprawnieñ VARCHAR(30) NOT NULL,
   CONSTRAINT ID_Uprawnienia_UNIQUE UNIQUE (ID_Uprawnienia),
   PRIMARY KEY (ID_Uprawnienia));
@@ -42,7 +42,7 @@ CREATE TABLE Uprawnienia (
 
 
 CREATE TABLE StatusKonta (
-  ID_StatusKonta INT NOT NULL,
+  ID_StatusKonta INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(50) NOT NULL,
   PRIMARY KEY (ID_StatusKonta),
   CONSTRAINT ID_StatusKonta_UNIQUE UNIQUE (ID_StatusKonta));
@@ -51,7 +51,7 @@ CREATE TABLE StatusKonta (
 
 
 CREATE TABLE DaneLogowaniaPracodawca (
-  ID_DaneLogowaniaPracodawca INT NOT NULL,
+  ID_DaneLogowaniaPracodawca INT IDENTITY(1,1) NOT NULL,
   Login VARCHAR(40) NOT NULL,
   Has³o VARCHAR(40) NOT NULL,
   DataUtworzenia DATE NOT NULL,
@@ -78,7 +78,7 @@ CREATE UNIQUE INDEX Has³o_UNIQUE ON DaneLogowaniaPracodawca (Has³o);
 
 
 CREATE TABLE Pracodawca (
-  ID_Pracodawca INT NOT NULL,
+  ID_Pracodawca INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(60) NOT NULL,
   Miasto VARCHAR(40) NOT NULL,
   KodPocztowy VARCHAR(6) NOT NULL,
@@ -104,7 +104,7 @@ CREATE UNIQUE INDEX Email_UNIQUE ON Pracodawca (Email);
 
 
 CREATE TABLE Stanowisko (
-  ID_Stanowisko INT NOT NULL,
+  ID_Stanowisko INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(40) NOT NULL,
   PRIMARY KEY (ID_Stanowisko),
   CONSTRAINT ID_Stanowisko_UNIQUE UNIQUE (ID_Stanowisko));
@@ -112,7 +112,7 @@ CREATE TABLE Stanowisko (
 
 
 CREATE TABLE OfertyPracy (
-  ID_OfertyPracy INT NOT NULL,
+  ID_OfertyPracy INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(50) NOT NULL,
   Opis TEXT NOT NULL,
   DziedzinaPracy_ID_DziedzinaPracy INT NULL,
@@ -151,7 +151,7 @@ CREATE INDEX fk_OfertyPracy_Stanowisko1_idx ON OfertyPRacy (Stanowisko_ID_Stanow
 
 
 CREATE TABLE PoszukujacyPracy (
-  ID_PoszukujacyPracy INT NOT NULL,
+  ID_PoszukujacyPracy INT IDENTITY(1,1) NOT NULL,
   Imie VARCHAR(30) NOT NULL,
   DrugieImie VARCHAR(30) NULL,
   Nazwisko VARCHAR(40) NOT NULL,
@@ -171,7 +171,7 @@ CREATE UNIQUE INDEX TelefonPoszukujacy_UNIQUE ON PoszukujacyPracy (Telefon);
 
 
 CREATE TABLE Kwalifikacje (
-  ID_Kwalifikacje INT NOT NULL ,
+  ID_Kwalifikacje INT IDENTITY(1,1) NOT NULL ,
   Doswiadczenie TEXT NOT NULL,
   Edukacja TEXT NOT NULL,
   InformacjeDodatkowe TEXT,
@@ -182,7 +182,7 @@ CREATE TABLE Kwalifikacje (
 
 
 CREATE TABLE List (
-  ID_Listu INT NOT NULL,
+  ID_Listu INT IDENTITY(1,1) NOT NULL,
   Tresc VARCHAR(45) NOT NULL,
   PoszukujacyPracy_ID_PoszukujacyPracy INT NOT NULL,
   PRIMARY KEY (ID_Listu),
@@ -197,7 +197,7 @@ CREATE INDEX fk_List_PoszukujacyPracy1_idx ON List (PoszukujacyPracy_ID_Poszukuj
 
 
 CREATE TABLE StatusZg³oszenia (
-  ID_StatusZg³oszenia INT NOT NULL,
+  ID_StatusZg³oszenia INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(25) NOT NULL,
   Opis TEXT NULL,
   PRIMARY KEY (ID_StatusZg³oszenia),
@@ -207,7 +207,7 @@ CREATE TABLE StatusZg³oszenia (
 
 
 CREATE TABLE Rekrutacja (
-  ID_Rekrutacja INT NOT NULL,
+  ID_Rekrutacja INT IDENTITY(1,1) NOT NULL,
   InformacjaZwrotna VARCHAR(200) NOT NULL,
   OfertyPracy_ID_OfertyPracy INT NOT NULL,
   PRIMARY KEY (ID_Rekrutacja),
@@ -224,7 +224,7 @@ CREATE INDEX fk_Rekrutacja_OfertyPracy1_idx ON Rekrutacja (OfertyPracy_ID_Oferty
 
 
 CREATE TABLE Zgloszenie (
-  ID_Zgloszenie INT NOT NULL,
+  ID_Zgloszenie INT IDENTITY(1,1) NOT NULL,
   TerminSk³adaniaZg³oszenia DATE NOT NULL,
   PoszukujacyPracy_ID_PoszukujacyPracy INT NOT NULL,
   StatusZg³oszenia_ID_StatusZg³oszenia INT NOT NULL,
@@ -254,7 +254,7 @@ CREATE INDEX fk_Zgloszenia_Rekrutacja1_idx ON Zgloszenie (Rekrutacja_ID_Rekrutac
 
 
 CREATE TABLE DaneLogowaniaPoszukujacyPracy (
-  ID_DaneLogowaniaPoszukujacyPracy INT NOT NULL,
+  ID_DaneLogowaniaPoszukujacyPracy INT IDENTITY(1,1) NOT NULL,
   Login VARCHAR(40) NOT NULL,
   Has³o VARCHAR(40) NOT NULL,
   DataUtworzenia DATE NOT NULL,
@@ -288,7 +288,7 @@ CREATE  UNIQUE INDEX LoginPoszukujacyPracy_UNIQUE ON DaneLogowaniaPoszukujacyPra
 
 
 CREATE TABLE StatusLogowania (
-  ID_StatusLogowania INT NOT NULL,
+  ID_StatusLogowania INT IDENTITY(1,1) NOT NULL,
   DataLogowania DATE NOT NULL,
   DataWylogowania DATE NOT NULL,
   DaneLogowaniaPracodawca_ID_DaneLogowania INT NULL,
@@ -313,14 +313,15 @@ CREATE INDEX fk_StatusLogowania_DaneLogowaniaPoszukujacyPracy1_idx ON StatusLogo
 
 
 CREATE TABLE ID_JezykiObce (
-  ID_JezykiObce INT NOT NULL,
+  ID_JezykiObce INT IDENTITY(1,1) NOT NULL,
   Nazwa VARCHAR(30) NOT NULL,
   StopieñZaawansowania VARCHAR(30) NOT NULL,
   PRIMARY KEY (ID_JezykiObce));
 
 CREATE TABLE JezykiObceOfertyPracy (
-  ID_JezykiObce_ID_JezykiObce INT NOT NULL,
+  ID_JezykiObce_ID_JezykiObce INT IDENTITY(1,1) NOT NULL,
   OfertyPracy_ID_OfertyPracy INT NOT NULL,
+    PRIMARY KEY (ID_JezykiObce_ID_JezykiObce),
   CONSTRAINT fk_ID_JezykiObce_has_OfertyPracy_ID_JezykiObce1
     FOREIGN KEY (ID_JezykiObce_ID_JezykiObce)
     REFERENCES ID_JezykiObce (ID_JezykiObce)
@@ -336,8 +337,9 @@ CREATE INDEX fk_ID_JezykiObce_has_OfertyPracy_OfertyPracy1_idx ON JezykiObceOfer
 CREATE INDEX fk_ID_JezykiObce_has_OfertyPracy_ID_JezykiObce1_idx ON JezykiObceOfertyPracy (ID_JezykiObce_ID_JezykiObce);
 
 CREATE TABLE JezykiObcePoszukujacyPracy (
-  ID_JezykiObce_ID_JezykiObce INT NOT NULL,
+  ID_JezykiObce_ID_JezykiObce INT IDENTITY(1,1) NOT NULL,
   PoszukujacyPracy_ID_PoszukujacyPracy INT NOT NULL,
+    PRIMARY KEY (ID_JezykiObce_ID_JezykiObce),
   CONSTRAINT fk_ID_JezykiObce_has_PoszukujacyPracy_ID_JezykiObce1
     FOREIGN KEY (ID_JezykiObce_ID_JezykiObce)
     REFERENCES ID_JezykiObce (ID_JezykiObce)
@@ -353,8 +355,9 @@ CREATE INDEX fk_ID_JezykiObce_has_PoszukujacyPracy_PoszukujacyPracy1_idx ON Jezy
 CREATE INDEX fk_ID_JezykiObce_has_PoszukujacyPracy_ID_JezykiObce1_idx ON JezykiObcePoszukujacyPracy (ID_JezykiObce_ID_JezykiObce);
 
 CREATE TABLE KwalifikacjeOfertyPracy (
-  Kwalifikacje_ID_Kwalifikacje INT NOT NULL,
+  Kwalifikacje_ID_Kwalifikacje INT IDENTITY(1,1) NOT NULL,
   OfertyPracy_ID_OfertyPracy INT NOT NULL,
+  PRIMARY KEY (Kwalifikacje_ID_Kwalifikacje),
   CONSTRAINT fk_Kwalifikacje_has_OfertyPracy_Kwalifikacje1
     FOREIGN KEY (Kwalifikacje_ID_Kwalifikacje)
     REFERENCES Kwalifikacje (ID_Kwalifikacje)
@@ -370,8 +373,9 @@ CREATE INDEX fk_Kwalifikacje_has_OfertyPracy_OfertyPracy1_idx ON KwalifikacjeOfe
 CREATE INDEX fk_Kwalifikacje_has_OfertyPracy_Kwalifikacje1_idx ON KwalifikacjeOfertyPracy (Kwalifikacje_ID_Kwalifikacje);
 
 CREATE TABLE KwalifikacjePoszukujacyPracy (
-  Kwalifikacje_ID_Kwalifikacje INT NOT NULL,
+  Kwalifikacje_ID_Kwalifikacje INT  IDENTITY(1,1) NOT NULL,
   PoszukujacyPracy_ID_PoszukujacyPracy INT NOT NULL,
+  PRIMARY KEY (Kwalifikacje_ID_Kwalifikacje),
   CONSTRAINT fk_Kwalifikacje_has_PoszukujacyPracy_Kwalifikacje1
     FOREIGN KEY (Kwalifikacje_ID_Kwalifikacje)
     REFERENCES Kwalifikacje (ID_Kwalifikacje)
@@ -387,151 +391,149 @@ CREATE INDEX fk_Kwalifikacje_has_PoszukujacyPracy_PoszukujacyPracy1_idx ON Kwali
 CREATE INDEX fk_Kwalifikacje_has_PoszukujacyPracy_Kwalifikacje1_idx ON KwalifikacjePoszukujacyPracy (Kwalifikacje_ID_Kwalifikacje);
 
 
+INSERT INTO `DziedzinaPracy` (`Nazwa`) VALUES ('Administracja');
+INSERT INTO `DziedzinaPracy` ( `Nazwa`) VALUES ('Informatyka');
+INSERT INTO `DziedzinaPracy` (`Nazwa`) VALUES ('Budownictwo');
 
-INSERT INTO DziedzinaPracy (ID_DziedzinaPracy , Nazwa) VALUES (1, 'Administracja');
-INSERT INTO DziedzinaPracy (ID_DziedzinaPracy , Nazwa) VALUES (2, 'Informatyka');
-INSERT INTO DziedzinaPracy (ID_DziedzinaPracy , Nazwa) VALUES (3, 'Budownictwo');
-
-INSERT INTO RodzajUmowy ( ID_RodzajUmowy, Nazwa) VALUES (1, 'Umowa o pracê');
-INSERT INTO RodzajUmowy ( ID_RodzajUmowy, Nazwa) VALUES (2, 'Umowa o dzie³o');
-INSERT INTO RodzajUmowy ( ID_RodzajUmowy, Nazwa) VALUES (3, 'Umowa zlecenie');
+INSERT INTO `Rodzaj Umowy` ( `Nazwa`) VALUES ( 'Umowa o pracê');
+INSERT INTO `Rodzaj Umowy` (  `Nazwa`) VALUES ( 'Umowa o dzie³o');
+INSERT INTO `Rodzaj Umowy` (  `Nazwa`) VALUES ('Umowa zlecenie');
   
-INSERT INTO Umowa (ID_Umowa, MiejsceWykonania, Wynagrodzenie, CzasPracy, RodzajUmowy_ID_RodzajUmowy) VALUES
-	(1, 'Warszawa', 3500, '120' ,1);
-INSERT INTO Umowa (ID_Umowa, MiejsceWykonania, Wynagrodzenie, CzasPracy, RodzajUmowy_ID_RodzajUmowy) VALUES
-	(2, 'Lublin', 3000, '110',2);
-INSERT INTO Umowa (ID_Umowa, MiejsceWykonania, Wynagrodzenie, CzasPracy, RodzajUmowy_ID_RodzajUmowy) VALUES
-	(3, 'Poznañ', 5500, '140' ,3);
+INSERT INTO `Umowa` ( `Miejsce Wykonania`, `Wynagrodzenie`, `Czas Pracy`, `Rodzaj Umowy_ID_RodzajUmowy`) VALUES
+	( 'Warszawa', 3500, '120' ,1);
+INSERT INTO `Umowa` ( `Miejsce Wykonania`, `Wynagrodzenie`, `Czas Pracy`, `Rodzaj Umowy_ID_RodzajUmowy`) VALUES
+	( 'Lublin', 3000, '110',2);
+INSERT INTO `Umowa` ( `Miejsce Wykonania`, `Wynagrodzenie`, `Czas Pracy`, `Rodzaj Umowy_ID_RodzajUmowy`) VALUES
+	( 'Poznañ', 5500, '140' ,3);
 
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (1 , 'U¿ytkownik');
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (2 , 'U¿ytkownik');
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (3 , 'U¿ytkownik');
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (4 , 'Pracodawca');
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (5 , 'Pracodawca');
-INSERT INTO Uprawnienia ( ID_Uprawnienia , Rodzajuprawnieñ ) VALUES (6 , 'Pracodawca');
+INSERT INTO `Uprawnienia` (  `Rodzaj uprawnieñ` ) VALUES ( 'U¿ytkownik');
+INSERT INTO `Uprawnienia` ( `Rodzaj uprawnieñ` ) VALUES ( 'U¿ytkownik');
+INSERT INTO `Uprawnienia` (  `Rodzaj uprawnieñ` ) VALUES ( 'U¿ytkownik');
+INSERT INTO `Uprawnienia` (  `Rodzaj uprawnieñ` ) VALUES ( 'Pracodawca');
+INSERT INTO `Uprawnienia` ( `Rodzaj uprawnieñ` ) VALUES ( 'Pracodawca');
+INSERT INTO `Uprawnienia` (  `Rodzaj uprawnieñ` ) VALUES ('Pracodawca');
 
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (1, 'Niezablokowane');
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (2, 'Niezablokowane');
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (3, 'Niezablokowane');
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (4, 'Niezablokowane');
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (5, 'Niezablokowane');
-INSERT INTO StatusKonta (ID_StatusKonta , Nazwa ) VALUES (6, 'Niezablokowane');
+INSERT INTO `StatusKonta` (`Nazwa` ) VALUES ( 'Niezablokowane');
+INSERT INTO `StatusKonta` (`Nazwa` ) VALUES ('Niezablokowane');
+INSERT INTO `StatusKonta` ( `Nazwa` ) VALUES ( 'Niezablokowane');
+INSERT INTO `StatusKonta` ( `Nazwa` ) VALUES ('Niezablokowane');
+INSERT INTO `StatusKonta` ( `Nazwa` ) VALUES ( 'Niezablokowane');
+INSERT INTO `StatusKonta` ( `Nazwa` ) VALUES ( 'Niezablokowane');
 
-INSERT INTO DaneLogowaniaPracodawca (ID_DaneLogowaniaPracodawca, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta) VALUES
-(1, 'MietekW' , 'MietekW', '2021-04-12', 1 , 4 , 4);
-INSERT INTO DaneLogowaniaPracodawca (ID_DaneLogowaniaPracodawca, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta) VALUES
-(2, 'MietekL' , 'MietekL', '2021-04-12', 2 , 5 , 5);
-INSERT INTO DaneLogowaniaPracodawca (ID_DaneLogowaniaPracodawca, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta) VALUES
-(3, 'MietekP' , 'MietekP', '2021-04-12', 3 , 6 , 6);
+INSERT INTO `DaneLogowaniaPracodawca` ( `Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`) VALUES
+( 'MietekW' , 'MietekW', '2021-04-12', 1 , 4 , 4);
+INSERT INTO `DaneLogowaniaPracodawca` (`Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`) VALUES
+( 'MietekL' , 'MietekL', '2021-04-12', 2 , 5 , 5);
+INSERT INTO `DaneLogowaniaPracodawca` (`Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`) VALUES
+('MietekP' , 'MietekP', '2021-04-12', 3 , 6 , 6);
 
-INSERT INTO Pracodawca ( ID_Pracodawca,  Nazwa,  Miasto,  KodPocztowy,  Województwo,  Ulica,  Nrdomu ,  NrMieszkania,  Telefon ,  Email,  DaneLogowaniaPracodawcy_ID_DaneLogowania) VALUES
-(1, 'MietekW' , 'Warszawa', '03-887', 'mazowieckie', 'Al. Jerozolimskie', '43', '1A' , '015265489154', 'MietekW@gmail.com', 1);
-INSERT INTO Pracodawca ( ID_Pracodawca,  Nazwa,  Miasto,  KodPocztowy,  Województwo,  Ulica,  Nrdomu ,  NrMieszkania,  Telefon ,  Email,  DaneLogowaniaPracodawcy_ID_DaneLogowania) VALUES
-(2, 'MietekL' , 'Lublin', '20-310', 'lubelskie', 'Al. Kraœnickie', '26', '' , '185265489154', 'MietekL@gmail.com', 2);
-INSERT INTO Pracodawca ( ID_Pracodawca,  Nazwa,  Miasto,  KodPocztowy,  Województwo,  Ulica,  Nrdomu ,  NrMieszkania,  Telefon ,  Email,  DaneLogowaniaPracodawcy_ID_DaneLogowania) VALUES
-(3, 'MietekP' , 'Poznañ', '30-468', 'wielkopolskie', 'Prosta', '43', '1A' , '015653254698', 'MietekP@gmail.com', 3);
+INSERT INTO `Pracodawca` ( `Nazwa`,  `Miasto`,  `KodPocztowy`,  `Województwo`,  `Ulica`,  `Nr domu` ,  `Nr Mieszkania`,  `Telefon` ,  `Email`,  `DaneLogowaniaPracodawcy_ID_DaneLogowania`) VALUES
+( 'MietekW' , 'Warszawa', '03-887', 'mazowieckie', 'Al. Jerozolimskie', '43', '1A' , '015265489154', 'MietekW@gmail.com', 1);
+INSERT INTO `Pracodawca` (   `Nazwa`,  `Miasto`,  `KodPocztowy`,  `Województwo`,  `Ulica`,  `Nr domu` ,  `Nr Mieszkania`,  `Telefon` ,  `Email`,  `DaneLogowaniaPracodawcy_ID_DaneLogowania`) VALUES
+( 'MietekL' , 'Lublin', '20-310', 'lubelskie', 'Al. Kraœnickie', '26', '' , '185265489154', 'MietekL@gmail.com', 2);
+INSERT INTO `Pracodawca` ( `Nazwa`,  `Miasto`,  `KodPocztowy`,  `Województwo`,  `Ulica`,  `Nr domu` ,  `Nr Mieszkania`,  `Telefon` ,  `Email`,  `DaneLogowaniaPracodawcy_ID_DaneLogowania`) VALUES
+( 'MietekP' , 'Poznañ', '30-468', 'wielkopolskie', 'Prosta', '43', '1A' , '015653254698', 'MietekP@gmail.com', 3);
 
-INSERT INTO Stanowisko ( ID_Stanowisko, Nazwa) VALUES (1, 'M³odszy Specjalista');
-INSERT INTO Stanowisko ( ID_Stanowisko, Nazwa) VALUES (2, 'Specjalista');
-INSERT INTO Stanowisko ( ID_Stanowisko, Nazwa) VALUES (3, 'Starszy Specjalista');
+INSERT INTO `Stanowisko` (  `Nazwa`) VALUES ( 'M³odszy Specjalista');
+INSERT INTO `Stanowisko` (  `Nazwa`) VALUES ('Specjalista');
+INSERT INTO `Stanowisko` (  `Nazwa`) VALUES ( 'Starszy Specjalista');
 
-INSERT INTO OfertyPracy ( ID_OfertyPracy, Nazwa, Opis, DziedzinaPracy_ID_DziedzinaPracy, Umowa_ID_Umowa, Pracodawca_ID_Pracodawca, Stanowisko_ID_Stanowisko, JezykiObceOfertyPracy_ID_JezykiObce) VALUES
-(1,'Potrzebny peon w urzêdzie pracy', 'Praca, praca!' ,1,1,1,1,1);
-INSERT INTO OfertyPracy ( ID_OfertyPracy, Nazwa, Opis, DziedzinaPracy_ID_DziedzinaPracy, Umowa_ID_Umowa, Pracodawca_ID_Pracodawca, Stanowisko_ID_Stanowisko, JezykiObceOfertyPracy_ID_JezykiObce) VALUES
-(2,'Programista', 'A Twój jêzyk to *werble* PHP!' ,2,2,2,2,2);
-INSERT INTO OfertyPracy ( ID_OfertyPracy, Nazwa, Opis, DziedzinaPracy_ID_DziedzinaPracy, Umowa_ID_Umowa, Pracodawca_ID_Pracodawca, Stanowisko_ID_Stanowisko, JezykiObceOfertyPracy_ID_JezykiObce) VALUES
-(3,'Operator koparki rêcznej', 'Nie opieraæ siê o betoniarkê!' ,3,3,3,3,3);
+INSERT INTO `OfertyPracy` (  `Nazwa`, `Opis`, `DziedzinaPracy_ID_DziedzinaPracy`, `Umowa_ID_Umowa`, `Pracodawca_ID_Pracodawca`, `Stanowisko_ID_Stanowisko`, `JezykiObceOfertyPracy_ID_JezykiObce`) VALUES
+('Potrzebny peon w urzêdzie pracy', 'Praca, praca!' ,1,1,1,1,1);
+INSERT INTO `OfertyPracy` (  `Nazwa`, `Opis`, `DziedzinaPracy_ID_DziedzinaPracy`, `Umowa_ID_Umowa`, `Pracodawca_ID_Pracodawca`, `Stanowisko_ID_Stanowisko`, `JezykiObceOfertyPracy_ID_JezykiObce`) VALUES
+('Programista', 'A Twój jêzyk to *werble* PHP!' ,2,2,2,2,2);
+INSERT INTO `OfertyPracy` ( `Nazwa`, `Opis`, `DziedzinaPracy_ID_DziedzinaPracy`, `Umowa_ID_Umowa`, `Pracodawca_ID_Pracodawca`, `Stanowisko_ID_Stanowisko`, `JezykiObceOfertyPracy_ID_JezykiObce`) VALUES
+('Operator koparki rêcznej', 'Nie opieraæ siê o betoniarkê!' ,3,3,3,3,3);
 
-INSERT INTO PoszukujacyPracy ( ID_PoszukujacyPracy, Imie, DrugieImie, Nazwisko, Email, Telefon, JezykiObcePoszukujacyPracy_ID_JezykiObce) VALUES 
-(1,'Andrzej','','Kowalski','andrzej@gmail.com','214569853214',4);
-INSERT INTO PoszukujacyPracy ( ID_PoszukujacyPracy, Imie, DrugieImie, Nazwisko, Email, Telefon, JezykiObcePoszukujacyPracy_ID_JezykiObce) VALUES 
-(2,'Jan','','Nowak','jan@gmail.com','214652148214',5);
-INSERT INTO PoszukujacyPracy ( ID_PoszukujacyPracy, Imie, DrugieImie, Nazwisko, Email, Telefon, JezykiObcePoszukujacyPracy_ID_JezykiObce) VALUES 
-(3,'Pjoter','','Rzy³a','pjoter@gmail.com','214566413598',6);
+INSERT INTO `PoszukujacyPracy` (`Imie`, `Drugie Imie`, `Nazwisko`, `Email`, `Telefon`, `JezykiObcePoszukujacyPracy_ID_JezykiObce`) VALUES 
+('Andrzej','','Kowalski','andrzej@gmail.com','214569853214',4);
+INSERT INTO `PoszukujacyPracy` (`Imie`, `Drugie Imie`, `Nazwisko`, `Email`, `Telefon`, `JezykiObcePoszukujacyPracy_ID_JezykiObce`) VALUES 
+('Jan','','Nowak','jan@gmail.com','214652148214',5);
+INSERT INTO `PoszukujacyPracy` (`Imie`, `Drugie Imie`, `Nazwisko`, `Email`, `Telefon`, `JezykiObcePoszukujacyPracy_ID_JezykiObce`) VALUES 
+('Pjoter','','Rzy³a','pjoter@gmail.com','214566413598',6);
 
-INSERT INTO Kwalifikacje ( ID_Kwalifikacje, Doswiadczenie, Edukacja, InformacjeDodatkowe) VALUES 
-(1, 'Brak', 'Szko³a Wy¿sza w Bytomiu', 'Administracja to moje drugie ¿ycie');
-INSERT INTO Kwalifikacje ( ID_Kwalifikacje, Doswiadczenie, Edukacja, InformacjeDodatkowe) VALUES 
-(2, '3 lata w bran¿y', 'Politechnika Lubelska', 'PHP? A co to takiego?');
-INSERT INTO Kwalifikacje ( ID_Kwalifikacje, Doswiadczenie, Edukacja, InformacjeDodatkowe) VALUES 
-(3, '10 lat', 'Zawodowa Szko³a Bran¿owa', '-');
+INSERT INTO `Kwalifikacje` (`Doswiadczenie`, `Edukacja`, `Informacje dodatkowe`) VALUES 
+( 'Brak', 'Szko³a Wy¿sza w Bytomiu', 'Administracja to moje drugie ¿ycie');
+INSERT INTO `Kwalifikacje` (`Doswiadczenie`, `Edukacja`, `Informacje dodatkowe`) VALUES 
+('3 lata w bran¿y', 'Politechnika Lubelska', 'PHP? A co to takiego?');
+INSERT INTO `Kwalifikacje` ( `Doswiadczenie`, `Edukacja`, `Informacje dodatkowe`) VALUES 
+( '10 lat', 'Zawodowa Szko³a Bran¿owa', '-');
 
 
-INSERT INTO List ( ID_Listu, Tresc, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
-(1,'Dzieñ dobry, ja do urzêdu pracy', 1);
-INSERT INTO List ( ID_Listu, Tresc, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
-(2,'Proszê tylko nie PHP', 2);
-INSERT INTO List ( ID_Listu, Tresc, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
-(3,'Co dziœ kopiemy?', 3);
+INSERT INTO `List` (  `Tresc`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
+('Dzieñ dobry, ja do urzêdu pracy', 1);
+INSERT INTO `List` (  `Tresc`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
+('Proszê tylko nie PHP', 2);
+INSERT INTO `List` ( `Tresc`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
+('Co dziœ kopiemy?', 3);
 
-INSERT INTO StatusZg³oszenia ( ID_StatusZg³oszenia , Nazwa, Opis) VALUES 
-(1, 'Oczekiwanie','Odezwiemy siê do Pana');
-INSERT INTO StatusZg³oszenia ( ID_StatusZg³oszenia , Nazwa, Opis) VALUES 
-(2, 'Zatwierdzone','Oczekuj kontaktu');
-INSERT INTO StatusZg³oszenia ( ID_StatusZg³oszenia , Nazwa, Opis) VALUES 
-(3, 'Zatwierdzone','Oczekuj kontaktu');
+INSERT INTO `StatusZg³oszenia` (  `Nazwa`, `Opis`) VALUES 
+( 'Oczekiwanie','Odezwiemy siê do Pana');
+INSERT INTO `StatusZg³oszenia` ( `Nazwa`, `Opis`) VALUES 
+( 'Zatwierdzone','Oczekuj kontaktu');
+INSERT INTO `StatusZg³oszenia` ( `Nazwa`, `Opis`) VALUES 
+('Zatwierdzone','Oczekuj kontaktu');
 
-INSERT INTO Rekrutacja ( ID_Rekrutacja, InformacjaZwrotna , OfertyPracy_ID_OfertyPracy) VALUES 
-(1,'Zg³oszenie przyjête', 1);
-INSERT INTO Rekrutacja ( ID_Rekrutacja, InformacjaZwrotna , OfertyPracy_ID_OfertyPracy) VALUES 
-(2,'Zg³oszenie przyjête', 2);
-INSERT INTO Rekrutacja ( ID_Rekrutacja, InformacjaZwrotna , OfertyPracy_ID_OfertyPracy) VALUES 
-(3,'Zg³oszenie przyjête', 3);
+INSERT INTO `Rekrutacja` ( `Informacja zwrotna` , `OfertyPracy_ID_OfertyPracy`) VALUES 
+('Zg³oszenie przyjête', 1);
+INSERT INTO `Rekrutacja` ( `Informacja zwrotna` , `OfertyPracy_ID_OfertyPracy`) VALUES 
+('Zg³oszenie przyjête', 2);
+INSERT INTO `Rekrutacja` ( `Informacja zwrotna` , `OfertyPracy_ID_OfertyPracy`) VALUES 
+('Zg³oszenie przyjête', 3);
 
-INSERT INTO Zgloszenie ( ID_Zgloszenie, TerminSk³adaniaZg³oszenia, PoszukujacyPracy_ID_PoszukujacyPracy, StatusZg³oszenia_ID_StatusZg³oszenia, Rekrutacja_ID_Rekrutacja) VALUES 
-(1,'2020-03-03',1,1,1);
-INSERT INTO Zgloszenie ( ID_Zgloszenie, TerminSk³adaniaZg³oszenia, PoszukujacyPracy_ID_PoszukujacyPracy, StatusZg³oszenia_ID_StatusZg³oszenia, Rekrutacja_ID_Rekrutacja) VALUES 
-(2,'2020-06-08',2,2,2);
-INSERT INTO Zgloszenie ( ID_Zgloszenie, TerminSk³adaniaZg³oszenia, PoszukujacyPracy_ID_PoszukujacyPracy, StatusZg³oszenia_ID_StatusZg³oszenia, Rekrutacja_ID_Rekrutacja) VALUES 
-(3,'2020-05-23',3,3,3);
+INSERT INTO `Zgloszenie` ( `Termin sk³adania zg³oszenia`, `PoszukujacyPracy_ID_PoszukujacyPracy`, `StatusZg³oszenia_ID_StatusZg³oszenia`, `Rekrutacja_ID_Rekrutacja`) VALUES 
+('2020-03-03',1,1,1);
+INSERT INTO `Zgloszenie` (`Termin sk³adania zg³oszenia`, `PoszukujacyPracy_ID_PoszukujacyPracy`, `StatusZg³oszenia_ID_StatusZg³oszenia`, `Rekrutacja_ID_Rekrutacja`) VALUES 
+('2020-06-08',2,2,2);
+INSERT INTO `Zgloszenie` (`Termin sk³adania zg³oszenia`, `PoszukujacyPracy_ID_PoszukujacyPracy`, `StatusZg³oszenia_ID_StatusZg³oszenia`, `Rekrutacja_ID_Rekrutacja`) VALUES 
+('2020-05-23',3,3,3);
 
-INSERT INTO DaneLogowaniaPoszukujacyPracy ( ID_DaneLogowaniaPoszukujacyPracy, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta, PoszukujacyPracy_ID_PoszukujacyPracy ) VALUES
-(1,'andrzejK','andrzej123','2020-03-28',1,1,1,1);
-INSERT INTO DaneLogowaniaPoszukujacyPracy ( ID_DaneLogowaniaPoszukujacyPracy, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta, PoszukujacyPracy_ID_PoszukujacyPracy ) VALUES
-(2,'janN','jan123','2021-02-22',2,2,2,2);
-INSERT INTO DaneLogowaniaPoszukujacyPracy ( ID_DaneLogowaniaPoszukujacyPracy, Login, Has³o, DataUtworzenia, Pracodawca_ID_Pracodawca, Uprawnienia_ID_Uprawnienia, StatusKonta_ID_StatusKonta, PoszukujacyPracy_ID_PoszukujacyPracy ) VALUES
-(3,'pjoterR','pjoter123','2021-01-24',3,3,3,3);
+INSERT INTO `DaneLogowaniaPoszukujacyPracy` (`Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`, `PoszukujacyPracy_ID_PoszukujacyPracy` ) VALUES
+('andrzejK','andrzej123','2020-03-28',1,1,1,1);
+INSERT INTO `DaneLogowaniaPoszukujacyPracy` ( `Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`, `PoszukujacyPracy_ID_PoszukujacyPracy` ) VALUES
+('janN','jan123','2021-02-22',2,2,2,2);
+INSERT INTO `DaneLogowaniaPoszukujacyPracy` (`Login`, `Has³o`, `Data Utworzenia`, `Pracodawca_ID_Pracodawca`, `Uprawnienia_ID_Uprawnienia`, `StatusKonta_ID_StatusKonta`, `PoszukujacyPracy_ID_PoszukujacyPracy` ) VALUES
+('pjoterR','pjoter123','2021-01-24',3,3,3,3);
   
-INSERT INTO StatusLogowania ( ID_StatusLogowania, DataLogowania, DataWylogowania, DaneLogowaniaPracodawca_ID_DaneLogowania, DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania) VALUES 
-(1,'2020-03-28','2020-03-28',1,1);
-INSERT INTO StatusLogowania ( ID_StatusLogowania, DataLogowania, DataWylogowania, DaneLogowaniaPracodawca_ID_DaneLogowania, DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania) VALUES 
-(2,'2021-02-22','2021-02-22',2,2);
-INSERT INTO StatusLogowania ( ID_StatusLogowania, DataLogowania, DataWylogowania, DaneLogowaniaPracodawca_ID_DaneLogowania, DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania) VALUES 
-(3,'2021-01-24','2021-01-24',3,3);
+INSERT INTO `StatusLogowania` (`DataLogowania`, `DataWylogowania`, `DaneLogowaniaPracodawca_ID_DaneLogowania`, `DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania`) VALUES 
+('2020-03-28','2020-03-28',1,1);
+INSERT INTO `StatusLogowania` (`DataLogowania`, `DataWylogowania`, `DaneLogowaniaPracodawca_ID_DaneLogowania`, `DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania`) VALUES 
+('2021-02-22','2021-02-22',2,2);
+INSERT INTO `StatusLogowania` (`DataLogowania`, `DataWylogowania`, `DaneLogowaniaPracodawca_ID_DaneLogowania`, `DaneLogowaniaPoszukujacyPracy_ID_DaneLogowania`) VALUES 
+('2021-01-24','2021-01-24',3,3);
 
-INSERT INTO ID_JezykiObce ( ID_JezykiObce, Nazwa , StopieñZaawansowania ) VALUES
-(1,'Angielski','C1');
-INSERT INTO ID_JezykiObce ( ID_JezykiObce, Nazwa , StopieñZaawansowania ) VALUES
-(2,'Angielski','B1');
-INSERT INTO ID_JezykiObce ( ID_JezykiObce, Nazwa , StopieñZaawansowania ) VALUES
-(3,'Angielski','A1');
+INSERT INTO `ID_JezykiObce` ( `Nazwa` , `Stopieñ zaawansowania` ) VALUES
+('Angielski','C1');
+INSERT INTO `ID_JezykiObce` ( `Nazwa` , `Stopieñ zaawansowania` ) VALUES
+('Angielski','B1');
+INSERT INTO `ID_JezykiObce` (`Nazwa` , `Stopieñ zaawansowania` ) VALUES
+('Angielski','A1');
 
-INSERT INTO JezykiObceOfertyPracy ( ID_JezykiObce_ID_JezykiObce, OfertyPracy_ID_OfertyPracy) VALUES 
+INSERT INTO `JezykiObceOfertyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `OfertyPracy_ID_OfertyPracy`) VALUES 
 (1,1);
-INSERT INTO JezykiObceOfertyPracy ( ID_JezykiObce_ID_JezykiObce, OfertyPracy_ID_OfertyPracy) VALUES 
+INSERT INTO `JezykiObceOfertyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `OfertyPracy_ID_OfertyPracy`) VALUES 
 (2,2);
-INSERT INTO JezykiObceOfertyPracy ( ID_JezykiObce_ID_JezykiObce, OfertyPracy_ID_OfertyPracy) VALUES 
+INSERT INTO `JezykiObceOfertyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `OfertyPracy_ID_OfertyPracy`) VALUES 
 (3,3);
 
-INSERT INTO JezykiObcePoszukujacyPracy ( ID_JezykiObce_ID_JezykiObce, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `JezykiObcePoszukujacyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (1,1);
-INSERT INTO JezykiObcePoszukujacyPracy ( ID_JezykiObce_ID_JezykiObce, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `JezykiObcePoszukujacyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (2,2);
-INSERT INTO JezykiObcePoszukujacyPracy ( ID_JezykiObce_ID_JezykiObce, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `JezykiObcePoszukujacyPracy` ( `ID_JezykiObce_ID_JezykiObce`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (3,3);
 
-INSERT INTO KwalifikacjeOfertyPracy ( Kwalifikacje_ID_Kwalifikacje, OfertyPracy_ID_OfertyPracy) VALUES
+INSERT INTO `KwalifikacjeOfertyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `OfertyPracy_ID_OfertyPracy`) VALUES
 (1,1);
-INSERT INTO KwalifikacjeOfertyPracy ( Kwalifikacje_ID_Kwalifikacje, OfertyPracy_ID_OfertyPracy) VALUES
+INSERT INTO `KwalifikacjeOfertyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `OfertyPracy_ID_OfertyPracy`) VALUES
 (2,2);
-INSERT INTO KwalifikacjeOfertyPracy ( Kwalifikacje_ID_Kwalifikacje, OfertyPracy_ID_OfertyPracy) VALUES
+INSERT INTO `KwalifikacjeOfertyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `OfertyPracy_ID_OfertyPracy`) VALUES
 (3,3);
 
-INSERT INTO KwalifikacjePoszukujacyPracy ( Kwalifikacje_ID_Kwalifikacje, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `KwalifikacjePoszukujacyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (1,1);
-INSERT INTO KwalifikacjePoszukujacyPracy ( Kwalifikacje_ID_Kwalifikacje, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `KwalifikacjePoszukujacyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (2,2);
-INSERT INTO KwalifikacjePoszukujacyPracy ( Kwalifikacje_ID_Kwalifikacje, PoszukujacyPracy_ID_PoszukujacyPracy) VALUES 
+INSERT INTO `KwalifikacjePoszukujacyPracy` ( `Kwalifikacje_ID_Kwalifikacje`, `PoszukujacyPracy_ID_PoszukujacyPracy`) VALUES 
 (3,3);
-
 
