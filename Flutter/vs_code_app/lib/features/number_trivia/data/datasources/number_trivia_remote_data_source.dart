@@ -5,9 +5,9 @@ import 'package:vs_code_app/features/number_trivia/data/models/number_trivia_mod
 import 'package:http/http.dart' as http;
 
 abstract class NumberTriviaRemoteDataSource {
-  Future<NumberTriviaModel>? getConcreteNumberTrivia(int number);
+  Future<NumberTriviaModel> getConcreteNumberTrivia(int number);
 
-  Future<NumberTriviaModel>? getRandomTrivia();
+  Future<NumberTriviaModel> getRandomTrivia();
 }
 
 class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
@@ -16,11 +16,11 @@ class NumberTriviaRemoteDataSourceImpl implements NumberTriviaRemoteDataSource {
   NumberTriviaRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<NumberTriviaModel>? getConcreteNumberTrivia(int number) =>
+  Future<NumberTriviaModel> getConcreteNumberTrivia(int number) =>
       _getTriviaFromUrl('http://numbersapi.com/$number');
 
   @override
-  Future<NumberTriviaModel>? getRandomTrivia() =>
+  Future<NumberTriviaModel> getRandomTrivia() =>
       _getTriviaFromUrl('http://numbersapi.com/random');
 
   Future<NumberTriviaModel> _getTriviaFromUrl(String url) async {

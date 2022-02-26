@@ -21,18 +21,18 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
       required this.networkInfo});
 
   @override
-  Future<Either<Failure, NumberTrivia>>? getConcreteNumberTrivia(
+  Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
       int number) async {
     return await _getTrivia(
         () => remoteDataSource.getConcreteNumberTrivia(number));
   }
 
   @override
-  Future<Either<Failure, NumberTrivia>>? getRandomNumberTrivia() async {
+  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
     return await _getTrivia(() => remoteDataSource.getRandomTrivia());
   }
 
-  Future<Either<Failure, NumberTrivia>> _getTrivia(
+  Future<Either<Failure, NumberTriviaModel>> _getTrivia(
       _ConcreteOrRandomChooser getConcreteOrRandom) async {
     if (await networkInfo.isConnected) {
       try {
