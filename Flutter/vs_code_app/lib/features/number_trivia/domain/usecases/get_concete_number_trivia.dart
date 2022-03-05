@@ -8,13 +8,13 @@ import 'package:vs_code_app/features/number_trivia/domain/repositories/number_tr
 
 class GetConcreteNumberTrivia extends UseCase<NumberTrivia,Params>{
 
-  final NumberTriviaRepository repository;
+  final NumberTriviaRepository? repository;
 
   GetConcreteNumberTrivia(this.repository);
 
   @override
-  Future<Either<Failure,NumberTrivia>?> call(Params params) async{
-    return await repository.getConcreteNumberTrivia(params.number);
+  Future<Either<Failure,NumberTrivia>?> call(Params? params) async{
+    return await repository?.getConcreteNumberTrivia(params!.number);
   }
 
 }
