@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:vs_code_app/core/error/failures.dart';
+import 'package:vs_code_app/core/usecases/usecase.dart';
 import 'package:vs_code_app/core/util/input_converter.dart';
 import 'package:vs_code_app/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:vs_code_app/features/number_trivia/domain/usecases/get_concete_number_trivia.dart';
@@ -46,19 +48,26 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
           yield Loading();
           final failureOrTrivia =
               await getConcreteNumberTrivia(Params(number: integer));
-          yield failureOrTrivia!.fold(
-              (failure) => Error(
-                  message: _mapFailureToMessage(failure)),
-              (trivia) => Loaded(trivia: trivia));
-
-          //throw 'Nullable type exception';
+          yield* _eitherLoadedOrErrorState(failureOrTrivia);
         },
       );
+    } else if (event is GetTriviaForRandomNumber) {
+      yield Loading();
+      final failureOrTrivia = await getRandomNumberTrivia!(NoParams());
+
+      yield* _eitherLoadedOrErrorState(failureOrTrivia);
     }
   }
 
-  String _mapFailureToMessage(Failure failure){
-    switch(failure.runtimeType){
+  Stream<NumberTriviaState> _eitherLoadedOrErrorState(
+      Either<Failure, NumberTrivia>? either) async* {
+    yield either!.fold(
+        (failure) => Error(message: _mapFailureToMessage(failure)),
+        (trivia) => Loaded(trivia: trivia));
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
       case ServerFailure:
         return SERVER_FAILURE_MESSAGE;
       case CacheFailure:
