@@ -1,4 +1,4 @@
-import 'dart:math';
+
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -61,7 +61,7 @@ void main() {
       when(mockInputConverter.stringToUnsignedInteger(any))
           .thenReturn(Right(tNumberParsed));
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
       await untilCalled(mockInputConverter.stringToUnsignedInteger(any));
 
       //assert
@@ -81,7 +81,7 @@ void main() {
       expectLater(bloc.state, emitsInOrder(expected));
 
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
 
     test('should emit [Loading,Error] when getting data fails', () async {
@@ -98,7 +98,7 @@ void main() {
       expectLater(bloc.state, emitsInOrder(expected));
 
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
 
     test(
@@ -118,7 +118,7 @@ void main() {
       expectLater(bloc.state, emitsInOrder(expected));
 
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
     test('should emit [Error] when the input is invalid', () async {
       //arrange
@@ -135,7 +135,7 @@ void main() {
       expectLater(bloc.state, emitsInOrder(expected));
 
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
     });
 
     test('should get data from the concrete use case', () async {
@@ -146,7 +146,7 @@ void main() {
           .thenAnswer((_) async => Right(tNumberTrivia));
 
       //act
-      bloc.dispatch(GetTriviaForConcreteNumber(tNumberString));
+      bloc.add(GetTriviaForConcreteNumber(tNumberString));
       await untilCalled(mockGetConcreteNumberTrivia(any));
 
       //assert
@@ -163,7 +163,7 @@ void main() {
           .thenAnswer((_) async => Right(tNumberTrivia));
 
       //act
-      bloc.dispatch(GetTriviaForRandomNumber());
+      bloc.add(GetTriviaForRandomNumber());
       await untilCalled(mockGetRandomNumberTrivia(any));
 
       //assert
@@ -181,7 +181,7 @@ void main() {
       expectLater(bloc.state, emitsInOrder(expected));
 
       //act
-      bloc.dispatch(GetTriviaForRandomNumber());
+      bloc.add(GetTriviaForRandomNumber());
     });
 
     test('should emit [Loading, Error] when getting data fails', () async {
@@ -198,7 +198,7 @@ void main() {
       expectLater(bloc.state, expected);
 
       //act
-      bloc.dispatch(GetTriviaForRandomNumber());
+      bloc.add(GetTriviaForRandomNumber());
     });
 
     test(
@@ -217,7 +217,7 @@ void main() {
       expectLater(bloc.state, expected);
 
       //act
-          bloc.dispatch(GetTriviaForRandomNumber());
+          bloc.add(GetTriviaForRandomNumber());
     });
 
 
