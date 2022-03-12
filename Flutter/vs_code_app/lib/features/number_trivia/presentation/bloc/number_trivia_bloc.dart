@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:vs_code_app/core/error/failures.dart';
 import 'package:vs_code_app/core/usecases/usecase.dart';
 import 'package:vs_code_app/core/util/input_converter.dart';
@@ -21,15 +22,15 @@ const String INVALID_INPUT_FAILURE_MESSAGE =
 
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia getConcreteNumberTrivia;
-  final GetRandomNumberTrivia? getRandomNumberTrivia;
+  final GetRandomNumberTrivia getRandomNumberTrivia;
   final InputConverter inputConverter;
 
   NumberTriviaBloc(
       {required GetConcreteNumberTrivia concrete,
-      required GetRandomNumberTrivia? random,
+      required GetRandomNumberTrivia random,
       required this.inputConverter})
       : getConcreteNumberTrivia = concrete,
-        getRandomNumberTrivia = random;
+        getRandomNumberTrivia = random,super(Empty());
 
   @override
   NumberTriviaState get initialState => Empty();
