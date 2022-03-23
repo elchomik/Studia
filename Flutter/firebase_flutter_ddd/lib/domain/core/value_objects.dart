@@ -2,10 +2,14 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_flutter_ddd/domain/core/failures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'errors.dart';
+
 @immutable
 abstract class ValueObject<T> {
   const ValueObject();
   Either<ValueFailure<T>, T> get value;
+
+  T getOrCrash() => value.fold((l) => throw UnexpectedValueError(l), id);
 
   bool isValid() => value.isRight();
 
