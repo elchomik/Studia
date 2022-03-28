@@ -1,13 +1,14 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
-import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
+import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
 import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton()
+@Injectable(as: IAuthFacade)
 class FirebaseAuthFacade implements IAuthFacade {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -56,7 +57,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return left(AuthFailure.cancledByUser());
+        return left(const AuthFailure.cancledByUser());
       }
       final googleAuthentication = await googleUser.authentication;
 
