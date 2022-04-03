@@ -4,10 +4,10 @@ import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
 import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import "package:google_sign_in/google_sign_in.dart";
 import 'package:injectable/injectable.dart';
 
-@LazySingleton()
+@LazySingleton(as: IAuthFacade)
 @Injectable(as: IAuthFacade)
 class FirebaseAuthFacade implements IAuthFacade {
   final FirebaseAuth _firebaseAuth;
