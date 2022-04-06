@@ -1,4 +1,4 @@
-import 'package:firebase_flutter_ddd/domain/auth/sign_in_form/bloc/sign_in_form_bloc.dart';
+import 'package:firebase_flutter_ddd/application/auth/bloc/sign_in_form/sign_in_form_bloc.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
 import 'package:firebase_flutter_ddd/presentation/sign_in/widgets/sign_in_form.dart';
 import 'package:flutter/material.dart';
