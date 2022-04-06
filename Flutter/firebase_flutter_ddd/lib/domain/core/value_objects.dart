@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:firebase_flutter_ddd/domain/core/failures.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'package:firebase_flutter_ddd/domain/core/failures.dart';
+import 'package:uuid/uuid.dart';
 
 import 'errors.dart';
 
@@ -24,4 +26,19 @@ abstract class ValueObject<T> {
 
   @override
   String toString() => 'Value($value)';
+}
+
+class UniqueId extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
+
+  factory UniqueId() {
+    return UniqueId._(right(const Uuid().v1()));
+  }
+
+  factory UniqueId.fromUniqueString(String uniqueId) {
+    return UniqueId._(right(uniqueId));
+  }
+
+  const UniqueId._(this.value);
 }
