@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
 import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart';
+import 'package:firebase_flutter_ddd/infrastructure/auth/firebase_user_mapper.dart';
 import 'package:flutter/services.dart';
 import "package:google_sign_in/google_sign_in.dart";
 import 'package:injectable/injectable.dart';
@@ -72,4 +73,14 @@ class FirebaseAuthFacade implements IAuthFacade {
       return left(const AuthFailure.serverError());
     }
   }
+
+  @override
+  Future<Option<User>> getSignedInUser() async {
+    optionOf(_firebaseAuth.currentUser?.toDomain());
+    throw "Null posible option";
+  }
+
+  @override
+  Future<void> signOut() =>
+      Future.wait([_googleSignIn.signOut(), _firebaseAuth.signOut()]);
 }
