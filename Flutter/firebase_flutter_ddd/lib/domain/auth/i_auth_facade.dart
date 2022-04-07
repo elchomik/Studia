@@ -4,7 +4,7 @@ import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
 
 abstract class IAuthFacade {
-  Future<Option<User>> getSignedInUser();
+  Future<Option<User>?> getSignedInUser();
   Future<Either<AuthFailure, Unit>> registerWithEmailAndPassword(
       {required EmailAddress emailAddress, required Password password});
 
