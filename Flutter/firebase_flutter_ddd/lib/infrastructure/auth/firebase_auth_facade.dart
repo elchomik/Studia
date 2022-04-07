@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:firebase_flutter_ddd/domain/auth/email_address.dart';
 import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart';
+import 'package:firebase_flutter_ddd/domain/core/value_objects.dart';
 import 'package:firebase_flutter_ddd/infrastructure/auth/firebase_user_mapper.dart';
 import 'package:flutter/services.dart';
 import "package:google_sign_in/google_sign_in.dart";
 import 'package:injectable/injectable.dart';
+import 'package:uuid/uuid.dart';
 
 @LazySingleton(as: IAuthFacade)
 @Injectable(as: IAuthFacade)
@@ -75,9 +79,8 @@ class FirebaseAuthFacade implements IAuthFacade {
   }
 
   @override
-  Future<Option<User>> getSignedInUser() async {
+  Future<Option<User>?> getSignedInUser() async {
     optionOf(_firebaseAuth.currentUser?.toDomain());
-    throw "Null posible option";
   }
 
   @override

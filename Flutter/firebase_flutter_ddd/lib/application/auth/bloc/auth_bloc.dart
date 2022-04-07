@@ -15,13 +15,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final IAuthFacade _authFacade;
 
   AuthBloc(this._authFacade) : super(const AuthState.initial()) {
-    on<AuthEvent>(_authCheckRequested);
-    on<AuthEvent>(_signedOut);
+    on<AuthCheckRequested>(_authCheckRequested);
+    on<SignedOut>(_signedOut);
   }
 
   Future _authCheckRequested(AuthEvent event, Emitter<AuthState> emit) async {
     final userOption = await _authFacade.getSignedInUser();
-    return userOption.fold(
+    return userOption?.fold(
       () => emit(const AuthState.unauthenticated()),
       (_) => emit(const AuthState.authenticated()),
     );
