@@ -35,6 +35,7 @@ class SignInForm extends StatelessWidget {
         return Form(
           autovalidateMode: AutovalidateMode.always,
           child: ListView(
+            padding: const EdgeInsets.all(8.0),
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Text(
@@ -124,7 +125,13 @@ class SignInForm extends StatelessWidget {
                   textStyle: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 child: const Text("SIGN IN WITH GOOGLE"),
-              )
+              ),
+              if (state.isSubmitting) ...[
+                const SizedBox(height: 0),
+                const LinearProgressIndicator(
+                  value: null,
+                )
+              ]
             ],
           ),
         );
