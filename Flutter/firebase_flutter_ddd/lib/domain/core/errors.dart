@@ -1,5 +1,7 @@
 import 'package:firebase_flutter_ddd/domain/core/failures.dart';
 
+class NotAutehnticatedError extends Error {}
+
 class UnexpectedValueError extends Error {
   final ValueFailure valueFailure;
 
