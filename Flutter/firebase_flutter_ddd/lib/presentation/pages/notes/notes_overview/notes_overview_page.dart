@@ -4,6 +4,7 @@ import 'package:firebase_flutter_ddd/application/auth/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_ddd/application/notes/note_actor/bloc/note_actor_bloc.dart';
 import 'package:firebase_flutter_ddd/application/notes/note_watcher/bloc/note_watcher_bloc.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
+import 'package:firebase_flutter_ddd/presentation/pages/notes/notes_overview/widgets/notes_overview_body_widget.dart';
 import 'package:firebase_flutter_ddd/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,6 +64,7 @@ class NotesOverviewPage extends StatelessWidget {
                   icon: const Icon(Icons.indeterminate_check_box))
             ],
           ),
+          body: NotesOverviewBody(),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               //TODO: Navigate to NoteFormPage
