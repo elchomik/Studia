@@ -12,38 +12,11 @@ part of 'note_dtos.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 NoteDto _$NoteDtoFromJson(Map<String, dynamic> json) {
   return _NoteDto.fromJson(json);
 }
-
-/// @nodoc
-class _$NoteDtoTearOff {
-  const _$NoteDtoTearOff();
-
-  _NoteDto call(
-      {required String id,
-      required String body,
-      required int color,
-      required List<TodoItemDto> todos,
-      @ServerTimestampConverter() required FieldValue serverTimeStamp}) {
-    return _NoteDto(
-      id: id,
-      body: body,
-      color: color,
-      todos: todos,
-      serverTimeStamp: serverTimeStamp,
-    );
-  }
-
-  NoteDto fromJson(Map<String, Object?> json) {
-    return NoteDto.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $NoteDto = _$NoteDtoTearOff();
 
 /// @nodoc
 mixin _$NoteDto {
@@ -113,9 +86,10 @@ class _$NoteDtoCopyWithImpl<$Res> implements $NoteDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$NoteDtoCopyWith<$Res> implements $NoteDtoCopyWith<$Res> {
-  factory _$NoteDtoCopyWith(_NoteDto value, $Res Function(_NoteDto) then) =
-      __$NoteDtoCopyWithImpl<$Res>;
+abstract class _$$_NoteDtoCopyWith<$Res> implements $NoteDtoCopyWith<$Res> {
+  factory _$$_NoteDtoCopyWith(
+          _$_NoteDto value, $Res Function(_$_NoteDto) then) =
+      __$$_NoteDtoCopyWithImpl<$Res>;
   @override
   $Res call(
       {String id,
@@ -126,13 +100,13 @@ abstract class _$NoteDtoCopyWith<$Res> implements $NoteDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$NoteDtoCopyWithImpl<$Res> extends _$NoteDtoCopyWithImpl<$Res>
-    implements _$NoteDtoCopyWith<$Res> {
-  __$NoteDtoCopyWithImpl(_NoteDto _value, $Res Function(_NoteDto) _then)
-      : super(_value, (v) => _then(v as _NoteDto));
+class __$$_NoteDtoCopyWithImpl<$Res> extends _$NoteDtoCopyWithImpl<$Res>
+    implements _$$_NoteDtoCopyWith<$Res> {
+  __$$_NoteDtoCopyWithImpl(_$_NoteDto _value, $Res Function(_$_NoteDto) _then)
+      : super(_value, (v) => _then(v as _$_NoteDto));
 
   @override
-  _NoteDto get _value => super._value as _NoteDto;
+  _$_NoteDto get _value => super._value as _$_NoteDto;
 
   @override
   $Res call({
@@ -142,7 +116,7 @@ class __$NoteDtoCopyWithImpl<$Res> extends _$NoteDtoCopyWithImpl<$Res>
     Object? todos = freezed,
     Object? serverTimeStamp = freezed,
   }) {
-    return _then(_NoteDto(
+    return _then(_$_NoteDto(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -156,7 +130,7 @@ class __$NoteDtoCopyWithImpl<$Res> extends _$NoteDtoCopyWithImpl<$Res>
           : color // ignore: cast_nullable_to_non_nullable
               as int,
       todos: todos == freezed
-          ? _value.todos
+          ? _value._todos
           : todos // ignore: cast_nullable_to_non_nullable
               as List<TodoItemDto>,
       serverTimeStamp: serverTimeStamp == freezed
@@ -174,9 +148,10 @@ class _$_NoteDto extends _NoteDto {
       {required this.id,
       required this.body,
       required this.color,
-      required this.todos,
+      required final List<TodoItemDto> todos,
       @ServerTimestampConverter() required this.serverTimeStamp})
-      : super._();
+      : _todos = todos,
+        super._();
 
   factory _$_NoteDto.fromJson(Map<String, dynamic> json) =>
       _$$_NoteDtoFromJson(json);
@@ -187,8 +162,13 @@ class _$_NoteDto extends _NoteDto {
   final String body;
   @override
   final int color;
+  final List<TodoItemDto> _todos;
   @override
-  final List<TodoItemDto> todos;
+  List<TodoItemDto> get todos {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_todos);
+  }
+
   @override
   @ServerTimestampConverter()
   final FieldValue serverTimeStamp;
@@ -202,28 +182,29 @@ class _$_NoteDto extends _NoteDto {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _NoteDto &&
+            other is _$_NoteDto &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.body, body) &&
             const DeepCollectionEquality().equals(other.color, color) &&
-            const DeepCollectionEquality().equals(other.todos, todos) &&
+            const DeepCollectionEquality().equals(other._todos, _todos) &&
             const DeepCollectionEquality()
                 .equals(other.serverTimeStamp, serverTimeStamp));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(body),
       const DeepCollectionEquality().hash(color),
-      const DeepCollectionEquality().hash(todos),
+      const DeepCollectionEquality().hash(_todos),
       const DeepCollectionEquality().hash(serverTimeStamp));
 
   @JsonKey(ignore: true)
   @override
-  _$NoteDtoCopyWith<_NoteDto> get copyWith =>
-      __$NoteDtoCopyWithImpl<_NoteDto>(this, _$identity);
+  _$$_NoteDtoCopyWith<_$_NoteDto> get copyWith =>
+      __$$_NoteDtoCopyWithImpl<_$_NoteDto>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -233,57 +214,36 @@ class _$_NoteDto extends _NoteDto {
 
 abstract class _NoteDto extends NoteDto {
   const factory _NoteDto(
-          {required String id,
-          required String body,
-          required int color,
-          required List<TodoItemDto> todos,
-          @ServerTimestampConverter() required FieldValue serverTimeStamp}) =
-      _$_NoteDto;
+      {required final String id,
+      required final String body,
+      required final int color,
+      required final List<TodoItemDto> todos,
+      @ServerTimestampConverter()
+          required final FieldValue serverTimeStamp}) = _$_NoteDto;
   const _NoteDto._() : super._();
 
   factory _NoteDto.fromJson(Map<String, dynamic> json) = _$_NoteDto.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get body;
+  String get body => throw _privateConstructorUsedError;
   @override
-  int get color;
+  int get color => throw _privateConstructorUsedError;
   @override
-  List<TodoItemDto> get todos;
+  List<TodoItemDto> get todos => throw _privateConstructorUsedError;
   @override
   @ServerTimestampConverter()
-  FieldValue get serverTimeStamp;
+  FieldValue get serverTimeStamp => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$NoteDtoCopyWith<_NoteDto> get copyWith =>
+  _$$_NoteDtoCopyWith<_$_NoteDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 TodoItemDto _$TodoItemDtoFromJson(Map<String, dynamic> json) {
   return _TodoItemDto.fromJson(json);
 }
-
-/// @nodoc
-class _$TodoItemDtoTearOff {
-  const _$TodoItemDtoTearOff();
-
-  _TodoItemDto call(
-      {required String id, required String name, required bool done}) {
-    return _TodoItemDto(
-      id: id,
-      name: name,
-      done: done,
-    );
-  }
-
-  TodoItemDto fromJson(Map<String, Object?> json) {
-    return TodoItemDto.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $TodoItemDto = _$TodoItemDtoTearOff();
 
 /// @nodoc
 mixin _$TodoItemDto {
@@ -337,24 +297,24 @@ class _$TodoItemDtoCopyWithImpl<$Res> implements $TodoItemDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$TodoItemDtoCopyWith<$Res>
+abstract class _$$_TodoItemDtoCopyWith<$Res>
     implements $TodoItemDtoCopyWith<$Res> {
-  factory _$TodoItemDtoCopyWith(
-          _TodoItemDto value, $Res Function(_TodoItemDto) then) =
-      __$TodoItemDtoCopyWithImpl<$Res>;
+  factory _$$_TodoItemDtoCopyWith(
+          _$_TodoItemDto value, $Res Function(_$_TodoItemDto) then) =
+      __$$_TodoItemDtoCopyWithImpl<$Res>;
   @override
   $Res call({String id, String name, bool done});
 }
 
 /// @nodoc
-class __$TodoItemDtoCopyWithImpl<$Res> extends _$TodoItemDtoCopyWithImpl<$Res>
-    implements _$TodoItemDtoCopyWith<$Res> {
-  __$TodoItemDtoCopyWithImpl(
-      _TodoItemDto _value, $Res Function(_TodoItemDto) _then)
-      : super(_value, (v) => _then(v as _TodoItemDto));
+class __$$_TodoItemDtoCopyWithImpl<$Res> extends _$TodoItemDtoCopyWithImpl<$Res>
+    implements _$$_TodoItemDtoCopyWith<$Res> {
+  __$$_TodoItemDtoCopyWithImpl(
+      _$_TodoItemDto _value, $Res Function(_$_TodoItemDto) _then)
+      : super(_value, (v) => _then(v as _$_TodoItemDto));
 
   @override
-  _TodoItemDto get _value => super._value as _TodoItemDto;
+  _$_TodoItemDto get _value => super._value as _$_TodoItemDto;
 
   @override
   $Res call({
@@ -362,7 +322,7 @@ class __$TodoItemDtoCopyWithImpl<$Res> extends _$TodoItemDtoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? done = freezed,
   }) {
-    return _then(_TodoItemDto(
+    return _then(_$_TodoItemDto(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -405,12 +365,13 @@ class _$_TodoItemDto extends _TodoItemDto {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _TodoItemDto &&
+            other is _$_TodoItemDto &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.done, done));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -420,8 +381,8 @@ class _$_TodoItemDto extends _TodoItemDto {
 
   @JsonKey(ignore: true)
   @override
-  _$TodoItemDtoCopyWith<_TodoItemDto> get copyWith =>
-      __$TodoItemDtoCopyWithImpl<_TodoItemDto>(this, _$identity);
+  _$$_TodoItemDtoCopyWith<_$_TodoItemDto> get copyWith =>
+      __$$_TodoItemDtoCopyWithImpl<_$_TodoItemDto>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -431,22 +392,22 @@ class _$_TodoItemDto extends _TodoItemDto {
 
 abstract class _TodoItemDto extends TodoItemDto {
   const factory _TodoItemDto(
-      {required String id,
-      required String name,
-      required bool done}) = _$_TodoItemDto;
+      {required final String id,
+      required final String name,
+      required final bool done}) = _$_TodoItemDto;
   const _TodoItemDto._() : super._();
 
   factory _TodoItemDto.fromJson(Map<String, dynamic> json) =
       _$_TodoItemDto.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  bool get done;
+  bool get done => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$TodoItemDtoCopyWith<_TodoItemDto> get copyWith =>
+  _$$_TodoItemDtoCopyWith<_$_TodoItemDto> get copyWith =>
       throw _privateConstructorUsedError;
 }

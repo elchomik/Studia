@@ -32,10 +32,12 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
 
   Future<void> _initialized(
       Initialized event, Emitter<NoteFormState> emit) async {
-    emit(event.initialNoteOption.fold(
-      () => state,
-      (initialNote) => state.copyWith(note: initialNote, isEditing: true),
-    ));
+    emit(
+      event.initialNoteOption.fold(
+        () => state,
+        (initialNote) => state.copyWith(note: initialNote, isEditing: true),
+      ),
+    );
   }
 
   Future<void> _bodyChanged(

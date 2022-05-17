@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:dartz/dartz.dart';
 import 'package:firebase_flutter_ddd/application/auth/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_ddd/application/notes/note_actor/bloc/note_actor_bloc.dart';
 import 'package:firebase_flutter_ddd/application/notes/note_watcher/bloc/note_watcher_bloc.dart';
@@ -76,11 +77,13 @@ class NotesOverviewPage extends StatelessWidget {
             onPressed: () {
               AutoRouter.of(context).push(
                 NoteFormPageRoute(
-                  editedNote: Note(
-                    id: UniqueId(),
-                    body: NoteBody(''),
-                    color: NoteColor(Colors.white),
-                    todos: List3(const KtList.empty()),
+                  editedNote: optionOf(
+                    Note(
+                      id: UniqueId(),
+                      body: NoteBody(''),
+                      color: NoteColor(Colors.white),
+                      todos: List3(const KtList.empty()),
+                    ),
                   ),
                 ),
               );
