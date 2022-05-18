@@ -5,6 +5,7 @@ import 'package:firebase_flutter_ddd/application/notes/note_form/bloc/note_form_
 import 'package:firebase_flutter_ddd/domain/notes/note.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
 import 'package:firebase_flutter_ddd/presentation/pages/notes/note_form/widgets/body_field_widget.dart';
+import 'package:firebase_flutter_ddd/presentation/pages/notes/note_form/widgets/color_field_widget.dart';
 import 'package:firebase_flutter_ddd/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +48,7 @@ class NoteFormPage extends StatelessWidget {
         builder: (context, state) {
           return Stack(
             children: [
-              NoteFormPageScaffold(),
+              const NoteFormPageScaffold(),
               SavingInProgressOverlay(
                 isSaving: state.isSaving,
               )
@@ -126,7 +127,7 @@ class NoteFormPageScaffold extends StatelessWidget {
           return Form(
               child: SingleChildScrollView(
             child: Column(
-              children: [BodyField()],
+              children: [const BodyField(), const ColorField()],
             ),
           ));
         },
