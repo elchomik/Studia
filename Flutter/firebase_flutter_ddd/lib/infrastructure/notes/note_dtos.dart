@@ -14,8 +14,6 @@ part 'note_dtos.g.dart';
 
 @freezed
 abstract class NoteDto implements _$NoteDto {
-  const NoteDto._();
-
   const factory NoteDto({
     required String id,
     required String body,
@@ -23,25 +21,28 @@ abstract class NoteDto implements _$NoteDto {
     required List<TodoItemDto> todos,
     @ServerTimestampConverter() required FieldValue serverTimeStamp,
   }) = _NoteDto;
+  const NoteDto._();
 
   factory NoteDto.fromDomain(Note note) {
     return NoteDto(
-        id: note.id.getOrCrash(),
-        body: note.body.getOrCrash(),
-        color: note.color.getOrCrash().value,
-        todos: note.todos
-            .getOrCrash()
-            .map((todoItem) => TodoItemDto.fromDomain(todoItem))
-            .asList(),
-        serverTimeStamp: FieldValue.serverTimestamp());
+      id: note.id.getOrCrash(),
+      body: note.body.getOrCrash(),
+      color: note.color.getOrCrash().value,
+      todos: note.todos
+          .getOrCrash()
+          .map((todoItem) => TodoItemDto.fromDomain(todoItem))
+          .asList(),
+      serverTimeStamp: FieldValue.serverTimestamp(),
+    );
   }
 
   Note toDomain() {
     return Note(
-        id: UniqueId.fromUniqueString(id),
-        body: NoteBody(body),
-        color: NoteColor(Color(color)),
-        todos: List3(todos.map((dto) => dto.toDomain()).toImmutableList()));
+      id: UniqueId.fromUniqueString(id),
+      body: NoteBody(body),
+      color: NoteColor(Color(color)),
+      todos: List3(todos.map((dto) => dto.toDomain()).toImmutableList()),
+    );
   }
 
   factory NoteDto.fromFirestore(DocumentSnapshot doc) {
@@ -67,23 +68,27 @@ class ServerTimestampConverter implements JsonConverter<FieldValue, Object> {
 
 @freezed
 abstract class TodoItemDto implements _$TodoItemDto {
+  const factory TodoItemDto({
+    required String id,
+    required String name,
+    required bool done,
+  }) = _TodoItemDto;
   const TodoItemDto._();
-
-  const factory TodoItemDto(
-      {required String id,
-      required String name,
-      required bool done}) = _TodoItemDto;
 
   factory TodoItemDto.fromDomain(TodoItem todoItem) {
     return TodoItemDto(
-        id: todoItem.id.getOrCrash(),
-        name: todoItem.name.getOrCrash(),
-        done: todoItem.done);
+      id: todoItem.id.getOrCrash(),
+      name: todoItem.name.getOrCrash(),
+      done: todoItem.done,
+    );
   }
 
   TodoItem toDomain() {
     return TodoItem(
-        id: UniqueId.fromUniqueString(id), name: TodoName(name), done: done);
+      id: UniqueId.fromUniqueString(id),
+      name: TodoName(name),
+      done: done,
+    );
   }
 
   factory TodoItemDto.fromJson(Map<String, dynamic> json) =>

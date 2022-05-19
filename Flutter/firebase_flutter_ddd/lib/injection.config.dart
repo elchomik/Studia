@@ -6,21 +6,28 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i4;
 import 'package:firebase_auth/firebase_auth.dart' as _i3;
+import 'package:firebase_flutter_ddd/application/auth/bloc/auth_bloc.dart'
+    as _i14;
+import 'package:firebase_flutter_ddd/application/auth/bloc/sign_in_form/sign_in_form_bloc.dart'
+    as _i13;
+import 'package:firebase_flutter_ddd/application/notes/note_actor/bloc/note_actor_bloc.dart'
+    as _i10;
+import 'package:firebase_flutter_ddd/application/notes/note_form/bloc/note_form_bloc.dart'
+    as _i11;
+import 'package:firebase_flutter_ddd/application/notes/note_watcher/bloc/note_watcher_bloc.dart'
+    as _i12;
+import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart' as _i6;
+import 'package:firebase_flutter_ddd/domain/notes/i_note_repository.dart'
+    as _i8;
+import 'package:firebase_flutter_ddd/infrastructure/auth/firebase_auth_facade.dart'
+    as _i7;
+import 'package:firebase_flutter_ddd/infrastructure/core/firebase_injectable_module.dart'
+    as _i15;
+import 'package:firebase_flutter_ddd/infrastructure/notes/note_repository.dart'
+    as _i9; // ignore_for_file: unnecessary_lambdas
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:google_sign_in/google_sign_in.dart' as _i5;
 import 'package:injectable/injectable.dart' as _i2;
-
-import 'application/auth/bloc/auth_bloc.dart' as _i14;
-import 'application/auth/bloc/sign_in_form/sign_in_form_bloc.dart' as _i13;
-import 'application/notes/note_actor/bloc/note_actor_bloc.dart' as _i10;
-import 'application/notes/note_form/bloc/note_form_bloc.dart' as _i11;
-import 'application/notes/note_watcher/bloc/note_watcher_bloc.dart' as _i12;
-import 'domain/auth/i_auth_facade.dart' as _i6;
-import 'domain/notes/i_note_repository.dart' as _i8;
-import 'infrastructure/auth/firebase_auth_facade.dart' as _i7;
-import 'infrastructure/core/firebase_injectable_module.dart' as _i15;
-import 'infrastructure/notes/note_repository.dart'
-    as _i9; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars
 /// initializes the registration of provided dependencies inside of [GetIt]

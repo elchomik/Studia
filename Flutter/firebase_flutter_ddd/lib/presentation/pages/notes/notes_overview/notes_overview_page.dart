@@ -6,7 +6,6 @@ import 'package:firebase_flutter_ddd/application/notes/note_actor/bloc/note_acto
 import 'package:firebase_flutter_ddd/application/notes/note_watcher/bloc/note_watcher_bloc.dart';
 import 'package:firebase_flutter_ddd/domain/core/value_objects.dart';
 import 'package:firebase_flutter_ddd/domain/notes/note.dart';
-import 'package:firebase_flutter_ddd/domain/notes/todo_item.dart';
 import 'package:firebase_flutter_ddd/domain/notes/value_objects.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
 import 'package:firebase_flutter_ddd/presentation/pages/notes/notes_overview/widgets/notes_overview_body_widget.dart';

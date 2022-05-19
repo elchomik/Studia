@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_flutter_ddd/application/auth/bloc/auth_bloc.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
 import 'package:firebase_flutter_ddd/presentation/routes/router.dart';
-import 'package:firebase_flutter_ddd/presentation/sign_in/sign_in_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
