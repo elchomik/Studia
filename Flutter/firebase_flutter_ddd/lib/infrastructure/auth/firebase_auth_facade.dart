@@ -19,13 +19,17 @@ class FirebaseAuthFacade implements IAuthFacade {
   FirebaseAuthFacade(this._firebaseAuth, this._googleSignIn);
 
   @override
-  Future<Either<AuthFailure, Unit>> registerWithEmailAndPassword(
-      {required EmailAddress emailAddress, required Password password}) async {
+  Future<Either<AuthFailure, Unit>> registerWithEmailAndPassword({
+    required EmailAddress emailAddress,
+    required Password password,
+  }) async {
     final emailAddressValue = emailAddress.getOrCrash();
     final passwordValue = password.getOrCrash();
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
-          email: emailAddressValue, password: passwordValue);
+        email: emailAddressValue,
+        password: passwordValue,
+      );
       return right(unit);
     } on PlatformException catch (e) {
       if (e.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
@@ -43,7 +47,9 @@ class FirebaseAuthFacade implements IAuthFacade {
     final passwordValue = password.getOrCrash();
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: emailAddressValue, password: passwordValue);
+        email: emailAddressValue,
+        password: passwordValue,
+      );
       return right(unit);
     } on PlatformException catch (e) {
       if (e.code == "ERROR_WRONG_PASSWORD" ||
@@ -65,8 +71,9 @@ class FirebaseAuthFacade implements IAuthFacade {
       final googleAuthentication = await googleUser.authentication;
 
       final authCredential = GoogleAuthProvider.credential(
-          idToken: googleAuthentication.idToken,
-          accessToken: googleAuthentication.accessToken);
+        idToken: googleAuthentication.idToken,
+        accessToken: googleAuthentication.accessToken,
+      );
 
       return _firebaseAuth
           .signInWithCredential(authCredential)
@@ -79,6 +86,7 @@ class FirebaseAuthFacade implements IAuthFacade {
   @override
   Future<Option<User>?> getSignedInUser() async {
     optionOf(_firebaseAuth.currentUser?.toDomain());
+    return null;
   }
 
   @override

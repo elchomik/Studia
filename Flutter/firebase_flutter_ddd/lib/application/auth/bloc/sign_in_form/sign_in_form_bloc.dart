@@ -45,8 +45,9 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
       );
 
   Future _signInWithEmailAndPasswordPressed(
-      SignInWithEmailAndPasswordPressed event,
-      Emitter<SignInFormState> emit) async {
+    SignInWithEmailAndPasswordPressed event,
+    Emitter<SignInFormState> emit,
+  ) async {
     Either<AuthFailure, Unit>? failureOrSuccess;
     final isEmailValid = state.emailAddress.isValid();
     final isPasswordValid = state.password.isValid();
@@ -70,7 +71,9 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   }
 
   Future _signInWithGooglePressed(
-      RegisterWithGooglePressed event, Emitter<SignInFormState> emit) async {
+    RegisterWithGooglePressed event,
+    Emitter<SignInFormState> emit,
+  ) async {
     emit(state.copyWith(isSubmitting: true, authFailureOrSuccess: none()));
     final failureOrSuccess = await _authFacade.signInWithGoogle();
     emit(
@@ -82,8 +85,9 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   }
 
   Future _registerWithEmailAndPasswordPressed(
-      RegisterWithEmailAndPasswordPressed event,
-      Emitter<SignInFormState> emit) async {
+    RegisterWithEmailAndPasswordPressed event,
+    Emitter<SignInFormState> emit,
+  ) async {
     Either<AuthFailure, Unit>? failureOrSuccess;
 
     final isEmailValid = state.emailAddress.isValid();

@@ -10,14 +10,13 @@ part 'note.freezed.dart';
 
 @freezed
 abstract class Note implements _$Note {
-  const Note._();
-
   const factory Note({
     required UniqueId id,
     required NoteBody body,
     required NoteColor color,
     required List3<TodoItem> todos,
   }) = _Note;
+  const Note._();
 
   factory Note.empty() => Note(
       id: UniqueId(),
@@ -28,12 +27,14 @@ abstract class Note implements _$Note {
   Option<ValueFailure<dynamic>> get failureOption {
     return body.failureOrUnit
         .andThen(todos.failureOrUnit)
-        .andThen(todos
-            .getOrCrash()
-            .map((todoItem) => todoItem.failureOption)
-            .filter((o) => o.isSome())
-            .getOrElse(0, (_) => none())
-            .fold(() => right(unit), (f) => left(f)))
+        .andThen(
+          todos
+              .getOrCrash()
+              .map((todoItem) => todoItem.failureOption)
+              .filter((o) => o.isSome())
+              .getOrElse(0, (_) => none())
+              .fold(() => right(unit), (f) => left(f)),
+        )
         .fold((f) => some(f), (_) => none());
   }
 }

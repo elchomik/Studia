@@ -1,13 +1,12 @@
 import 'dart:ui';
 
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_flutter_ddd/domain/auth/auth_failure.dart';
 import 'package:firebase_flutter_ddd/domain/notes/i_note_repository.dart';
 import 'package:firebase_flutter_ddd/domain/notes/note.dart';
 import 'package:firebase_flutter_ddd/domain/notes/note_failure.dart';
 import 'package:firebase_flutter_ddd/domain/notes/value_objects.dart';
-import 'package:firebase_flutter_ddd/infrastructure/notes/note_dtos.dart';
 import 'package:firebase_flutter_ddd/presentation/pages/notes/note_form/misc/todo_item_presentation_classes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -31,7 +30,9 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
   }
 
   Future<void> _initialized(
-      Initialized event, Emitter<NoteFormState> emit) async {
+    Initialized event,
+    Emitter<NoteFormState> emit,
+  ) async {
     emit(
       event.initialNoteOption.fold(
         () => state,
@@ -41,28 +42,39 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
   }
 
   Future<void> _bodyChanged(
-      BodyChanged event, Emitter<NoteFormState> emit) async {
-    emit(state.copyWith(
-      note: state.note.copyWith(body: NoteBody(event.bodyStr)),
-      saveFailureOrSuccessOption: none(),
-    ));
+    BodyChanged event,
+    Emitter<NoteFormState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        note: state.note.copyWith(body: NoteBody(event.bodyStr)),
+        saveFailureOrSuccessOption: none(),
+      ),
+    );
   }
 
   Future<void> _colorChanged(
-      ColorChanged event, Emitter<NoteFormState> emit) async {
-    emit(state.copyWith(
-      note: state.note.copyWith(color: NoteColor(event.color)),
-      saveFailureOrSuccessOption: none(),
-    ));
+    ColorChanged event,
+    Emitter<NoteFormState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        note: state.note.copyWith(color: NoteColor(event.color)),
+        saveFailureOrSuccessOption: none(),
+      ),
+    );
   }
 
   Future<void> _todosChanged(
       TodosChanged event, Emitter<NoteFormState> emit) async {
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         note: state.note.copyWith(
           todos: List3(event.todos.map((primitive) => primitive.toDomain())),
         ),
-        saveFailureOrSuccessOption: none()));
+        saveFailureOrSuccessOption: none(),
+      ),
+    );
   }
 
   Future<void> _saved(Saved event, Emitter<NoteFormState> emit) async {
@@ -74,9 +86,12 @@ class NoteFormBloc extends Bloc<NoteFormEvent, NoteFormState> {
           ? await _noteRepository.update(state.note)
           : await _noteRepository.create(state.note);
     }
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         isSaving: false,
         showErrorMessage: true,
-        saveFailureOrSuccessOption: optionOf(failureOrSuccess)));
+        saveFailureOrSuccessOption: optionOf(failureOrSuccess),
+      ),
+    );
   }
 }

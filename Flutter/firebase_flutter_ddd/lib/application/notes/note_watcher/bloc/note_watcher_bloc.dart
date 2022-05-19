@@ -1,18 +1,19 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
+import 'package:bloc/bloc.dart' show Bloc, Emitter;
 import 'package:dartz/dartz.dart';
 import 'package:firebase_flutter_ddd/domain/notes/i_note_repository.dart';
+import 'package:firebase_flutter_ddd/domain/notes/note.dart';
+import 'package:firebase_flutter_ddd/domain/notes/note_failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 
-import '../../../../domain/notes/note.dart';
-import '../../../../domain/notes/note_failure.dart';
-
+part 'note_watcher_bloc.freezed.dart';
 part 'note_watcher_event.dart';
 part 'note_watcher_state.dart';
-part 'note_watcher_bloc.freezed.dart';
 
 @Injectable()
 class NoteWatcherBloc extends Bloc<NoteWatcherEvent, NoteWatcherState> {

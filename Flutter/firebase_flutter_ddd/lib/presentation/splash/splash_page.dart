@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_flutter_ddd/application/auth/bloc/auth_bloc.dart';
-import 'package:firebase_flutter_ddd/presentation/pages/notes/notes_overview/notes_overview_page.dart';
 import 'package:firebase_flutter_ddd/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

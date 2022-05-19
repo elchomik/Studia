@@ -1,10 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:firebase_flutter_ddd/domain/core/errors.dart';
 import 'package:firebase_flutter_ddd/domain/core/failures.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
-
-import 'errors.dart';
 
 @immutable
 abstract class ValueObject<T> {

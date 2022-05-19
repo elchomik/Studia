@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_flutter_ddd/domain/auth/i_auth_facade.dart';
+import 'package:firebase_flutter_ddd/domain/auth/user.dart';
 import 'package:firebase_flutter_ddd/domain/core/errors.dart';
 import 'package:firebase_flutter_ddd/injection.dart';
-
-import '../../domain/auth/user.dart';
 
 extension FirestoreX on FirebaseFirestore {
   Future<DocumentReference> userDocument() async {

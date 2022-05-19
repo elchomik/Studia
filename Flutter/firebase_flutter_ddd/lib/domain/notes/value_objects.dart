@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:firebase_flutter_ddd/domain/core/failures.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_flutter_ddd/domain/core/failures.dart';
 import 'package:firebase_flutter_ddd/domain/core/value_objects.dart';
 import 'package:firebase_flutter_ddd/domain/core/value_transfomers.dart';
 import 'package:firebase_flutter_ddd/domain/core/value_validators.dart';
