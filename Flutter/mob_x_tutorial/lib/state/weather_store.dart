@@ -13,23 +13,28 @@ enum StoreState { initial, loading, loaded }
 abstract class _WeatherStore with Store {
   final WeatherRepository _weatherRepository;
 
-  _WeatherStore(this._weatherRepository);
+  _WeatherStore(this._weatherRepository)
+      : errorMessage = '',
+        weather = Weather(cityName: '', temperatureCelsius: 0.0),
+        _weatherFuture = ObservableFuture.value(
+            Weather(cityName: '', temperatureCelsius: 0.0));
 
   @observable
-  ObservableFuture<Weather>? _weatherFuture;
+  ObservableFuture<Weather> _weatherFuture;
 
   @observable
-  Weather? weather;
+  Weather weather;
 
   @observable
-  String? errorMessage;
+  String errorMessage;
 
   @computed
   StoreState get state {
-    if (_weatherFuture!.status == FutureStatus.rejected) {
+    if (_weatherFuture != null &&
+        _weatherFuture.status == FutureStatus.rejected) {
       return StoreState.initial;
     }
-    return _weatherFuture!.status == FutureStatus.pending
+    return _weatherFuture.status == FutureStatus.pending
         ? StoreState.loading
         : StoreState.loaded;
   }

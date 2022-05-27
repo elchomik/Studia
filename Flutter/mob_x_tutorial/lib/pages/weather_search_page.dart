@@ -21,14 +21,17 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _weatherStore = Provider.of<WeatherStore>(context);
+    _weatherStore = Provider.of<WeatherStore>(context, listen: false);
+    print(_weatherStore.toString());
     _disposers = [
-      reaction((_) => _weatherStore!.errorMessage, (String? message) {
-        _scaffoldKey.currentState?.showSnackBar(
-          SnackBar(
-            content: Text(message!),
-          ),
-        );
+      reaction((_) => _weatherStore?.errorMessage ?? '', (String? message) {
+        if (_scaffoldKey.currentState != null) {
+          _scaffoldKey.currentState?.showSnackBar(
+            SnackBar(
+              content: Text(message!),
+            ),
+          );
+        }
       })
     ];
   }
@@ -48,8 +51,9 @@ class _WeatherSearchPageState extends State<WeatherSearchPage> {
       body: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),
           alignment: Alignment.center,
-          child: Observer(builder: (_) {
-            switch (_weatherStore!.state) {
+          child: Observer(builder: (context) {
+            var state = _weatherStore?.state ?? StoreState.initial;
+            switch (state) {
               case StoreState.initial:
                 return buildInitialInput();
               case StoreState.loading:
@@ -114,7 +118,7 @@ class CityInputField extends StatelessWidget {
   }
 
   void submitCityName(BuildContext context, String cityName) {
-    final weatherStore = Provider.of<WeatherStore>(context);
+    final weatherStore = Provider.of<WeatherStore>(context, listen: false);
     weatherStore.getWeather(cityName);
   }
 }
