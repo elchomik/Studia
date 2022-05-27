@@ -11,7 +11,7 @@ class FakeWeatherRepository implements WeatherRepository {
 
   @override
   Future<Weather> fetchWeather(String cityName) {
-    return Future.delayed(Duration(seconds: 1), () {
+    return Future.delayed(const Duration(seconds: 1), () {
       final random = Random();
 
       if (random.nextBool()) {

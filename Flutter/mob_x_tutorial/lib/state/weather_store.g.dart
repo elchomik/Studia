@@ -20,13 +20,13 @@ mixin _$WeatherStore on _WeatherStore, Store {
       Atom(name: '_WeatherStore._weatherFuture', context: context);
 
   @override
-  ObservableFuture<Weather>? get _weatherFuture {
+  ObservableFuture<Weather> get _weatherFuture {
     _$_weatherFutureAtom.reportRead();
     return super._weatherFuture;
   }
 
   @override
-  set _weatherFuture(ObservableFuture<Weather>? value) {
+  set _weatherFuture(ObservableFuture<Weather> value) {
     _$_weatherFutureAtom.reportWrite(value, super._weatherFuture, () {
       super._weatherFuture = value;
     });
@@ -36,13 +36,13 @@ mixin _$WeatherStore on _WeatherStore, Store {
       Atom(name: '_WeatherStore.weather', context: context);
 
   @override
-  Weather? get weather {
+  Weather get weather {
     _$weatherAtom.reportRead();
     return super.weather;
   }
 
   @override
-  set weather(Weather? value) {
+  set weather(Weather value) {
     _$weatherAtom.reportWrite(value, super.weather, () {
       super.weather = value;
     });
@@ -52,13 +52,13 @@ mixin _$WeatherStore on _WeatherStore, Store {
       Atom(name: '_WeatherStore.errorMessage', context: context);
 
   @override
-  String? get errorMessage {
+  String get errorMessage {
     _$errorMessageAtom.reportRead();
     return super.errorMessage;
   }
 
   @override
-  set errorMessage(String? value) {
+  set errorMessage(String value) {
     _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
       super.errorMessage = value;
     });
