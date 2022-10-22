@@ -2,6 +2,7 @@ package com.example.wallet.controllers;
 
 import com.example.wallet.privilleges.roles.IsAuthenticatedUser;
 import com.example.wallet.readonly.Password;
+import com.example.wallet.readonly.UserProjection;
 import com.example.wallet.services.PasswordService;
 import com.example.wallet.webui.PasswordDTO;
 import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
@@ -30,8 +31,9 @@ public class PasswordControllers {
     @PostMapping
     @IsAuthenticatedUser
     public ResponseEntity<Password> createPassword(final @RequestBody PasswordDTO passwordDTO,
-                                                   final Authentication authentication){
-        Password passwordInWallet = passwordService.createPasswordInWallet(passwordDTO);
+                                                   final Authentication authentication) throws Exception {
+        final UserProjection userProjection = (UserProjection) authentication.getPrincipal();
+        final Password passwordInWallet = passwordService.createPasswordInWallet(passwordDTO, userProjection.getUser());
         if(Objects.isNull(passwordInWallet.getId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

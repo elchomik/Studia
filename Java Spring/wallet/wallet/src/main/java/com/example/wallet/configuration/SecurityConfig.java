@@ -34,7 +34,6 @@ public class SecurityConfig{
     private final AuthenticationConfiguration authenticationConfiguration;
     private final String secret;
 
-
     public SecurityConfig(final UserService userService,
                           final RestAuthenticationFailureHandler restAuthenticationFailureHandler,
                           final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler,
@@ -52,19 +51,18 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register","/login").permitAll()
+                .antMatchers("/register","/loginToApp").permitAll()
+                .and()
+                .authorizeRequests()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(authenticationFilter())
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), userService, secret))
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(authenticationConfiguration), userService,secret))
                 .exceptionHandling()
                 .defaultAuthenticationEntryPointFor(registerUserEntryPoint(),
                         new AntPathRequestMatcher("/register"));
-                //.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-
         return  http.build();
     }
 

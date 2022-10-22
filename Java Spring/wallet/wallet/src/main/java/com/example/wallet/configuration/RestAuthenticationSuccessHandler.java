@@ -2,9 +2,9 @@ package com.example.wallet.configuration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.wallet.readonly.AuthenticatedUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     private final String secret;
 
     public RestAuthenticationSuccessHandler(
-             @Value("${jwt.expirationTime}") long expirationTime,
+            final @Value("${jwt.expirationTime}") long expirationTime,
             final @Value("${jwt.secret}") String secret) {
         this.expirationTime = expirationTime;
         this.secret = secret;
@@ -29,10 +29,9 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
-
-        String token = JWT.create()
-                .withSubject(principal.getUsername())
+        final AuthenticatedUser principal = (AuthenticatedUser) authentication.getPrincipal();
+       final  String token = JWT.create()
+                .withSubject(principal.getAuthenitactedUserData().getLogin())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ expirationTime))
                 .sign(Algorithm.HMAC512(secret));
         response.addHeader("Authorization", "Bearer "+token);

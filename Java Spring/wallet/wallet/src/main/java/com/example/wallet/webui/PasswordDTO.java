@@ -5,25 +5,16 @@ import java.io.Serializable;
 public class PasswordDTO implements Serializable {
 
     private final String password;
-    private final Integer userId;
     private final String webAddress;
     private final String description;
-    private final String login;
+    private final String hashAlgorithm;
 
-    public PasswordDTO(String password, Integer userId, String webAddress, String description, String login) {
-        this.password = password;
-        this.userId = userId;
+    public PasswordDTO(final String password, final String webAddress,
+                       final String description, final String hashAlgorithm) {
         this.webAddress = webAddress;
         this.description = description;
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Integer getUserId() {
-        return userId;
+        this.password=password;
+        this.hashAlgorithm= hashAlgorithm;
     }
 
     public String getWebAddress() {
@@ -34,7 +25,11 @@ public class PasswordDTO implements Serializable {
         return description;
     }
 
-    public String getLogin() {
-        return login;
+    public String getPassword() {
+        return password;
+    }
+
+    public String getHashAlgorithm() {
+        return hashAlgorithm;
     }
 }

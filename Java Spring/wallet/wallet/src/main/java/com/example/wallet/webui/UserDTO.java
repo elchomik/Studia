@@ -4,31 +4,32 @@ import java.io.Serializable;
 
 public class UserDTO implements Serializable {
 
-    private final String salt;
     private final String login;
-    private final String passwordHash;
+    private final String password;
     private final boolean isPasswordKeptAsHash;
+    private final String hashAlgorithm;
 
-    public UserDTO(final String salt, final String login, final String passwordHash, final boolean isPasswordKeptAsHash) {
-        this.salt = salt;
+    public UserDTO(final String login, final String password, final boolean isPasswordKeptAsHash,
+                   final String hashAlgorithm) {
         this.login = login;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.isPasswordKeptAsHash = isPasswordKeptAsHash;
-    }
-
-    public String getSalt() {
-        return salt;
+        this.hashAlgorithm = hashAlgorithm;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
     public boolean isPasswordKeptAsHash() {
         return isPasswordKeptAsHash;
+    }
+
+    public String getHashAlgorithm() {
+        return hashAlgorithm;
     }
 }

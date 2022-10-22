@@ -23,19 +23,23 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try{
-            BufferedReader reader = request.getReader();
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while((line = reader.readLine())!=null){
-                builder.append(line);
+            if(!request.getRequestURI().equals("/register")) {
+                final BufferedReader reader = request.getReader();
+                final StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+                final UserDTO authRequest = objectMapper.readValue(builder.toString(), UserDTO.class);
+                final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword());
+                setDetails(request, token);
+                return this.getAuthenticationManager().authenticate(token);
             }
-            UserDTO authRequest = objectMapper.readValue(builder.toString(), UserDTO.class);
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPasswordHash());
-            setDetails(request, token);
-            return this.getAuthenticationManager().authenticate(token);
-
+            return null;
         }catch (IOException e){
             throw new IllegalArgumentException(e.getMessage());
         }
     }
+
+
 }

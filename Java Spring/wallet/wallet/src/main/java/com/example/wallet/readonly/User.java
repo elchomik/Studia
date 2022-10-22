@@ -2,6 +2,7 @@ package com.example.wallet.readonly;
 
 
 import javax.persistence.*;
+import java.security.Key;
 import java.util.List;
 
 @Entity
@@ -11,7 +12,6 @@ public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
-
     private String login;
     private String passwordHash;
     private String salt;
@@ -20,7 +20,8 @@ public class User{
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId",insertable = false,updatable = false)
     private List<Password> passwords;
-    public User(String login, String passwordHash, String salt, boolean isPasswordKeptAsHash) {
+    public User(final String login, final String passwordHash,
+                final String salt, final boolean isPasswordKeptAsHash) {
         this.login = login;
         this.passwordHash = passwordHash;
         this.salt = salt;

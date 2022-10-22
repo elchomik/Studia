@@ -17,11 +17,10 @@ public class Password {
     @Column(name = "userId")
     private Integer id;
 
-    public Password(){
+    public Password(){}
 
-    }
-
-    public Password(String passwd, String webAddress, String description, String login, Integer id) {
+    public Password(final String passwd, final String webAddress,final String description,
+                    final String login, final Integer id) {
         this.passwd = passwd;
         this.webAddress = webAddress;
         this.description = description;

@@ -5,18 +5,18 @@ import java.io.Serializable;
 public class UpdateMasterPasswordDTO implements Serializable {
 
     private final String password;
-    private final String salt;
+    private final String hashAlgorithm;
 
-    public UpdateMasterPasswordDTO(final String password, final String salt) {
+    public UpdateMasterPasswordDTO(final String password, final String hashAlgorithm) {
         this.password = password;
-        this.salt = salt;
+        this.hashAlgorithm = hashAlgorithm;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getHashAlgorithm() {
+        return hashAlgorithm;
     }
 }
