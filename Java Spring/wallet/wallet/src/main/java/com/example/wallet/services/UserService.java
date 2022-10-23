@@ -47,15 +47,20 @@ public class UserService implements UserDetailsService {
         final String salt = generateRandomSaltForNewRegisterUser();
         userPassword= userDTO.getPassword();
         final String passwordToHash= salt+ pepper+userPassword;
-        if(userDTO.isPasswordKeptAsHash() && userDTO.getHashAlgorithm().equals(SHA512)){
+        if(userDTO.isPasswordKeptAsHash()){
+            saveUserHashPassword(userDTO,userDTO.getHashAlgorithm(),salt,passwordToHash);
+        }
+        return userRepository.save(new User(userDTO.getLogin(),userDTO.getPassword(),"",false));
+    }
+
+    private User saveUserHashPassword(final UserDTO userDTO, final String hashAlgorithm,final String salt,
+                                      final String passwordToHash){
+        if(hashAlgorithm.equals(SHA512)){
             final String hashPassword = SHA512Algorithm.calculateSHA512(passwordToHash);
             return userRepository.save(new User(userDTO.getLogin(),hashPassword,salt,true));
         }
-        else if(userDTO.isPasswordKeptAsHash() && userDTO.getHashAlgorithm().equals(HMAC_SHA512)){
-            final String hashPassword = HMACAlgorithm.calculateHMAC(passwordToHash,userPassword);
-            return userRepository.save(new User(userDTO.getLogin(), hashPassword, salt, true));
-        }
-        return userRepository.save(new User(userDTO.getLogin(),userDTO.getPassword(),"",false));
+        final String hashPassword = HMACAlgorithm.calculateHMAC(passwordToHash,userPassword);
+        return userRepository.save(new User(userDTO.getLogin(), hashPassword, salt, true));
     }
 
     private String generateRandomSaltForNewRegisterUser(){

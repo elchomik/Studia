@@ -1,6 +1,7 @@
 package com.example.wallet.cryptography;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -13,14 +14,18 @@ public class EncryptionAndDecryptionPasswords {
 
     public static String enrypt(final String data, final Key key, final String algorithm) throws Exception{
         final Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE,key);
+        byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        final IvParameterSpec ivspec = new IvParameterSpec(iv);
+        cipher.init(Cipher.ENCRYPT_MODE,key,ivspec);
         final byte[] encryptedValue= cipher.doFinal(data.getBytes());
         return Base64.getEncoder().encodeToString(encryptedValue);
     }
 
     public static String decrypt(final String encryptedData, final Key key, final String algorithm) throws Exception{
         final Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, key);
+        final byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        final IvParameterSpec ivspec = new IvParameterSpec(iv);
+        cipher.init(Cipher.DECRYPT_MODE, key,ivspec);
         final byte[] decodedValue = Base64.getDecoder().decode(encryptedData);
         final byte[] decprytedValue = cipher.doFinal(decodedValue);
         return new String(decprytedValue);

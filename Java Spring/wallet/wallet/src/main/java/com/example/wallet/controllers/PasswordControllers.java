@@ -1,20 +1,18 @@
 package com.example.wallet.controllers;
 
 import com.example.wallet.privilleges.roles.IsAuthenticatedUser;
+import com.example.wallet.readonly.AuthenticatedUser;
 import com.example.wallet.readonly.Password;
 import com.example.wallet.readonly.UserProjection;
 import com.example.wallet.services.PasswordService;
 import com.example.wallet.webui.PasswordDTO;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -39,4 +37,20 @@ public class PasswordControllers {
         }
        return ResponseEntity.status(HttpStatus.CREATED).body(passwordInWallet);
     }
+
+    @GetMapping("/allPasswords")
+    @IsAuthenticatedUser
+    public ResponseEntity<List<String>> getAllPasswordsForCurrentUser(final boolean shouldDecryptPassword,
+                                                                        final Authentication authentication) throws Exception {
+        final UserProjection userProjection = (UserProjection) authentication.getPrincipal();
+        final AuthenticatedUser authenticatedUser = (AuthenticatedUser) userProjection.getUser();
+        final Integer userId = authenticatedUser.getAuthenitactedUserData().getUserId();
+        List<String> allPasswords = passwordService.getAllPasswords(userId, shouldDecryptPassword);
+
+        if(Objects.nonNull(allPasswords)){
+            return ResponseEntity.status(HttpStatus.FOUND).body(allPasswords);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
 }
