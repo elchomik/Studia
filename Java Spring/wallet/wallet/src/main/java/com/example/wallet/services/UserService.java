@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         userPassword= userDTO.getPassword();
         final String passwordToHash= salt+ pepper+userPassword;
         if(userDTO.isPasswordKeptAsHash()){
-            saveUserHashPassword(userDTO,userDTO.getHashAlgorithm(),salt,passwordToHash);
+            return saveUserHashPassword(userDTO,userDTO.getHashAlgorithm(),salt,passwordToHash);
         }
         return userRepository.save(new User(userDTO.getLogin(),userDTO.getPassword(),"",false));
     }
@@ -83,15 +83,15 @@ public class UserService implements UserDetailsService {
         userPassword= updateMasterPasswordDTO.getPassword();
         final String passwordToHash= salt+ pepper+userPassword;
         final boolean passwordKeptAsHash = authenticatedUser.getAuthenitactedUserData().isPasswordKeptAsHash();
-        if(passwordKeptAsHash || updateMasterPasswordDTO.getHashAlgorithm().equals(SHA512)){
+        if(passwordKeptAsHash && updateMasterPasswordDTO.getHashAlgorithm().equals(SHA512)){
             final String hashPassword = SHA512Algorithm.calculateSHA512(passwordToHash);
             return userRepository.save(new User(userId, login, hashPassword, salt, true));
         }
-        else if(updateMasterPasswordDTO.getHashAlgorithm().equals(HMAC_SHA512)){
+        else if(passwordKeptAsHash && updateMasterPasswordDTO.getHashAlgorithm().equals(HMAC_SHA512)){
             final String hashPassword = HMACAlgorithm.calculateHMAC(passwordToHash,userPassword);
             return userRepository.save(new User(userId, login, hashPassword, salt, true));
         }
-        return userRepository.save(new User(userId, login, updateMasterPasswordDTO.getPassword(), salt, false));
+        return userRepository.save(new User(userId, login,userPassword, salt, false));
     }
 
     @Override

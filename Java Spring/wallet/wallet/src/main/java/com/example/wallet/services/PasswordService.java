@@ -3,14 +3,17 @@ package com.example.wallet.services;
 import com.example.wallet.cryptography.EncryptionAndDecryptionPasswords;
 import com.example.wallet.readonly.AuthenticatedUser;
 import com.example.wallet.readonly.Password;
+import com.example.wallet.readonly.User;
 import com.example.wallet.repositories.PasswordRepository;
 import com.example.wallet.webui.PasswordDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.wallet.services.UserService.userPassword;
 
@@ -60,5 +63,28 @@ public class PasswordService {
             return decryptedPasswords;
         }
         return allPasswordsByUserId.stream().map(Password::getPasswd).toList();
+    }
+
+    public HttpStatus updatePasswords(final User user, final List<String> allDecryptedPasswords) throws Exception {
+    final Key key = EncryptionAndDecryptionPasswords.generateKey(userPassword);
+    final String login= user.getLogin();
+    final Integer userId = user.getUserId();
+    final Password passwordDetails = passwordRepository.findPasswordByUserId(userId);
+    if(Objects.isNull(passwordDetails)){
+        return HttpStatus.NOT_FOUND;
+    }
+    allDecryptedPasswords.forEach(password->{
+        try {
+            saveUserPasswordEncryption(passwordDetails,key,login);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    });
+    return HttpStatus.OK;
+    }
+
+    private void saveUserPasswordEncryption(final Password password, final Key key, final String login) throws Exception {
+        final String encryptedPassword = EncryptionAndDecryptionPasswords.enrypt(password.getPasswd(), key, password.getDescription());
+        passwordRepository.save(new Password(encryptedPassword, password.getWebAddress(),password.getDescription(),login,password.getId()));
     }
 }

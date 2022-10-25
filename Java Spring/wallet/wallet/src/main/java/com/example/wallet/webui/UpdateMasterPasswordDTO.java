@@ -12,11 +12,12 @@ public class UpdateMasterPasswordDTO implements Serializable {
         this.hashAlgorithm = hashAlgorithm;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getHashAlgorithm() {
         return hashAlgorithm;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
