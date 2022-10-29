@@ -12,6 +12,6 @@ public interface PasswordRepository extends JpaRepository<Password, Integer> {
     @Query(value = "SELECT p FROM  Password p WHERE p.id = :userId")
     List<Password> findAllPasswordsByUserId(final @Param("userId") Integer userId);
 
-    @Query(value = "SELECT p FROM Password p WHERE p.id= :userId")
-    Password findPasswordByUserId(final @Param("userId") Integer userId);
+    @Query(value = "SELECT p FROM Password p WHERE p.id= :userId AND p.passwordId= :passwordId")
+    Password findPasswordByUserId(final @Param("userId") Integer userId, final @Param("passwordId") Integer passwordId);
 }

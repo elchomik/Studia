@@ -3,6 +3,7 @@ package com.example.wallet.services;
 import com.example.wallet.cryptography.EncryptionAndDecryptionPasswords;
 import com.example.wallet.readonly.AuthenticatedUser;
 import com.example.wallet.readonly.Password;
+import com.example.wallet.readonly.PasswordProjection;
 import com.example.wallet.readonly.User;
 import com.example.wallet.repositories.PasswordRepository;
 import com.example.wallet.webui.PasswordDTO;
@@ -47,35 +48,37 @@ public class PasswordService {
                 passwordDTO.getDescription(), login, userId));
     }
 
-    public List<String> getAllPasswords(final Integer userId, final boolean shouldDecryptPassword) throws Exception {
+    public List<PasswordProjection> getAllPasswords(final Integer userId, final boolean shouldDecryptPassword) throws Exception {
         final List<Password> allPasswordsByUserId = passwordRepository.findAllPasswordsByUserId(userId);
         if(shouldDecryptPassword){
             final Key key = EncryptionAndDecryptionPasswords.generateKey(userPassword);
-            final List<String> decryptedPasswords= new ArrayList<>();
+            final List<PasswordProjection> decryptedPasswords= new ArrayList<>();
             allPasswordsByUserId.forEach(password -> {
                 try {
                     final String decryptedPassword = EncryptionAndDecryptionPasswords.decrypt(password.getPasswd(), key, password.getDescription());
-                    decryptedPasswords.add(decryptedPassword);
+                    decryptedPasswords.add(new PasswordProjection(password.getPasswordId(),decryptedPassword));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
             return decryptedPasswords;
         }
-        return allPasswordsByUserId.stream().map(Password::getPasswd).toList();
+        final List<PasswordProjection> encryptedProjection = new ArrayList<>();
+        allPasswordsByUserId.forEach(password -> {
+            encryptedProjection.add(new PasswordProjection(password.getPasswordId(), password.getWebAddress()));
+        });
+
+        return encryptedProjection;
     }
 
-    public HttpStatus updatePasswords(final User user, final List<String> allDecryptedPasswords) throws Exception {
+    public HttpStatus updatePasswords(final User user, final List<PasswordProjection> allDecryptedPasswords) throws Exception {
     final Key key = EncryptionAndDecryptionPasswords.generateKey(userPassword);
     final String login= user.getLogin();
     final Integer userId = user.getUserId();
-    final Password passwordDetails = passwordRepository.findPasswordByUserId(userId);
-    if(Objects.isNull(passwordDetails)){
-        return HttpStatus.NOT_FOUND;
-    }
     allDecryptedPasswords.forEach(password->{
         try {
-            saveUserPasswordEncryption(passwordDetails,key,login);
+            final Password passwordDetails = passwordRepository.findPasswordByUserId(userId, password.getPasswordId());
+            saveUserPasswordEncryption(passwordDetails,key,login,userId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -83,8 +86,8 @@ public class PasswordService {
     return HttpStatus.OK;
     }
 
-    private void saveUserPasswordEncryption(final Password password, final Key key, final String login) throws Exception {
+    private void saveUserPasswordEncryption(final Password password, final Key key, final String login, final Integer userId) throws Exception {
         final String encryptedPassword = EncryptionAndDecryptionPasswords.enrypt(password.getPasswd(), key, password.getDescription());
-        passwordRepository.save(new Password(encryptedPassword, password.getWebAddress(),password.getDescription(),login,password.getId()));
+        passwordRepository.save(new Password(encryptedPassword, password.getWebAddress(),password.getDescription(),login,userId));
     }
 }

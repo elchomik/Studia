@@ -2,6 +2,7 @@ package com.example.wallet.controllers;
 
 import com.example.wallet.privilleges.roles.IsAuthenticatedUser;
 import com.example.wallet.readonly.AuthenticatedUser;
+import com.example.wallet.readonly.PasswordProjection;
 import com.example.wallet.readonly.User;
 import com.example.wallet.readonly.UserProjection;
 import com.example.wallet.services.PasswordService;
@@ -33,12 +34,12 @@ public class UserController {
                                                final Authentication authentication) throws Exception {
         final UserProjection userProjection = (UserProjection) authentication.getPrincipal();
         final AuthenticatedUser authenticatedUser = (AuthenticatedUser) userProjection.getUser();
-        List<String> allDecryptedPasswords = passwordService.getAllPasswords(authenticatedUser.getAuthenitactedUserData().getUserId(), true);
+        List<PasswordProjection> allPasswords = passwordService.getAllPasswords(authenticatedUser.getAuthenitactedUserData().getUserId(), true);
         final User user = userService.updatedPassword(authenticatedUser, updateMasterPasswordDTO);
         if(Objects.isNull(user.getUserId())){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        HttpStatus httpStatusResponseEntity = passwordService.updatePasswords(user, allDecryptedPasswords);
+        HttpStatus httpStatusResponseEntity = passwordService.updatePasswords(user, allPasswords);
         return ResponseEntity.status(httpStatusResponseEntity).body(user);
     }
 }
