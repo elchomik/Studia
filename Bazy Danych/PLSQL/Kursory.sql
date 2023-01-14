@@ -1,5 +1,5 @@
 --Kursory w PL/SQL
-
+SET SERVEROUTPUT ON;
 --Zadanie 184
 BEGIN
     FOR i in 1..100 LOOP
@@ -125,43 +125,44 @@ BEGIN
     END IF;
 END;
 
---Zadanie 191
-DECLARE 
-    CURSOR c1 IS SELECT  DISTINCT s.Id_Student, Imie, Nazwisko, Data_Egzamin
-        FROM Studenci s INNER JOIN Egzaminy e
-        ON s.Id_Student = e.Id_Student
-        ORDER BY 4 DESC;
-    wynik c1%ROWTYPE;
+--Zadanie 191 sposób prawilny
+DECLARE
+    CURSOR c1 IS SELECT DISTINCT Data_Egzamin FROM Egzaminy;
+    CURSOR cStudenci(pData Egzaminy.Data_Egzamin%TYPE) IS SELECT
+        e.Id_Student, Nazwisko, Imie FROM Studenci s INNER JOIN
+        Egzaminy e ON e.Id_Student = s.Id_Student AND Data_Egzamin = pData ORDER BY 1;
 BEGIN
-    OPEN c1;
-    IF c1%ISOPEN THEN
-        FOR i in 1..3 LOOP
-            FETCH c1 INTO wynik;
-            dbms_output.put_line(wynik.Id_Student || ' ' || wynik.Imie || ' ' || wynik.Nazwisko || ' ' || wynik.Data_Egzamin);
+    FOR vc1 IN c1 LOOP
+        EXIT WHEN c1%ROWCOUNT>3;
+        dbms_output.put_line(vc1.Data_Egzamin);
+        FOR vc2 IN cStudenci(vc1.Data_Egzamin) LOOP
+            dbms_output.put_line(vc2.Id_Student || ' ' || vc2.Nazwisko || ' ' || vc2.Imie);
         END LOOP;
-        CLOSE c1;
-    END IF;
+    END LOOP;
 END;
 
---Zadanie 192
+
+--Zadanie 192 sposób prawilny
 DECLARE
-    CURSOR c1 IS SELECT o.Id_Osrodek, Nazwa_Osrodek, s.Id_Student, Nazwisko, Imie, COUNT(ID_Egzamin) AS Liczba
-        FROM Studenci s INNER JOIN Egzaminy e ON e.Id_Student = s.Id_Student
+    CURSOR c1 IS SELECT DISTINCT o.Id_Osrodek, Nazwa_Osrodek FROM Osrodki o
+        INNER JOIN Egzaminy e ON e.Id_Osrodek = o.Id_Osrodek AND
+        Nazwa_Osrodek = 'CKMP';
+    CURSOR c2(p_Id_Osrodek Osrodki.Id_Osrodek%TYPE) IS SELECT e.Id_Student,Imie,Nazwisko, COUNT(Id_Egzamin) AS Liczba_egzaminow
+        FROM Studenci s INNER JOIN Egzaminy e ON s.Id_Student = e.Id_Student
         INNER JOIN Osrodki o ON o.Id_Osrodek = e.Id_Osrodek
-        WHERE Nazwa_Osrodek = 'CKMP'
-        GROUP BY o.Id_Osrodek, Nazwa_Osrodek, s.Id_Student, Nazwisko, Imie
-        ORDER BY Liczba DESC;
-    wynik c1%ROWTYPE;
+        WHERE e.Id_Osrodek = p_Id_Osrodek
+        GROUP BY e.Id_Student,Imie,Nazwisko
+        ORDER BY 4 DESC;
 BEGIN
-    OPEN c1;
-    IF c1%ISOPEN THEN
-        FOR i IN 1..2 LOOP
-        FETCH c1 INTO wynik;
-         dbms_output.put_line(wynik.Id_Student || ' ' || wynik.Imie || ' ' || wynik.Nazwisko || ' ' ||wynik.liczba);
+    FOR vc1 IN c1 LOOP
+            dbms_output.put_line(vc1.Id_Osrodek || ' ' || vc1.Nazwa_Osrodek);
+        FOR vc2 IN c2(vc1.Id_Osrodek) LOOP
+            EXIT WHEN c2%ROWCOUNT>2;
+            dbms_output.put_line(vc2.Id_Student || ' ' || vc2.Imie || ' ' || vc2.Nazwisko || ' ' || vc2.Liczba_Egzaminow);
         END LOOP;
-        close c1;
-    END IF;
+    END LOOP;
 END;
+
 
 --Zadanie 194
 
