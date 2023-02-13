@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -26,6 +27,11 @@ import static com.github.adminfaces.template.util.Assert.has;
 @Stateless
 public class CarService implements Serializable {
 
+
+    List<String> sampleList = Arrays.asList("Java", "\n \n", "Kotlin", " ");
+    List withoutBlanks = sampleList.stream()
+            .filter(Predicate.not(String::isBlank))
+            .collect(Collectors.toList());
     @Inject
     List<Car> allCars;
 
