@@ -1,0 +1,4 @@
+Program napisany w języku Java w wersji 18.0.0
+Wykonywalny kod programu znajduje się w podkatalogu target, oraz nazwany jest jako rozwiązanie1.
+W celu uruchomieniu programu należy w wierszu poleceń wpisać polecenie 
+java -jar <jar-file-name>.jar
