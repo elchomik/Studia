@@ -17,6 +17,17 @@ public class Catalogue extends JFrame {
     private final JTextField msiField;
     private final JTextField huaweiField;
 
+    private static final int NR = 0;
+    private static final int PRODUCENT = 1;
+    private static final int POWIERZCHNIA = 4;
+    private static final int DOTYKOWY = 5;
+    private static final int PROCESOR = 6;
+    private static final int RDZENIE = 7;
+    private static final int TAKTOWANIE = 8;
+    private static final int RODZAJ = 11;
+    private static final int UKLAD = 12;
+    private static final int SYSTEM = 14;
+    private static final int NAPED = 15;
     int sonyCount = 0;
     int asusCount = 0;
     int dellCount = 0;
@@ -27,7 +38,7 @@ public class Catalogue extends JFrame {
 
     public Catalogue() {
         setTitle("Zadanie T2");
-        setSize(1200, 800);
+        setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
@@ -122,18 +133,7 @@ public class Catalogue extends JFrame {
             @Override
             public void setValueAt(Object aValue, int row, int column) {
                 String currentValue = aValue.toString();
-                System.out.println("Kolumna " + column);
-                if(currentValue.isEmpty()) {
-                    JOptionPane.showMessageDialog(table, "Wprowadzona wartość jest zła", "Błąd", JOptionPane.ERROR_MESSAGE);
-                }
-                else if(column == 6) {
-                    if(!isProperIntegerValue(currentValue)){
-                        JOptionPane.showMessageDialog(table, "Wprowadzona wartość jest zła", "Błąd", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else {
-                    tableModel.setValueAt(currentValue, row, column);
-                }
+                validateInputData(row, column, currentValue);
             }
         };
 
@@ -143,6 +143,44 @@ public class Catalogue extends JFrame {
 
     }
 
+    private void validateInputData(int row, int column, String currentValue) {
+        if(currentValue.isEmpty()) {
+            JOptionPane.showMessageDialog(table, "Podaana wartość jest pusta, powinieneś wprowadzić wartość", "Błąd",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        else if(isColumnWithStringValidation(column) && !isInputConatinsOnlyString(currentValue)) {
+                JOptionPane.showMessageDialog(table, "Podałeś liczbę w tym polu dozwolone są tylko znaki", "Błąd",
+                        JOptionPane.ERROR_MESSAGE);
+        }
+        else if(column == RDZENIE && !isProperIntegerValue(currentValue)) {
+                JOptionPane.showMessageDialog(table, "Podałeś złą wartość, w tym polu dozwolone są tylko liczby całkowite", "Błąd",
+                        JOptionPane.ERROR_MESSAGE);
+        }
+        else if(column == TAKTOWANIE && currentValue.length() >4 && isInputContainsOnlyDigit(currentValue)) {
+            JOptionPane.showMessageDialog(table, "Za duża wartość taktowania dopuszczalne tylko 4 cyfry", "Błąd",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        else if( column == TAKTOWANIE || column == NR && !isInputContainsOnlyDigit(currentValue)) {
+            JOptionPane.showMessageDialog(table, "Ups podałeś znak a dopuszczalne tylko cyfry", "Błąd",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        else {
+            tableModel.setValueAt(currentValue, row, column);
+        }
+    }
+
+    private static boolean isInputConatinsOnlyString(String input) {
+        return input.chars().allMatch(Character::isLetter);
+    }
+
+    private static boolean isInputContainsOnlyDigit(String input) {
+        return input.chars().allMatch(Character::isDigit);
+    }
+
+    private static boolean isColumnWithStringValidation(int column) {
+        return (column == PRODUCENT || column == POWIERZCHNIA || column == DOTYKOWY
+                || column == PROCESOR || column == RODZAJ || column == UKLAD || column == SYSTEM || column == NAPED);
+    }
     private boolean isProperIntegerValue(String currentObjectValue) {
             try{
                 parseInt(currentObjectValue);
@@ -216,7 +254,7 @@ public class Catalogue extends JFrame {
 
     private void exportDataToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for(int row = 1; row < tableModel.getRowCount(); row++) {
+            for(int row = 0; row < tableModel.getRowCount(); row++) {
                 for(int col = 1; col < tableModel.getColumnCount(); col++) {
                     String value = tableModel.getValueAt(row, col).toString() + ";";
                     writer.write(value);
