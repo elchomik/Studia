@@ -1,0 +1,8 @@
+Program napisany w języku Java w wersji 18.0.0
+Wykonywalny kod programu znajduje się w podkatalogu target, oraz nazwany jest jako rozwiązanie2.
+Reguły walidacyjne określone są na wszystkich polach dotyczące tego czy wpisana wartość jest pusta.
+Dla pól Producet, Powierzchnia, Dotykowy, Procesor, Rodzaj, Układ, System i Napęd odbywa się walidacja sprawdzająca czy dane pole jest String.
+Dla pól Rdzenie oraz Taktowanie dodana jest walidacja czy podana wartość jest numeryczna.
+Dodatkowo wartość pola Taktowania sprawdzana jest przez długość tekstu czy mniejsza niż 4.
+W celu uruchomieniu programu należy w wierszu poleceń wpisać polecenie 
+java -jar <jar-file-name>.jar
