@@ -14,7 +14,7 @@ public class Element {
     public Long getId() {
         return id;
     }
-    
+
     public Long getParentId() {
         return parentId;
     }
