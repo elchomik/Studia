@@ -1,8 +1,15 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.awt.*;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static java.lang.Integer.parseInt;
 
@@ -97,6 +104,11 @@ public class Catalogue extends JFrame {
         JButton exportButton = new JButton("Eksportuj");
         exportButton.setPreferredSize(new Dimension(200, 20));
 
+        JButton importXML = new JButton(" Import XML");
+        importXML.setPreferredSize(new Dimension(200, 20));
+        JButton exportXML = new JButton( "Export XML");
+        exportXML.setPreferredSize(new Dimension(200, 20));
+
         importButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(Catalogue.this);
@@ -112,11 +124,37 @@ public class Catalogue extends JFrame {
             if(result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToFile(filePath);
+                exportDataToXMLFile(filePath);
+            }
+        });
+
+        importXML.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showOpenDialog(Catalogue.this);
+            if(result == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                try {
+                    importFromXml(filePath);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        exportXML.addActionListener(e->{
+            JFileChooser fileChooser = new JFileChooser();
+            int result = fileChooser.showSaveDialog(Catalogue.this);
+            if(result == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                exportDataToXMLFile(filePath);
             }
         });
 
         buttonsPanel.add(importButton);
         buttonsPanel.add(exportButton);
+        buttonsPanel.add(importXML);
+        buttonsPanel.add(exportXML);
+
         panel.add(buttonsPanel, BorderLayout.NORTH);
 
         tableModel = new DefaultTableModel();
@@ -209,6 +247,42 @@ public class Catalogue extends JFrame {
         }
     }
 
+    private void importFromXml(String file) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            Laptops laptops = (Laptops) unmarshaller.unmarshal(new File(file));
+
+            for (Laptop laptop: laptops.getLaptops()) {
+                int id = laptop.getId();
+                String manufacturer = setTextIfApplicable(laptop.getManufacturer());
+                String touch = setTextIfApplicable(laptop.getScreen().getTouch());
+                String size = setTextIfApplicable(laptop.getScreen().getSize());
+                String resolution = setTextIfApplicable(laptop.getScreen().getResolution());
+                String type = setTextIfApplicable(laptop.getScreen().getType());
+                String name = setTextIfApplicable(laptop.getProcessor().getName());
+                String physicalCores = setTextIfApplicable(laptop.getProcessor().getPhysicalCores());
+                String clockSpeed = setTextIfApplicable(laptop.getProcessor().getClockSpeed());
+                String ram = setTextIfApplicable(laptop.getRam());
+                String discType = setTextIfApplicable(laptop.getDisc().getType());
+                String discStorage = setTextIfApplicable(laptop.getDisc().getStorage());
+                String os = setTextIfApplicable(laptop.getOs());
+                String discReader = setTextIfApplicable(laptop.getDiscReader());
+                String graphicName = setTextIfApplicable(laptop.getGraphicCard().getName());
+                String memory = setTextIfApplicable(laptop.getGraphicCard().getMemory());
+
+                tableModel.addRow(new Object[]{
+                        id, manufacturer, touch, size, resolution, type, name, physicalCores,
+                        clockSpeed, ram, discType, discStorage, graphicName, memory, os, discReader
+                });
+
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
     private static void setTextWhenNoValue(String[] fields) {
         int i=0;
         for(String field: fields) {
@@ -217,6 +291,10 @@ public class Catalogue extends JFrame {
             }
             i++;
         }
+    }
+
+    private static String setTextIfApplicable(String value) {
+        return (Objects.isNull(value) || value.isEmpty()) ? "Brak" : value;
     }
 
     private void countDevices(String device) {
@@ -263,6 +341,56 @@ public class Catalogue extends JFrame {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void exportDataToXMLFile(String fileName) {
+        Laptops laptops = new Laptops();
+        ArrayList<Laptop> laptopArrayList = new ArrayList<>();
+        laptops.setModdate(String.valueOf(LocalDateTime.now()));
+        for (int row = 0; row < tableModel.getRowCount(); row++) {
+            Laptop laptop = new Laptop();
+            laptop.setId(row + 1);
+            laptop.setManufacturer(tableModel.getValueAt(row, 1).toString());
+
+            laptop.setScreen(new Screen(
+                    tableModel.getValueAt(row, 2).toString(),
+                    tableModel.getValueAt(row, 3).toString(),
+                    tableModel.getValueAt(row, 4).toString(),
+                    tableModel.getValueAt(row, 5).toString()
+            ));
+
+            laptop.setProcessor(new Processor(
+                    tableModel.getValueAt(row, 6).toString(),
+                    tableModel.getValueAt(row, 7).toString(),
+                    tableModel.getValueAt(row, 8).toString()
+            ));
+
+            laptop.setRam(tableModel.getValueAt(row, 9).toString());
+
+            laptop.setDisc(new Disc(
+                    tableModel.getValueAt(row,10).toString(),
+                    tableModel.getValueAt(row, 11).toString()
+            ));
+
+            laptop.setGraphicCard(new GraphicCard(
+                    tableModel.getValueAt(row, 12).toString(),
+                    tableModel.getValueAt(row, 13).toString()
+            ));
+
+            laptop.setOs(tableModel.getValueAt(row, 14).toString());
+            laptop.setDiscReader(tableModel.getValueAt(row, 15).toString());
+            laptopArrayList.add(laptop);
+        }
+        laptops.setLaptops(laptopArrayList);
+        try{
+            JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(laptops, new File(fileName));
+
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
         }
     }
 }
