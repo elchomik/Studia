@@ -1,8 +1,10 @@
+package xml.catalogue;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-class GraphicCard {
+public class GraphicCard {
 
     private String name;
     private String memory;

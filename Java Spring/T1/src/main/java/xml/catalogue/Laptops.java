@@ -1,9 +1,11 @@
+package xml.catalogue;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
 @XmlRootElement(name = "laptops")
 @XmlAccessorType(XmlAccessType.FIELD)
-class Laptops {
+public class Laptops {
 
 
     @XmlElement(name = "laptop")

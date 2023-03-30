@@ -1,3 +1,5 @@
+import xml.catalogue.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBContext;

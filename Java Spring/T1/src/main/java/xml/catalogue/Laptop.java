@@ -1,8 +1,10 @@
+package xml.catalogue;
+
 import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "laptop")
 @XmlAccessorType(XmlAccessType.FIELD)
-class Laptop {
+public class Laptop {
 
     @XmlAttribute(name = "id")
     private int id;
