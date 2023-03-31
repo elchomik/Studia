@@ -282,7 +282,7 @@ public class Catalogue extends JFrame {
     }
 
 
-    private void setTextWhenNoValue(String[] fields) {
+    public void setTextWhenNoValue(String[] fields) {
         IntStream.range(0, fields.length)
                 .filter(i -> fields[i].isEmpty())
                 .forEach(i -> fields[i] = "Brak");
