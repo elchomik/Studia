@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import static java.lang.Integer.parseInt;
 
@@ -43,7 +44,7 @@ public class Catalogue extends JFrame {
     int samsungCount = 0;
     int fujitsuCount = 0;
     int msiCount = 0;
-    int huaweiCount =0;
+    int huaweiCount = 0;
 
     public Catalogue() {
         setTitle("Zadanie T2");
@@ -102,28 +103,28 @@ public class Catalogue extends JFrame {
         panel.add(textFieldPanel, BorderLayout.SOUTH);
 
         JButton importButton = new JButton("Importuj");
-        importButton.setPreferredSize(new Dimension(200,20));
+        importButton.setPreferredSize(new Dimension(200, 20));
         JButton exportButton = new JButton("Eksportuj");
         exportButton.setPreferredSize(new Dimension(200, 20));
 
         JButton importXML = new JButton(" Import XML");
         importXML.setPreferredSize(new Dimension(200, 20));
-        JButton exportXML = new JButton( "Export XML");
+        JButton exportXML = new JButton("Export XML");
         exportXML.setPreferredSize(new Dimension(200, 20));
 
         importButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(Catalogue.this);
-            if(result == JFileChooser.APPROVE_OPTION) {
+            if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 importDataFromFile(filePath);
             }
         });
 
-        exportButton.addActionListener(e->{
+        exportButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showSaveDialog(Catalogue.this);
-            if(result == JFileChooser.APPROVE_OPTION) {
+            if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToFile(filePath);
                 exportDataToXMLFile(filePath);
@@ -133,7 +134,7 @@ public class Catalogue extends JFrame {
         importXML.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showOpenDialog(Catalogue.this);
-            if(result == JFileChooser.APPROVE_OPTION) {
+            if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 try {
                     importFromXml(filePath);
@@ -143,10 +144,10 @@ public class Catalogue extends JFrame {
             }
         });
 
-        exportXML.addActionListener(e->{
+        exportXML.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             int result = fileChooser.showSaveDialog(Catalogue.this);
-            if(result == JFileChooser.APPROVE_OPTION) {
+            if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToXMLFile(filePath);
             }
@@ -184,58 +185,54 @@ public class Catalogue extends JFrame {
     }
 
     private void validateInputData(int row, int column, String currentValue) {
-        if(currentValue.isEmpty()) {
+        if (currentValue.isEmpty()) {
             JOptionPane.showMessageDialog(table, "Podaana wartość jest pusta, powinieneś wprowadzić wartość", "Błąd",
                     JOptionPane.ERROR_MESSAGE);
-        }
-        else if(isColumnWithStringValidation(column) && !isInputConatinsOnlyString(currentValue)) {
-                JOptionPane.showMessageDialog(table, "Podałeś liczbę w tym polu dozwolone są tylko znaki", "Błąd",
-                        JOptionPane.ERROR_MESSAGE);
-        }
-        else if(column == RDZENIE && !isProperIntegerValue(currentValue)) {
-                JOptionPane.showMessageDialog(table, "Podałeś złą wartość, w tym polu dozwolone są tylko liczby całkowite", "Błąd",
-                        JOptionPane.ERROR_MESSAGE);
-        }
-        else if(column == TAKTOWANIE && currentValue.length() >4 && isInputContainsOnlyDigit(currentValue)) {
+        } else if (isColumnWithStringValidation(column) && !isInputContainsOnlyString(currentValue)) {
+            JOptionPane.showMessageDialog(table, "Podałeś liczbę w tym polu dozwolone są tylko znaki", "Błąd",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (column == RDZENIE && !isProperIntegerValue(currentValue)) {
+            JOptionPane.showMessageDialog(table, "Podałeś złą wartość, w tym polu dozwolone są tylko liczby całkowite", "Błąd",
+                    JOptionPane.ERROR_MESSAGE);
+        } else if (column == TAKTOWANIE && currentValue.length() > 4 && isInputContainsOnlyDigit(currentValue)) {
             JOptionPane.showMessageDialog(table, "Za duża wartość taktowania dopuszczalne tylko 4 cyfry", "Błąd",
                     JOptionPane.ERROR_MESSAGE);
-        }
-        else if( column == TAKTOWANIE || column == NR && !isInputContainsOnlyDigit(currentValue)) {
+        } else if (column == TAKTOWANIE || column == NR && !isInputContainsOnlyDigit(currentValue)) {
             JOptionPane.showMessageDialog(table, "Ups podałeś znak a dopuszczalne tylko cyfry", "Błąd",
                     JOptionPane.ERROR_MESSAGE);
-        }
-        else {
+        } else {
             tableModel.setValueAt(currentValue, row, column);
         }
     }
 
-    private static boolean isInputConatinsOnlyString(String input) {
+    public boolean isInputContainsOnlyString(String input) {
         return input.chars().allMatch(Character::isLetter);
     }
 
-    private static boolean isInputContainsOnlyDigit(String input) {
+    public boolean isInputContainsOnlyDigit(String input) {
         return input.chars().allMatch(Character::isDigit);
     }
 
-    private static boolean isColumnWithStringValidation(int column) {
+    public boolean isColumnWithStringValidation(int column) {
         return (column == PRODUCENT || column == POWIERZCHNIA || column == DOTYKOWY
                 || column == PROCESOR || column == RODZAJ || column == UKLAD || column == SYSTEM || column == NAPED);
     }
-    private boolean isProperIntegerValue(String currentObjectValue) {
-            try{
-                parseInt(currentObjectValue);
-                return true;
-            }catch (NumberFormatException e){
-                return false;
-            }
+
+    public boolean isProperIntegerValue(String currentObjectValue) {
+        try {
+            parseInt(currentObjectValue);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
-    private void importDataFromFile(String filePath) {
+    public void importDataFromFile(String filePath) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String line;
             int lineNumber = 1;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] fields = line.split(";" ,-1);
+                String[] fields = line.split(";", -1);
                 setTextWhenNoValue(fields);
                 tableModel.addRow(new Object[]{
                         lineNumber, fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8],
@@ -249,13 +246,13 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void importFromXml(String file) {
+    public void importFromXml(String file) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Laptops laptops = (Laptops) unmarshaller.unmarshal(new File(file));
 
-            for (Laptop laptop: laptops.getLaptops()) {
+            for (Laptop laptop : laptops.getLaptops()) {
                 int id = laptop.getId();
                 String manufacturer = setTextIfApplicable(laptop.getManufacturer());
                 String touch = setTextIfApplicable(laptop.getScreen().getTouch());
@@ -279,27 +276,23 @@ public class Catalogue extends JFrame {
                 });
 
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
 
-    private static void setTextWhenNoValue(String[] fields) {
-        int i=0;
-        for(String field: fields) {
-            if(field.isEmpty()) {
-                fields[i] = "Brak";
-            }
-            i++;
-        }
+    public void setTextWhenNoValue(String[] fields) {
+        IntStream.range(0, fields.length)
+                .filter(i -> fields[i].isEmpty())
+                .forEach(i -> fields[i] = "Brak");
     }
 
-    private static String setTextIfApplicable(String value) {
+    public String setTextIfApplicable(String value) {
         return (Objects.isNull(value) || value.isEmpty()) ? "Brak" : value;
     }
 
-    private void countDevices(String device) {
+    public void countDevices(String device) {
         switch (device) {
             case "Asus" -> {
                 asusCount++;
@@ -332,10 +325,10 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void exportDataToFile(String filename) {
+    public void exportDataToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for(int row = 0; row < tableModel.getRowCount(); row++) {
-                for(int col = 1; col < tableModel.getColumnCount(); col++) {
+            for (int row = 0; row < tableModel.getRowCount(); row++) {
+                for (int col = 1; col < tableModel.getColumnCount(); col++) {
                     String value = tableModel.getValueAt(row, col).toString() + ";";
                     writer.write(value);
                 }
@@ -346,7 +339,7 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void exportDataToXMLFile(String fileName) {
+    public void exportDataToXMLFile(String fileName) {
         Laptops laptops = new Laptops();
         ArrayList<Laptop> laptopArrayList = new ArrayList<>();
         laptops.setModdate(String.valueOf(LocalDateTime.now()));
@@ -371,7 +364,7 @@ public class Catalogue extends JFrame {
             laptop.setRam(tableModel.getValueAt(row, 9).toString());
 
             laptop.setDisc(new Disc(
-                    tableModel.getValueAt(row,10).toString(),
+                    tableModel.getValueAt(row, 10).toString(),
                     tableModel.getValueAt(row, 11).toString()
             ));
 
@@ -385,7 +378,7 @@ public class Catalogue extends JFrame {
             laptopArrayList.add(laptop);
         }
         laptops.setLaptops(laptopArrayList);
-        try{
+        try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
