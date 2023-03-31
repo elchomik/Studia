@@ -148,4 +148,17 @@ public class CatalogueTest {
         assertEquals("Brak", catalogue.setTextIfApplicable(null));
     }
 
+    @Test
+    @DisplayName("Set text when input is empty")
+    void shouldSetTextWhenInputIsEmpty() {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.setTextIfApplicable("")).thenReturn("Brak");
+
+        //then
+        assertEquals("Brak", catalogue.setTextIfApplicable(""));
+    }
+
 }
