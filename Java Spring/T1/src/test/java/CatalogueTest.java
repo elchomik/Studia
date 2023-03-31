@@ -32,4 +32,19 @@ public class CatalogueTest {
         //assert
         assertFalse(catalogue.isInputContainsOnlyString("Screen123"));
     }
+
+
+    @Test
+    void isInputContainsOnlyDigit_InputIsString_True() {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.isInputContainsOnlyDigit("12341")).thenReturn(true);
+
+        //assert
+        assertTrue(catalogue.isInputContainsOnlyDigit("12341"));
+    }
+
+
 }
