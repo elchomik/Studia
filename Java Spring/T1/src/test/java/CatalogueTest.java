@@ -63,7 +63,7 @@ public class CatalogueTest {
     }
 
     @ParameterizedTest
-    @DisplayName("Column with String validation")
+    @DisplayName("Columns with String validation")
     @ValueSource(ints ={1,4,5,6,11,12,14,15})
     void isColumnWithStringValidation_InputIsInt_True(int column){
         //given
@@ -72,7 +72,21 @@ public class CatalogueTest {
         //when
         when(catalogue.isColumnWithStringValidation(column)).thenReturn(true);
 
-        //assertTrue
+        //assert
         assertTrue(catalogue.isColumnWithStringValidation(column));
+    }
+
+    @ParameterizedTest
+    @DisplayName("Columns without String validation")
+    @ValueSource(ints = {0,2,3,7,8,9,10,11,13})
+    void isColumnWithoutStringValidation_InputIsInt_False(int column) {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.isColumnWithStringValidation(column)).thenReturn(false);
+
+        //assert
+        assertFalse(catalogue.isColumnWithStringValidation(column));
     }
 }
