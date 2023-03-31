@@ -4,8 +4,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.stream.IntStream;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -88,5 +89,18 @@ public class CatalogueTest {
 
         //assert
         assertFalse(catalogue.isColumnWithStringValidation(column));
+    }
+
+    @Test
+    void shouldDisplaySpecifiedTextWhenInputIsEmpty(){
+        String[] values = new String[]{"co", "tam", "" };
+
+        IntStream.range(0, values.length)
+                .filter(i -> values[i].isEmpty())
+                .forEach(i -> values[i] = "Brak");
+
+        assertEquals("co", values[0]);
+        assertEquals("tam", values[1]);
+        assertEquals("Brak", values[2]);
     }
 }
