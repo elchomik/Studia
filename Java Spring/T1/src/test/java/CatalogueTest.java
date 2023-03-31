@@ -1,7 +1,9 @@
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CatalogueTest {
@@ -17,5 +19,17 @@ public class CatalogueTest {
 
         //assert
         assertTrue(catalogue.isInputContainsOnlyString("Screen"));
+    }
+
+    @Test
+    void isInputContainsOnlyString_InputIsString_False() {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.isInputContainsOnlyString("Screen123")).thenReturn(false);
+
+        //assert
+        assertFalse(catalogue.isInputContainsOnlyString("Screen123"));
     }
 }
