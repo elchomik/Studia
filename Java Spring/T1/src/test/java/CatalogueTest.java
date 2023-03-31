@@ -47,4 +47,15 @@ public class CatalogueTest {
     }
 
 
+    @Test
+    void isInputContainsOnlyDigit_InputIsString_False() {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.isInputContainsOnlyDigit("12323ssdds23")).thenReturn(false);
+
+        //assert
+        assertFalse(catalogue.isInputContainsOnlyDigit("12323ssdds23"));
+    }
 }
