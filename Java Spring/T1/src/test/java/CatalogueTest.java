@@ -135,5 +135,17 @@ public class CatalogueTest {
     }
 
 
+    @Test
+    @DisplayName("Set text when input is null")
+    void shouldSetTextWhenInputIsNull(){
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+
+        //when
+        when(catalogue.setTextIfApplicable(null)).thenReturn("Brak");
+
+        //then
+        assertEquals("Brak", catalogue.setTextIfApplicable(null));
+    }
 
 }
