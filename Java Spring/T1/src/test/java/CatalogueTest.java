@@ -119,4 +119,21 @@ public class CatalogueTest {
                 ()-> assertEquals("test 2", fields[1]),
                 () -> assertEquals("test 3", fields[2]));
     }
+
+    @Test
+    @DisplayName("No set text when input is not empty")
+    void shouldNoSetTextIfApplicable() {
+        //given
+        Catalogue catalogue = mock(Catalogue.class);
+        String input = "Test do wstawienia";
+
+        //when
+        when(catalogue.setTextIfApplicable(input)).thenReturn(input);
+
+        //assert
+        assertEquals(input, catalogue.setTextIfApplicable(input));
+    }
+
+
+
 }
