@@ -188,7 +188,7 @@ public class Catalogue extends JFrame {
             JOptionPane.showMessageDialog(table, "Podaana wartość jest pusta, powinieneś wprowadzić wartość", "Błąd",
                     JOptionPane.ERROR_MESSAGE);
         }
-        else if(isColumnWithStringValidation(column) && !isInputConatinsOnlyString(currentValue)) {
+        else if(isColumnWithStringValidation(column) && !isInputContainsOnlyString(currentValue)) {
                 JOptionPane.showMessageDialog(table, "Podałeś liczbę w tym polu dozwolone są tylko znaki", "Błąd",
                         JOptionPane.ERROR_MESSAGE);
         }
@@ -209,19 +209,19 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private static boolean isInputConatinsOnlyString(String input) {
+    public boolean isInputContainsOnlyString(String input) {
         return input.chars().allMatch(Character::isLetter);
     }
 
-    private static boolean isInputContainsOnlyDigit(String input) {
+    public boolean isInputContainsOnlyDigit(String input) {
         return input.chars().allMatch(Character::isDigit);
     }
 
-    private static boolean isColumnWithStringValidation(int column) {
+    public boolean isColumnWithStringValidation(int column) {
         return (column == PRODUCENT || column == POWIERZCHNIA || column == DOTYKOWY
                 || column == PROCESOR || column == RODZAJ || column == UKLAD || column == SYSTEM || column == NAPED);
     }
-    private boolean isProperIntegerValue(String currentObjectValue) {
+    public boolean isProperIntegerValue(String currentObjectValue) {
             try{
                 parseInt(currentObjectValue);
                 return true;
@@ -230,7 +230,7 @@ public class Catalogue extends JFrame {
             }
     }
 
-    private void importDataFromFile(String filePath) {
+    public void importDataFromFile(String filePath) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
             String line;
             int lineNumber = 1;
@@ -249,7 +249,7 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void importFromXml(String file) {
+    public void importFromXml(String file) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -285,7 +285,7 @@ public class Catalogue extends JFrame {
     }
 
 
-    private static void setTextWhenNoValue(String[] fields) {
+    private void setTextWhenNoValue(String[] fields) {
         int i=0;
         for(String field: fields) {
             if(field.isEmpty()) {
@@ -295,11 +295,11 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private static String setTextIfApplicable(String value) {
+    public String setTextIfApplicable(String value) {
         return (Objects.isNull(value) || value.isEmpty()) ? "Brak" : value;
     }
 
-    private void countDevices(String device) {
+    public void countDevices(String device) {
         switch (device) {
             case "Asus" -> {
                 asusCount++;
@@ -332,7 +332,7 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void exportDataToFile(String filename) {
+    public void exportDataToFile(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             for(int row = 0; row < tableModel.getRowCount(); row++) {
                 for(int col = 1; col < tableModel.getColumnCount(); col++) {
@@ -346,7 +346,7 @@ public class Catalogue extends JFrame {
         }
     }
 
-    private void exportDataToXMLFile(String fileName) {
+    public void exportDataToXMLFile(String fileName) {
         Laptops laptops = new Laptops();
         ArrayList<Laptop> laptopArrayList = new ArrayList<>();
         laptops.setModdate(String.valueOf(LocalDateTime.now()));
