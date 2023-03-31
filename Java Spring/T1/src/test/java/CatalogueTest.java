@@ -102,5 +102,21 @@ public class CatalogueTest {
         assertEquals("co", values[0]);
         assertEquals("tam", values[1]);
         assertEquals("Brak", values[2]);
+
+    }
+
+    @Test
+    @DisplayName("Check if setting text not works on not empty String array")
+    void shouldNotSetSpecifiedTextWhenInputDoesNotContainsEmptyValue() {
+        String[] fields = new String[]{"test", "test 2", "test 3"};
+
+        IntStream.range(0, fields.length)
+                .filter(i -> fields[i].isEmpty())
+                .forEach(i -> fields[i] = "Brak");
+
+        assertAll("fields",
+                () -> assertEquals("test", fields[0]),
+                ()-> assertEquals("test 2", fields[1]),
+                () -> assertEquals("test 3", fields[2]));
     }
 }
