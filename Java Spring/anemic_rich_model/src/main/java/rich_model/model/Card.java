@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class Card {
 
-    private static final CardLimit DEFAULT_CARD_LIMIT = CardLimit.of(BigDecimal.valueOf(1000L));
+    private static final CardLimit DEFAULT_CARD_LIMIT = CardLimit.of(BigDecimal.valueOf(1000));
 
     private final UUID cardId;
     private final String cardNumber;
@@ -40,17 +40,17 @@ public class Card {
     }
 
     public void block() {
-        if (canCardBeBlocked()) throw new CardStateExcpetion("Card can't be blocked");
+        if (!canCardBeBlocked()) throw new CardStateExcpetion("Card can't be blocked");
         this.isBlocked = true;
     }
 
     public void changeCardLimit(CardLimit newLimit) {
-        if (canChangeCardLimit()) throw new CardStateExcpetion("Couldn't change card limit");
+        if (!canChangeCardLimit()) throw new CardStateExcpetion("Couldn't change card limit");
         this.cardLimit = newLimit;
     }
 
     public void activate() {
-        if (canCardBeActivate()) throw new CardStateExcpetion("Card can't be activate");
+        if (!canCardBeActivate()) throw new CardStateExcpetion("Card can't be activate");
         this.isActive = true;
         this.cardLimit = DEFAULT_CARD_LIMIT;
     }

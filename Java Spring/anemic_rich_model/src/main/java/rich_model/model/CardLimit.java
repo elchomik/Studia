@@ -14,7 +14,7 @@ public class CardLimit {
 
     private CardLimit(BigDecimal value) {
         if(Objects.isNull(value)) throw new CardStateExcpetion("Limit was not provided");
-        if(value.compareTo(BigDecimal.ZERO) > 0) throw new CardStateExcpetion("Limit must be 0");
+        if(value.compareTo(BigDecimal.ZERO) < 0) throw new CardStateExcpetion("Limit must be 0");
         this.value = value;
     }
 
