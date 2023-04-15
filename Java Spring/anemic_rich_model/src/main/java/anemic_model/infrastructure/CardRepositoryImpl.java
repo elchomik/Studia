@@ -9,11 +9,16 @@ import java.util.UUID;
 
 public class CardRepositoryImpl implements CardRepository {
 
+    private static final String UUID_ID = "a1b2c3d4-e5f6-4a4a-9b9b-1c1d1e1f1c1e";
     private Set<Card> cards;
     private Card card;
 
     public CardRepositoryImpl() {
-        card = new Card();
+        Card card = new Card();
+        card.setActive(false);
+        card.setCardId(UUID.fromString(UUID_ID));
+        card.setCardNumber("cos");
+        card.setBlocekd(false);
         cards = Set.of(card);
     }
 

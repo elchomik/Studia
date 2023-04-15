@@ -1,4 +1,4 @@
-package anemic_model.services;
+package anemic_model;
 
 
 import anemic_model.excpetions.ChangedCardLimitException;
@@ -19,7 +19,7 @@ public class CardLimitService {
 
     public void changeCardLimit(UUID cardId, BigDecimal limit) {
         Card card = cardRepository.loadCardById(cardId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseGet(Card::new);
 
         validateIsCardBlocked(card);
         validateIsCardNotActive(card);

@@ -1,4 +1,4 @@
-package anemic_model.services;
+package anemic_model;
 
 import anemic_model.excpetions.BlockedCardException;
 import anemic_model.infrastructure.CardRepository;
@@ -15,7 +15,8 @@ public class CardBlockedService {
     }
 
     private void blockCard(UUID cardId) {
-        Card card = cardRepository.loadCardById(cardId).orElseThrow(IllegalArgumentException::new);
+        Card card = cardRepository.loadCardById(cardId)
+                .orElseGet(Card::new);
 
         validateIsCardBlocked(card);
         validateIsCardNotActive(card);
