@@ -14,7 +14,7 @@ public class CardBlockedService {
         this.cardRepository = cardRepository;
     }
 
-    private void blockCard(UUID cardId) {
+    public void blockCard(UUID cardId) {
         Card card = cardRepository.loadCardById(cardId)
                 .orElseGet(Card::new);
 
