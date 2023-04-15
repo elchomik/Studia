@@ -127,7 +127,6 @@ public class Catalogue extends JFrame {
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToFile(filePath);
-                exportDataToXMLFile(filePath);
             }
         });
 
