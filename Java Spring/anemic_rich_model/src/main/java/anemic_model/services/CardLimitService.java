@@ -1,7 +1,7 @@
 package anemic_model.services;
 
 
-import anemic_model.ChangedCardLimitException;
+import anemic_model.excpetions.ChangedCardLimitException;
 import anemic_model.infrastructure.CardRepository;
 import anemic_model.model.Card;
 

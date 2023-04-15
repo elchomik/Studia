@@ -1,4 +1,4 @@
-package anemic_model;
+package anemic_model.excpetions;
 
 public class ActivateCardException extends IllegalArgumentException{
 

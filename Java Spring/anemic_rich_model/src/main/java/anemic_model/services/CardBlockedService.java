@@ -1,6 +1,6 @@
 package anemic_model.services;
 
-import anemic_model.BlockedCardException;
+import anemic_model.excpetions.BlockedCardException;
 import anemic_model.infrastructure.CardRepository;
 import anemic_model.model.Card;
 

@@ -1,6 +1,6 @@
 package anemic_model.services;
 
-import anemic_model.ActivateCardException;
+import anemic_model.excpetions.ActivateCardException;
 import anemic_model.infrastructure.CardRepository;
 import anemic_model.model.Card;
 

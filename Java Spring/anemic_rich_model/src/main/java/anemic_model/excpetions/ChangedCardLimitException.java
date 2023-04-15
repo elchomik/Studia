@@ -1,4 +1,4 @@
-package anemic_model;
+package anemic_model.excpetions;
 
 public class ChangedCardLimitException extends IllegalArgumentException{
     public ChangedCardLimitException(String s) {
