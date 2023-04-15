@@ -1,4 +1,4 @@
-package rich_model.model.exceptions;
+package rich_model.exceptions;
 
 public class CardStateExcpetion extends IllegalArgumentException{
 

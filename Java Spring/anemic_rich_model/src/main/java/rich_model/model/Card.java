@@ -1,6 +1,6 @@
 package rich_model.model;
 
-import rich_model.model.exceptions.CardStateExcpetion;
+import rich_model.exceptions.CardStateExcpetion;
 
 import java.math.BigDecimal;
 import java.util.UUID;
