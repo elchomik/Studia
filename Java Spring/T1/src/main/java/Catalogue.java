@@ -1,3 +1,4 @@
+import database.ConnectionDB;
 import xml.catalogue.*;
 
 import javax.swing.*;
@@ -7,7 +8,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.*;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,14 +106,19 @@ public class Catalogue extends JFrame {
         panel.add(textFieldPanel, BorderLayout.SOUTH);
 
         JButton importButton = new JButton("Importuj");
-        importButton.setPreferredSize(new Dimension(200, 20));
+        importButton.setPreferredSize(new Dimension(100, 20));
         JButton exportButton = new JButton("Eksportuj");
-        exportButton.setPreferredSize(new Dimension(200, 20));
+        exportButton.setPreferredSize(new Dimension(100, 20));
 
         JButton importXML = new JButton(" Import XML");
-        importXML.setPreferredSize(new Dimension(200, 20));
+        importXML.setPreferredSize(new Dimension(120, 20));
         JButton exportXML = new JButton("Export XML");
-        exportXML.setPreferredSize(new Dimension(200, 20));
+        exportXML.setPreferredSize(new Dimension(120, 20));
+
+        JButton importDB = new JButton("Import DB");
+        importDB.setPreferredSize(new Dimension(120,20));
+        JButton exportDB = new JButton("Export to DB");
+        exportDB.setPreferredSize(new Dimension(120,20));
 
         importButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -152,10 +160,22 @@ public class Catalogue extends JFrame {
             }
         });
 
+        importDB.addActionListener(e -> {
+            try {
+                importDataFromDB(e);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        exportDB.addActionListener(e-> exportDataToDB());
+
         buttonsPanel.add(importButton);
         buttonsPanel.add(exportButton);
         buttonsPanel.add(importXML);
         buttonsPanel.add(exportXML);
+        buttonsPanel.add(importDB);
+        buttonsPanel.add(exportDB);
 
         panel.add(buttonsPanel, BorderLayout.NORTH);
 
@@ -250,9 +270,9 @@ public class Catalogue extends JFrame {
             JAXBContext jaxbContext = JAXBContext.newInstance(Laptops.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             Laptops laptops = (Laptops) unmarshaller.unmarshal(new File(file));
-
+            int rowCount = getRowCount();
             for (Laptop laptop : laptops.getLaptops()) {
-                int id = laptop.getId();
+                int id = ++rowCount;
                 String manufacturer = setTextIfApplicable(laptop.getManufacturer());
                 String touch = setTextIfApplicable(laptop.getScreen().getTouch());
                 String size = setTextIfApplicable(laptop.getScreen().getSize());
@@ -278,6 +298,40 @@ public class Catalogue extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private int getRowCount() {
+        return tableModel.getRowCount() == 0 ? 1: table.getRowCount();
+    }
+
+    void importDataFromDB(ActionEvent e) throws SQLException {
+        Connection connection = DriverManager.getConnection(ConnectionDB.URL, ConnectionDB.USER, ConnectionDB.PASSWORD);
+        ResultSet resultSet = ConnectionDB.selectDataFromDB(connection);
+
+        while(resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String manufacturer = setTextIfApplicable(resultSet.getString("manufacturer"));
+            String touch = setTextIfApplicable(resultSet.getString("touch"));
+            String screenSize = setTextIfApplicable(resultSet.getString("screen_size"));
+            String screenResolution = setTextIfApplicable(resultSet.getString("screen_resolution"));
+            String screenType = setTextIfApplicable(resultSet.getString("screen_type"));
+            String processorName = setTextIfApplicable(resultSet.getString("processor_name"));
+            int physicalCores = resultSet.getInt("physical_cores");
+            int clockSpeed = resultSet.getInt("clock_speed");
+            String ram = setTextIfApplicable(resultSet.getString("ram"));
+            String discType = setTextIfApplicable(resultSet.getString("disc_type"));
+            String discStorage = setTextIfApplicable(resultSet.getString("disc_storage"));
+            String graphicCardName = setTextIfApplicable(resultSet.getString("graphic_card_name"));
+            String graphicCardMemory = setTextIfApplicable(resultSet.getString("graphic_card_memory"));
+            String os = setTextIfApplicable(resultSet.getString("os"));
+            String discReader = setTextIfApplicable(resultSet.getString("disc_reader"));
+
+            tableModel.addRow(new Object[]{
+                    id, manufacturer, touch, screenSize, screenResolution, screenType, processorName, physicalCores,
+                    clockSpeed, ram, discType, discStorage, graphicCardName, graphicCardMemory, os, discReader
+            });
+        }
+        connection.close();
     }
 
 
@@ -343,38 +397,7 @@ public class Catalogue extends JFrame {
         ArrayList<Laptop> laptopArrayList = new ArrayList<>();
         laptops.setModdate(String.valueOf(LocalDateTime.now()));
         for (int row = 0; row < tableModel.getRowCount(); row++) {
-            Laptop laptop = new Laptop();
-            laptop.setId(row + 1);
-            laptop.setManufacturer(tableModel.getValueAt(row, 1).toString());
-
-            laptop.setScreen(new Screen(
-                    tableModel.getValueAt(row, 2).toString(),
-                    tableModel.getValueAt(row, 3).toString(),
-                    tableModel.getValueAt(row, 4).toString(),
-                    tableModel.getValueAt(row, 5).toString()
-            ));
-
-            laptop.setProcessor(new Processor(
-                    tableModel.getValueAt(row, 6).toString(),
-                    tableModel.getValueAt(row, 7).toString(),
-                    tableModel.getValueAt(row, 8).toString()
-            ));
-
-            laptop.setRam(tableModel.getValueAt(row, 9).toString());
-
-            laptop.setDisc(new Disc(
-                    tableModel.getValueAt(row, 10).toString(),
-                    tableModel.getValueAt(row, 11).toString()
-            ));
-
-            laptop.setGraphicCard(new GraphicCard(
-                    tableModel.getValueAt(row, 12).toString(),
-                    tableModel.getValueAt(row, 13).toString()
-            ));
-
-            laptop.setOs(tableModel.getValueAt(row, 14).toString());
-            laptop.setDiscReader(tableModel.getValueAt(row, 15).toString());
-            laptopArrayList.add(laptop);
+            preparedXMLData(laptopArrayList, row);
         }
         laptops.setLaptops(laptopArrayList);
         try {
@@ -387,4 +410,51 @@ public class Catalogue extends JFrame {
             throw new RuntimeException(e);
         }
     }
+
+    private void preparedXMLData(ArrayList<Laptop> laptopArrayList, int row) {
+        Laptop laptop = new Laptop();
+        laptop.setId(row + 1);
+        laptop.setManufacturer(tableModel.getValueAt(row, 1).toString());
+
+        laptop.setScreen(new Screen(
+                tableModel.getValueAt(row, 2).toString(),
+                tableModel.getValueAt(row, 3).toString(),
+                tableModel.getValueAt(row, 4).toString(),
+                tableModel.getValueAt(row, 5).toString()
+        ));
+
+        laptop.setProcessor(new Processor(
+                tableModel.getValueAt(row, 6).toString(),
+                tableModel.getValueAt(row, 7).toString(),
+                tableModel.getValueAt(row, 8).toString()
+        ));
+
+        laptop.setRam(tableModel.getValueAt(row, 9).toString());
+
+        laptop.setDisc(new Disc(
+                tableModel.getValueAt(row, 10).toString(),
+                tableModel.getValueAt(row, 11).toString()
+        ));
+
+        laptop.setGraphicCard(new GraphicCard(
+                tableModel.getValueAt(row, 12).toString(),
+                tableModel.getValueAt(row, 13).toString()
+        ));
+
+        laptop.setOs(tableModel.getValueAt(row, 14).toString());
+        laptop.setDiscReader(tableModel.getValueAt(row, 15).toString());
+        laptopArrayList.add(laptop);
+    }
+
+    public void exportDataToDB() {
+        try{
+            Connection connection = DriverManager
+                    .getConnection(ConnectionDB.URL, ConnectionDB.USER, ConnectionDB.PASSWORD);
+            ConnectionDB.extractDataToDB(connection, tableModel,getRowCount());
+            connection.close();
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
