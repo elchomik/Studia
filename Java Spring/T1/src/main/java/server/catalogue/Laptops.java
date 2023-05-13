@@ -1,4 +1,4 @@
-package xml.catalogue;
+package server.catalogue;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
@@ -13,10 +13,6 @@ public class Laptops {
 
     @XmlAttribute(name = "moddate")
     private String moddate;
-
-    public String getModdate() {
-        return moddate;
-    }
 
     public void setModdate(String moddate) {
         this.moddate = moddate;

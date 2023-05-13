@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
+import server.Server;
 
 import java.util.stream.IntStream;
 
@@ -10,57 +11,57 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CatalogueTest {
+public class ServerTest {
 
     @Test
     void isInputContainsOnlyString_InputIsString_True() {
 
         //given
-        Catalogue catalogue = Mockito.spy(new Catalogue());
+        Server server = Mockito.spy(new Server());
 
         //when
-        when(catalogue.isInputContainsOnlyString("Screen")).thenReturn(true);
+        when(server.isInputContainsOnlyString("Screen")).thenReturn(true);
 
         //assert
-        assertTrue(catalogue.isInputContainsOnlyString("Screen"));
+        assertTrue(server.isInputContainsOnlyString("Screen"));
     }
 
     @Test
     void isInputContainsOnlyString_InputIsString_False() {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.isInputContainsOnlyString("Screen123")).thenReturn(false);
+        when(server.isInputContainsOnlyString("Screen123")).thenReturn(false);
 
         //assert
-        assertFalse(catalogue.isInputContainsOnlyString("Screen123"));
+        assertFalse(server.isInputContainsOnlyString("Screen123"));
     }
 
 
     @Test
     void isInputContainsOnlyDigit_InputIsString_True() {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.isInputContainsOnlyDigit("12341")).thenReturn(true);
+        when(server.isInputContainsOnlyDigit("12341")).thenReturn(true);
 
         //assert
-        assertTrue(catalogue.isInputContainsOnlyDigit("12341"));
+        assertTrue(server.isInputContainsOnlyDigit("12341"));
     }
 
 
     @Test
     void isInputContainsOnlyDigit_InputIsString_False() {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.isInputContainsOnlyDigit("12323ssdds23")).thenReturn(false);
+        when(server.isInputContainsOnlyDigit("12323ssdds23")).thenReturn(false);
 
         //assert
-        assertFalse(catalogue.isInputContainsOnlyDigit("12323ssdds23"));
+        assertFalse(server.isInputContainsOnlyDigit("12323ssdds23"));
     }
 
     @ParameterizedTest
@@ -68,13 +69,13 @@ public class CatalogueTest {
     @ValueSource(ints ={1,4,5,6,11,12,14,15})
     void isColumnWithStringValidation_InputIsInt_True(int column){
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.isColumnWithStringValidation(column)).thenReturn(true);
+        when(server.isColumnWithStringValidation(column)).thenReturn(true);
 
         //assert
-        assertTrue(catalogue.isColumnWithStringValidation(column));
+        assertTrue(server.isColumnWithStringValidation(column));
     }
 
     @ParameterizedTest
@@ -82,13 +83,13 @@ public class CatalogueTest {
     @ValueSource(ints = {0,2,3,7,8,9,10,11,13})
     void isColumnWithoutStringValidation_InputIsInt_False(int column) {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.isColumnWithStringValidation(column)).thenReturn(false);
+        when(server.isColumnWithStringValidation(column)).thenReturn(false);
 
         //assert
-        assertFalse(catalogue.isColumnWithStringValidation(column));
+        assertFalse(server.isColumnWithStringValidation(column));
     }
 
     @Test
@@ -124,14 +125,14 @@ public class CatalogueTest {
     @DisplayName("No set text when input is not empty")
     void shouldNoSetTextIfApplicable() {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
         String input = "Test do wstawienia";
 
         //when
-        when(catalogue.setTextIfApplicable(input)).thenReturn(input);
+        when(server.setTextIfApplicable(input)).thenReturn(input);
 
         //assert
-        assertEquals(input, catalogue.setTextIfApplicable(input));
+        assertEquals(input, server.setTextIfApplicable(input));
     }
 
 
@@ -139,26 +140,26 @@ public class CatalogueTest {
     @DisplayName("Set text when input is null")
     void shouldSetTextWhenInputIsNull(){
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.setTextIfApplicable(null)).thenReturn("Brak");
+        when(server.setTextIfApplicable(null)).thenReturn("Brak");
 
         //then
-        assertEquals("Brak", catalogue.setTextIfApplicable(null));
+        assertEquals("Brak", server.setTextIfApplicable(null));
     }
 
     @Test
     @DisplayName("Set text when input is empty")
     void shouldSetTextWhenInputIsEmpty() {
         //given
-        Catalogue catalogue = mock(Catalogue.class);
+        Server server = mock(Server.class);
 
         //when
-        when(catalogue.setTextIfApplicable("")).thenReturn("Brak");
+        when(server.setTextIfApplicable("")).thenReturn("Brak");
 
         //then
-        assertEquals("Brak", catalogue.setTextIfApplicable(""));
+        assertEquals("Brak", server.setTextIfApplicable(""));
     }
 
 }
