@@ -7,15 +7,10 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Laptops {
 
-
     @XmlElement(name = "laptop")
     private List<Laptop> laptops;
 
-    @XmlAttribute(name = "moddate")
-    private String moddate;
-
     public void setModdate(String moddate) {
-        this.moddate = moddate;
     }
 
     public List<Laptop> getLaptops() {
