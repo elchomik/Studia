@@ -29,14 +29,14 @@ public class ConnectionDB {
         return 0;
     }
 
-    public static ResultSet selectDevicesByScreenType(final Connection connection, final String screenType) throws SQLException {
-        final String query = "SELECT * FROM Urzadzenia WHERE screen_type=?";
+    public static ResultSet selectDevicesByScreenResolution(final Connection connection, final String screenType) throws SQLException {
+        final String query = "SELECT * FROM Urzadzenia WHERE screen_size=?";
         final PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, screenType);
         return preparedStatement.executeQuery();
     }
 
-    public static int selectDevicesCountByScreenResolution(final Connection connection, final String screenResolution) throws SQLException {
+    public static int selectDevicesCountByScreenType(final Connection connection, final String screenResolution) throws SQLException {
         final String query = "SELECT COUNT(*) FROM Urzadzenia WHERE screen_resolution=?";
         final PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setString(1, screenResolution);
