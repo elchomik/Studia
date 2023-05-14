@@ -17,8 +17,8 @@ public interface LaptopsSoapInterface {
     long getLaptopCountsFilterByProducer(final String producerName) throws SQLException;
 
     @WebMethod
-    DeviceList getAllDevicesByScreenType(final String screenResolution) throws SQLException;
+    DeviceList getAllDevicesByScreenSize(final String screenSize) throws SQLException;
 
     @WebMethod
-    long getDeviceCountByScreenResolution(final String screenSize) throws SQLException;
+    long getDeviceCountByScreenResolution(final String screenResolution) throws SQLException;
 }
