@@ -25,9 +25,9 @@ public class LaptopSoapInterfaceImpl implements LaptopsSoapInterface {
     }
 
     @Override
-    public DeviceList getAllDevicesByScreenType(String screenType) throws SQLException {
+    public DeviceList getAllDevicesByScreenSize(String screenSize) throws SQLException {
         final Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        final ResultSet resultSet = selectDevicesByScreenType(connection, screenType);
+        final ResultSet resultSet = selectDevicesByScreenResolution(connection, screenSize);
         final ArrayList<Device> deviceFromDB = new ArrayList<>();
 
         while (resultSet.next()) {
@@ -69,7 +69,7 @@ public class LaptopSoapInterfaceImpl implements LaptopsSoapInterface {
     @Override
     public long getDeviceCountByScreenResolution(String screenResolution) throws SQLException {
         final Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-        final int devicesCount = selectDevicesCountByScreenResolution(connection, screenResolution);
+        final int devicesCount = selectDevicesCountByScreenType(connection, screenResolution);
         connection.close();
         return devicesCount;
     }
