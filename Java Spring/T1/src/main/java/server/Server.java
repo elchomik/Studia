@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
 import static server.database.ConnectionDB.*;
 import static server.database.Device.toComparingDevices;
 import static server.database.Device.toDevice;
@@ -133,10 +134,8 @@ public class Server extends JFrame {
         buttonsPanel.add(exportDB);
 
         tableModel = new DefaultTableModel();
-        for (String s : Arrays.asList("Nr", "Producent", "Ekran", "Rozdzielczość", "Powierzchnia", "Dotykowy", "Procesor",
-                "Rdzenie", "Taktowanie", "RAM", "Dysk", "Rodzaj dysku", "Układ graficzny", "Pamięć graf.", "System", "Napęd")) {
-            tableModel.addColumn(s);
-        }
+        asList("Nr", "Producent", "Ekran", "Rozdzielczość", "Powierzchnia", "Dotykowy", "Procesor",
+                "Rdzenie", "Taktowanie", "RAM", "Dysk", "Rodzaj dysku", "Układ graficzny", "Pamięć graf.", "System", "Napęd").forEach(tableModel::addColumn);
 
         table = new JTable(tableModel) {
             @Override
