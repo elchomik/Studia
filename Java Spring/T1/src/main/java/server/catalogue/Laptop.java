@@ -1,4 +1,4 @@
-package xml.catalogue;
+package server.catalogue;
 
 import javax.xml.bind.annotation.*;
 

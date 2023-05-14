@@ -1,8 +1,10 @@
+package server;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import database.ComparingDevice;
-import database.Device;
-import xml.catalogue.*;
+import server.catalogue.*;
+import server.database.ComparingDevice;
+import server.database.Device;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,12 +23,13 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static database.ConnectionDB.*;
-import static database.Device.toComparingDevices;
-import static database.Device.toDevice;
 import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
+import static server.database.ConnectionDB.*;
+import static server.database.Device.toComparingDevices;
+import static server.database.Device.toDevice;
 
-public class Catalogue extends JFrame {
+public class Server extends JFrame {
     private final JTable table;
     private final DefaultTableModel tableModel;
     private final JLabel label;
@@ -44,7 +47,7 @@ public class Catalogue extends JFrame {
     private static final int NAPED = 15;
 
 
-    public Catalogue() {
+    public Server() {
         setTitle("Zadanie T2");
         setSize(1000, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,7 +78,7 @@ public class Catalogue extends JFrame {
 
         importButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(Catalogue.this);
+            int result = fileChooser.showOpenDialog(Server.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 importDataFromFile(filePath);
@@ -84,7 +87,7 @@ public class Catalogue extends JFrame {
 
         exportButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showSaveDialog(Catalogue.this);
+            int result = fileChooser.showSaveDialog(Server.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToFile(filePath);
@@ -93,7 +96,7 @@ public class Catalogue extends JFrame {
 
         importXML.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showOpenDialog(Catalogue.this);
+            int result = fileChooser.showOpenDialog(Server.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 try {
@@ -106,7 +109,7 @@ public class Catalogue extends JFrame {
 
         exportXML.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
-            int result = fileChooser.showSaveDialog(Catalogue.this);
+            int result = fileChooser.showSaveDialog(Server.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
                 exportDataToXMLFile(filePath);
@@ -131,10 +134,8 @@ public class Catalogue extends JFrame {
         buttonsPanel.add(exportDB);
 
         tableModel = new DefaultTableModel();
-        for (String s : Arrays.asList("Nr", "Producent", "Ekran", "Rozdzielczość", "Powierzchnia", "Dotykowy", "Procesor",
-                "Rdzenie", "Taktowanie", "RAM", "Dysk", "Rodzaj dysku", "Układ graficzny", "Pamięć graf.", "System", "Napęd")) {
-            tableModel.addColumn(s);
-        }
+        asList("Nr", "Producent", "Ekran", "Rozdzielczość", "Powierzchnia", "Dotykowy", "Procesor",
+                "Rdzenie", "Taktowanie", "RAM", "Dysk", "Rodzaj dysku", "Układ graficzny", "Pamięć graf.", "System", "Napęd").forEach(tableModel::addColumn);
 
         table = new JTable(tableModel) {
             @Override

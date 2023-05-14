@@ -1,4 +1,4 @@
-package xml.catalogue;
+package server.catalogue;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
@@ -7,19 +7,10 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Laptops {
 
-
     @XmlElement(name = "laptop")
     private List<Laptop> laptops;
 
-    @XmlAttribute(name = "moddate")
-    private String moddate;
-
-    public String getModdate() {
-        return moddate;
-    }
-
     public void setModdate(String moddate) {
-        this.moddate = moddate;
     }
 
     public List<Laptop> getLaptops() {

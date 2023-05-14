@@ -1,4 +1,4 @@
-package database;
+package server.database;
 
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
@@ -16,6 +16,35 @@ public class ConnectionDB {
     public static void deleteAllRecords(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate("DELETE FROM Urzadzenia");
+    }
+
+    public static int selectDevicesCountByProducer(final Connection connection, final String producer) throws SQLException {
+        final String query = "SELECT COUNT(*) FROM Urzadzenia WHERE manufacturer=?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, producer);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+        return 0;
+    }
+
+    public static ResultSet selectDevicesByScreenResolution(final Connection connection, final String screenType) throws SQLException {
+        final String query = "SELECT * FROM Urzadzenia WHERE screen_size=?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, screenType);
+        return preparedStatement.executeQuery();
+    }
+
+    public static int selectDevicesCountByScreenType(final Connection connection, final String screenResolution) throws SQLException {
+        final String query = "SELECT COUNT(*) FROM Urzadzenia WHERE screen_resolution=?";
+        final PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, screenResolution);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if(resultSet.next()) {
+            return resultSet.getInt(1);
+        }
+        return 0;
     }
 
     public static void extractDataToDB(Connection connection, DefaultTableModel tableModel) throws SQLException {
