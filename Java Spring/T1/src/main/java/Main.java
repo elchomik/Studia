@@ -1,3 +1,4 @@
+import Rest.RestClient;
 import client.Client;
 import server.Server;
 import server.soap.LaptopSoapInterfaceImpl;
@@ -10,6 +11,7 @@ public class Main {
         new Server();
         publish("http://localhost:8080/laptops",new LaptopSoapInterfaceImpl());
         new Client();
+        new RestClient();
     }
 
 }
