@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static java.awt.FlowLayout.LEFT;
@@ -125,12 +126,19 @@ public class RestClient extends JFrame {
         });
 
         rocketCountryBtn.addActionListener(l -> {
+            clearTableRows();
             final String selectedRocketCountry = rocketCountryBox.getItemAt(rocketCountryBox.getSelectedIndex());
-            final long selectedCountriesSize = dataFromAPI.stream().filter(rocket -> rocket.country()
-                    .equals(selectedRocketCountry)).count();
-            rocketCountryLabel.setText(String.valueOf(selectedCountriesSize));
-        });
+            List<Rocket> rockets = dataFromAPI.stream().filter(rocket ->
+                    rocket.country().equals(selectedRocketCountry)).toList();
 
+            rockets.forEach(a -> tableModel.addRow(new Object[]{a.rocketId(), a.rocketName(),
+                    a.country(), a.company(), a.rocketHeight(),
+                    a.stages(), a.rocketMass(), a.costPerLaunch(),
+                    a.firstFlight()}));
+
+            int sum = rockets.stream().mapToInt(Rocket::costPerLaunch).sum();
+            rocketCountryLabel.setText(String.valueOf(sum));
+        });
 
         add(panel);
         setVisible(true);
