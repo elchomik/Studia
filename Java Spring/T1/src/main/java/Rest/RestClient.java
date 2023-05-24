@@ -53,7 +53,6 @@ public class RestClient extends JFrame {
         final JLabel rocketNameLabel = new JLabel("Nazwa rakiety");
         final JLabel rocketNamesCount = new JLabel("0");
         final JLabel rocketCountryLabel = new JLabel("Wybór producenta");
-        final JLabel rocketCountryCount = new JLabel("0");
 
         rocketNamesBox = new JComboBox<>();
         rocketNamesBox.setBounds(X, Y, WIDTH, HEIGHT);
@@ -67,7 +66,7 @@ public class RestClient extends JFrame {
         final JButton rocketNameBtn = new JButton("Liczba rakiet o nazwie");
         rocketNameBtn.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
 
-        final JButton rocketCountryBtn = new JButton("Liczba rakiet o wymiarze");
+        final JButton rocketCountryBtn = new JButton("Wyświetl rakiety");
         rocketCountryBtn.setPreferredSize(new Dimension(FIELD_WIDTH, FIELD_HEIGHT));
 
         final JButton rocketIdBtn = new JButton("Wyświetl rakietę o id");
@@ -102,7 +101,6 @@ public class RestClient extends JFrame {
         rowPanel.add(createHorizontalStrut(12));
         rowPanel.add(rocketCountryBtn);
         rowPanel.add(createHorizontalStrut(12));
-        rowPanel.add(rocketCountryCount);
         panel.add(rowPanel, BorderLayout.NORTH);
         panel.add(scrollPane);
 
