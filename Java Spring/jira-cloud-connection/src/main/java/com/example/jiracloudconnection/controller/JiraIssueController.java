@@ -36,4 +36,9 @@ public class JiraIssueController {
     public String createEpicOnBoard(final @RequestBody JiraIssue issue) {
         return service.createEpic(issue);
     }
+
+    @PostMapping("/create/subtask")
+    public String createSubtaskForIssue() {
+        return service.createSubtaskForIssue();
+    }
 }

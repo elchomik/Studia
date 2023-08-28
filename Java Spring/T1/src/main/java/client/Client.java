@@ -105,7 +105,7 @@ public class Client extends JFrame {
             try {
                 fetchDataFromDbByScreenResolution(selectedScreenResolution);
             } catch (MalformedURLException | SQLException e) {
-                 e.printStackTrace();
+                e.printStackTrace();
             }
         });
 
@@ -142,7 +142,7 @@ public class Client extends JFrame {
 
     private void clearTableRows() {
         int rowCount = table.getRowCount();
-        if(rowCount!=0) {
+        if (rowCount != 0) {
             int i = 0;
             while (i < rowCount) {
                 tableModel.removeRow(0);

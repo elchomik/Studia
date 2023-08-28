@@ -5,6 +5,7 @@ public enum JiraIssueTypes {
     BUG(10004L),
     EPIK(10002L),
     STORY(10005L),
+    SUBTASK(10003L),
     TASK(10001L);
 
     private final Long issueId;
