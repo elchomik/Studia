@@ -3,6 +3,7 @@ package server;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import server.catalogue.*;
+import server.csv.CsvParser;
 import server.database.ComparingDevice;
 import server.database.Device;
 
@@ -81,7 +82,8 @@ public class Server extends JFrame {
             int result = fileChooser.showOpenDialog(Server.this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                importDataFromFile(filePath);
+                //importDataFromFile(filePath);
+                importDataFromCsvFile(filePath);
             }
         });
 
@@ -202,6 +204,14 @@ public class Server extends JFrame {
         }
     }
 
+    public void importDataFromCsvFile(String filePath) {
+        CsvParser csvParser = new CsvParser();
+        try {
+            csvParser.parseCsvFile(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void importDataFromFile(String filePath) {
         int rowCount = tableModel.getRowCount();
         List<Device> devicesFromViewTable = getDevicesFromViewTable(rowCount);
