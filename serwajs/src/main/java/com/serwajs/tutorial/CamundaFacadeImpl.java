@@ -1,19 +1,19 @@
 package com.serwajs.tutorial;
 
-import org.camunda.bpm.engine.IdentityService;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.ProcessEngineException;
-import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.*;
 import org.camunda.bpm.engine.authorization.Groups;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.runtime.ProcessInstanceWithVariables;
+import org.camunda.bpm.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -44,16 +44,61 @@ public class CamundaFacadeImpl implements CamundaFacade {
     @Override
     public boolean isProcessInstanceIsRunning(String processInstanceId) {
         RuntimeService runtimeService = getRuntimeService();
-
         ActivityInstance activityInstance = runtimeService.getActivityInstance(processInstanceId);
         return activityInstance != null;
+    }
+
+    @Override
+    public String startProcessBeforeOverthrowMonarchy(String key) {
+        RuntimeService runtimeService = getRuntimeService();
+        try {
+            ProcessInstanceWithVariables monarchyId = runtimeService.createProcessInstanceByKey(key)
+                    .startBeforeActivity("Monarchy_ID")
+                    .executeWithVariablesInReturn();
+            Task overthrowMonarchyTask = getTaskService().createTaskQuery().active().processInstanceId(monarchyId.getProcessInstanceId())
+                    .singleResult();
+            getTaskService().complete(overthrowMonarchyTask.getId());
+            return monarchyId.getProcessInstanceId();
+        } catch (ProcessEngineException e) {
+            LOGGER.error(e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String startProcessBeforeTaxi(String key) {
+        RuntimeService runtimeService = getRuntimeService();
+        try {
+            ProcessInstance taxiId = runtimeService.createProcessInstanceByKey(key)
+                    .startBeforeActivity("Taxi_ID")
+                    .execute();
+            return taxiId.getId();
+        } catch (ProcessEngineException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public String startProcessBeforeDeparture(String key) {
+        RuntimeService runtimeService = getRuntimeService();
+        Map<String, Object> variables = Map.of("country", "France",
+                "money", 1000);
+        try{
+            ProcessInstance execute = runtimeService.createProcessInstanceByKey(key)
+                    .startBeforeActivity("say-hello")
+                    .setVariablesLocal(variables)
+                    .execute();
+            return execute.getId();
+        }catch (ProcessEngineException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
     @Transactional
     public Optional<String> createUser(String userId) {
         final boolean isUserAlreadyExists = isUserAlreadyExists(userId);
-        if(isUserAlreadyExists) {
+        if (isUserAlreadyExists) {
             return Optional.empty();
         }
 
@@ -74,7 +119,7 @@ public class CamundaFacadeImpl implements CamundaFacade {
     @Override
     public void deleteUser(String userId) {
         final boolean isUserAlreadyExists = isUserAlreadyExists(userId);
-        if(isUserAlreadyExists) {
+        if (isUserAlreadyExists) {
             getIdentityService().deleteUser(userId);
         }
     }
@@ -84,11 +129,15 @@ public class CamundaFacadeImpl implements CamundaFacade {
         return user != null;
     }
 
-    private RuntimeService getRuntimeService() {
+    public RuntimeService getRuntimeService() {
         return processEngine.getRuntimeService();
     }
 
     private IdentityService getIdentityService() {
         return processEngine.getIdentityService();
+    }
+
+    public TaskService getTaskService() {
+        return processEngine.getTaskService();
     }
 }
